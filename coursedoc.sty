@@ -96,7 +96,8 @@ Due: \@duedate
 
 \usepackage{amsthm}
 \theoremstyle{definition}
-\newcounter{thm}
+% \newcounter{thm}
+\newtheorem{thm}{Theorem}[section]
 \newtheorem{axiom}[thm]{Axiom}
 \newtheorem{conjecture}[thm]{Conjecture}
 \newtheorem{corollary}[thm]{Corollary}
@@ -104,6 +105,8 @@ Due: \@duedate
 \newtheorem{example}[thm]{Example}
 \newtheorem{lemma}[thm]{Lemma}
 \newtheorem{theorem}[thm]{Theorem}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{exercise}[thm]{Exercise}
 \newenvironment{pf}[1][Proof]{%
 \begin{proof}[\bf #1]
 }
@@ -121,12 +124,12 @@ Due: \@duedate
 
 %% listings setup (if needed)
 \iflistings
-\usepackage{listings}
+\usepackage[final]{listings}
 \usepackage{xunicode}
 \usepackage{relsize}
 \lstset{
 columns=flexible,
-basicstyle=\linespread{0.9}\ttfamily\relscale{0.9},
+basicstyle=\linespread{0.9}\ttfamily,%\relscale{0.9},
 keywordstyle=\bfseries,
 %commentstyle=\itshape,
 showstringspaces=false,
@@ -146,6 +149,8 @@ literate={*}{*}1{-}{-}1,escapeinside={(*}{*)}
 %%% logic
 \newcommand\true{\ensuremath{\mathrm{T}}}
 \newcommand\false{\ensuremath{\mathrm{F}}}
+\newcommand\True{\ensuremath{\mathrm{true}}}
+\newcommand\False{\ensuremath{\mathrm{false}}}
 %%% relations
 \newcommand\R[3][R]{\ensuremath{#2 \mathrel{#1} #3}}
 %%% regular expressions

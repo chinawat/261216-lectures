@@ -21,14 +21,14 @@
 \newfontfamily\thaifont[
   Script=Thai,
   Scale=MatchLowercase,
-%  Extension=.otf,
+  Extension=.otf,
   ItalicFont=*-Italic,
   BoldFont=*-Bold,
   BoldItalicFont=*-BoldItalic,
-%   FakeBold=1.5,
+  % FakeBold=1.5,
 ]{Laksaman}
 \newfontfamily\thaifonttt[
-  Script=Thai,
+%  Script=Thai,
   Scale=MatchLowercase,
   FakeBold=2,
 ]{Arundina Sans Mono}
@@ -37,18 +37,30 @@
   \setmonofont[
     Mapping=,
     Scale=MatchLowercase,
-%    Extension=.otf,
-    BoldFont=*zi4-Bold
+    Extension=.otf,
+    UprightFont=*zi4-Regular,
+    BoldFont=*zi4-Bold,
+    AutoFakeSlant
   ]{Inconsolata}
 \else
   \newfontfamily\engfont{TeX Gyre Termes}
   \newfontfamily\engfonttt[
     Mapping=,
     Scale=MatchLowercase,
-%    Extension=.otf,
-    BoldFont=*zi4-Bold
+    Extension=.otf,
+    UprightFont=*zi4-Regular,
+    BoldFont=*zi4-Bold,
+    AutoFakeSlant
   ]{Inconsolata}
 \fi
+
+%% math setup
+\RequirePackage{amsmath}
+\RequirePackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+\setmathfontface\mathrm{TeX Gyre Termes}
+\setmathfontface\mathbf{TeX Gyre Termes Bold}
+\setmathfontface\mathit{TeX Gyre Termes Italic}
 
 \RequirePackage{ifthen}
 \ifenglish
