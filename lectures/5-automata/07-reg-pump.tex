@@ -1,0 +1,150 @@
+\section{Nonregular languages}
+
+State machines ที่เราได้เรียนรู้มาแล้วนั้นสามารถจำแนกได้เป็นสองประเภทใหญ่ๆ คือ
+\begin{itemize}
+\item finite state machines ซึ่งรวมถึง finite automata ที่มีจำนวนสถานะจำกัด กล่าวคือ สามารถเขียนแจกแจงเซตของ states ให้ครบทุกตัวได้ \enskip DFAs และ NFAs จัดอยู่ในกรณีนี้
+\item state machines with infinite number of states ซึ่งไม่สามารถเขียนแจกแจงเซตของ states ให้ครบได้ ตัวอย่างเช่น state machine ที่จำลองการเดินของหุ่นยนต์ที่เดินทแยงได้เท่านั้น \enskip ในตัวอย่างนี้ states เป็นพิกัดจำนวนเต็มในระนาบสองมิติ ซึ่งมีจำนวนไม่จำกัด
+\end{itemize}
+หากพิจารณาในกรณีของ finite automata เท่านั้น ก่อนหน้านี้ เราทราบแล้วว่า ถ้า $L$ เป็น regular language แล้วเราสามารถเขียน DFA ที่รับรู้ $L$ ได้ \enskip เนื่องจาก DFA นั้นมีจำนวนสถานะที่จำกัด กล่าวคือ มีหน่วยความจำจำนวนจำกัด จะได้ว่า contrapositive ของประพจน์ดังกล่าวคือ ถ้าเราจำเป็นต้องใช้หน่วยความจำไม่จำกัดในการสร้างกลไกที่จะรับรู้ $L$ นั่นคือ ไม่มี DFA ใดๆ ที่รับรู้ $L$ ได้เลย แล้ว $L$ จะต้องไม่ใช่ regular language \enskip ภาษาที่เข้าข่ายลักษณะนี้เรียกว่า\emph{ภาษาอปรกติ} (nonregular language)s
+
+\begin{example}
+ให้ $B=\set{\str{0}^n\str{1}^n\mid n\geq 0}$ กล่าวคือ $s\in B$ ถ้า $s$ ขึ้นต้นด้วย \str{0} $n$ ตัว แล้วตามด้วย \str{1} $n$ ตัว \enskip หากเราจะพยายามสร้าง DFA ที่รับรู้ $B$ เราต้องจดจำและติดตามว่าเราได้อ่าน \str{0} เข้ามาแล้วทั้งหมดกี่ตัว เพื่อที่เราจะได้ตรวจสอบในภายหลังได้ว่า จำนวนของ \str{1} ที่ตามมานั้นมีเท่ากัน \enskip แต่ input strings ที่เป็นไปได้นั้นอาจจะยาวเท่าใดก็ได้ หาก DFA ต้องมีหน่วยความจำที่จำกัด ก็น่าจะนับจำนวน \str{0} ที่มีจำกัดได้เท่านั้น \enskip จึงดูเหมือนว่าจะเป็นไปไม่ได้ที่จะมี DFA ที่รับรู้ $B$ ได้ กล่าวคือ ดูเหมือนว่า $B$ น่าจะเป็น nonregular language
+\end{example}
+
+\begin{example}
+$C=\set{w\mid\textup{$w$ มีจำนวน \str{0} และ \str{1} เท่ากัน}}$ \enskip เช่น $\str{10110010},\str{0}^n\str{1}^n,\str{1}^n\str{0}^n$ \enskip ในตัวอย่างนี้ ดูเหมือนว่าเราต้องนับจำนวน \str{0} และ \str{1} อีกเช่นกัน \enskip ดังนั้น $C$ น่าจะเป็น nonregular language ด้วย
+\end{example}
+
+\begin{example}
+$D=\set{w\mid\textup{$w$ มีจำนวน \str{01} และ \str{10} ที่เป็น substrings เท่ากัน}}$ \enskip เช่น $\str{101}\in D$ เนื่องจากมี $\str{01}$ และ $\str{10}$ ปรากฏอยู่อย่างละหนึ่งครั้ง แต่ $\str{1010}\notin D$ เนื่องจากมี \str{01} ปรากฏเพียงครั้งเดียว แต่ \str{01} ปรากฏอยู่สองครั้ง \enskip ในตัวอย่างนี้ ดูเหมือนว่าเราต้องนับจำนวน \str{01} และ \str{10} เพื่อเปรียบเทียบว่าเท่ากันหรือไม่ \enskip ดังนั้น $D$ ดูแล้วน่าจะเป็น nonregular language อีกเช่นกัน
+\end{example}
+
+แท้ที่จริงแล้ว $B$ และ $C$ เป็น nonregular languages ตามที่เราคาดไว้ แต่ $D$ นั้น regular! กล่าวคือ มี DFA ที่รับรู้ $D$ \enskip แสดงว่า การคิดคำนึงแบบคร่าวๆ โดยใช้อัชฌัตติกญาณ (intuition) นั้นอาจจะทำให้เกิดข้อผิดพลาดได้ \enskip ดังนั้น หากต้องการทราบอย่างแน่ชัดว่าภาษาใดเป็น nonregular language หรือไม่ เราต้องเขียนบทพิสูจน์ที่แสดงว่าเป็นไปไม่ได้ที่จะมี DFA ที่รับรู้ภาษาที่เรากำลังพิจารณา \enskip บทพิสูจน์ในลักษณะนี้จะใช้ pumping lemma ดังที่จะได้กล่าวต่อไป
+
+\subsection{Pumping lemma for regular languages}
+
+Pumping lemma สำหรับ regular languages นั้นกล่าวโดยคร่าวๆ ได้ว่า regular language ทุกภาษาจะมีคุณสมบัติพิเศษ คือ ถ้า $L$ เป็น regular language และ $s\in L$ โดยที่ $s$ นั้นยาวพอ (ในที่นี้ จะต้องยาวอย่างน้อย ``pumping length'') แล้วจะมีส่วนหนึ่งของ $s$ ที่เขียนซ้ำกี่รอบก็ได้ แต่ผลลัพธ์ที่ได้ก็ยังเป็นสมาชิกของ $L$ เช่นเดิม
+
+ดังนั้น หากจะพิสูจน์ว่า $L$ ไม่ใช่ regular language เราต้องพิสูจน์ว่า $L$ ไม่มี pumping length ที่ทำให้ $s\in L$ ใดๆ ที่ยาวอย่างน้อย pumping length มีส่วนหนึ่งสามารถเขียนซ้ำกี่รอบก็ได้และผลลัพธ์ยังคงอยู่ใน $L$
+
+\begin{theorem}[pumping lemma]
+ถ้า $A$ เป็น regular language แล้วจะมีจำนวนเต็มบวก $p$ (เรียกว่า \emph{the pumping length}) ที่ทำให้สายอักขระ $s\in A$ ใดๆ ที่มีความยาวอย่างน้อย $p$ สามารถแบ่งเป็นสามส่วน $s=xyz$ ซึ่งมีคุณสมบัติครบทุกข้อต่อไปนี้
+\begin{enumerate}
+\item $\forall i\geq 0: xy^iz\in A$ \label{pumping:pumped} \\
+กล่าวคือ ส่วนของ $y$ จะเขียนซ้ำ (pump) กี่ครั้งก็ได้ แต่ผลลัพธ์ที่ได้ยังคงอยู่ใน $A$
+\item $|y|>0$ \label{pumping:middle} \\
+กล่าวคือ ความยาวของ $y$ จะต้องไม่เป็นศูนย์ นั่นคือ $y$ จะต้องไม่เป็น $\varepsilon$
+\item $|xy|\leq p$ \label{pumping:short} \\
+กล่าวคือ ส่วนของ $xy$ ต่อกัน ต้องมีความยาวไม่เกิน the pumping length
+\end{enumerate}
+\begin{pf}
+ให้ $A$ เป็น regular language จะได้ว่า มี DFA $M$ ที่รับรู้ $A$ \enskip เนื่องจาก pumping lemma บังคับให้เราหาค่า $p$ สำหรับ $A$ นี้ จึงกำหนด $p$ ให้เป็นจำนวนของ states ใน $M$ \enskip ค่าของ $p$ ที่ว่านี้คือ pumping length ที่เราจะใช้ในการพิสูจน์เงื่อนไขที่เหลือ กล่าวคือ หาก $s\in A$ ยาวอย่างน้อย $p$ แล้วจะมีวิธีแบ่งส่วน $s$ ให้ตรงตามเงื่อนไขทั้งสามข้อข้างต้นได้
+
+ให้ $s\in A$ โดยที่ $|s|\geq p$ \enskip ให้ $n$ เป็นความยาวของ $s$ กล่าวคือ $n\triangleq |s|$ และ $s=s_1s_2\ldots s_n$ โดยที่ $s_i$ เป็นตัวอักษรแต่ละตัว \enskip พิจารณาลำดับของ states ที่ $M$ ต้องใช้ในการประมวลผล $s$ ยกตัวอย่างเช่น
+\[
+\underbrace{q_1\xrightarrow{s_1} q_2\xrightarrow{s_2} q_5\xrightarrow{s_3} q_8 \stackrel{\cdots}{\cdots} q_{17}\xrightarrow{s_{p-1}} q_5\xrightarrow{s_p} q_9}_{\textup{$p+1$ states}}\xrightarrow{s_{p+1}} q_{13} \stackrel{\cdots}{\cdots} q_7\xrightarrow{s_n} q_6
+\]
+โปรดสังเกตว่า $q_1$ ต้องเป็น start state และ $q_6$ ต้องเป็น accept state เนื่องจาก $s\in A$ และ $M$ ต้อง accept $s$
+
+จะได้ว่า หาก $M$ ต้องอ่านตัวอักษร $p$ ตัว แล้ว $M$ จะต้องมีลำดับของ states ยาว $p+1$ ตัว ที่ $M$ จะต้องใช้ในการประมวลผลตัวอักษรทั้งหมดดังกล่าว \enskip เนื่องจาก $M$ มีเพียง $p$ states แต่ต้องใช้ $p+1$ states แสดงว่าจะต้องมี state ที่ $M$ จะต้องใช้ซ้ำ \enskip ในตัวอย่างข้างต้น state ที่ใช้ซ้ำคือ $q_5$ \enskip การทำงานของ $M$ ที่ประมวลผล $s$ สามารถเขียนจำลองเป็นแผนภาพได้ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (q1) {$q_1$};
+\node[state] (q5) at ($(q1)+(2,2)$) {$q_5$};
+\node[state,accepting] (q6) at ($(q1)+(5,1)$) {$q_6$};
+
+\draw[arrow,dashed]
+  (q1) .. controls ($(q1)+(0,2)$) and  ($(q1)+(0.5,2)$) .. node[above] {$x$}
+    ($(q1)+(0.5,1.5)$) .. controls ($(q1)+(0.5,1)$) and ($(q1)+(1,1)$) ..
+    ($(q1)+(1,0)$) .. controls ($(q1)+(1,-1)$) and  ($(q1)+(1.5,0)$) ..
+    ($(q1)+(1,1)$) .. controls ($(q1)+(1,2)$) and  ($(q1)+(1.5,2)$) ..
+    (q5);
+\draw[arrow,dashed]
+  (q5) .. controls ($(q5)+(-1,0.5)$) ..
+    ($(q5)+(-1,1)$) .. controls ($(q5)+(-1,2)$) and ($(q5)+(-0.5,2)$) ..
+    ($(q5)+(-0.5,1)$) .. controls ($(q5)+(-0.5,0.5)$) and ($(q5)+(0,0.5)$) ..
+    ($(q5)+(0,1)$) .. controls ($(q5)+(0,2)$) ..
+    ($(q5)+(0.25,2)$) node[above] {$y$} .. controls ($(q5)+(0.5,2)$) ..
+    ($(q5)+(0.5,1.5)$) .. controls ($(q5)+(0.5,1)$) and ($(q5)+(1,1)$) ..
+    ($(q5)+(1,1.5)$) .. controls ($(q5)+(1,2)$) and ($(q5)+(1.5,2)$) ..
+    ($(q5)+(1.5,1)$) .. controls ($(q5)+(1.5,0.5)$) ..
+    (q5);
+\draw[arrow,dashed]
+  (q5) .. controls ($(q1)+(3,2)$) ..
+    ($(q1)+(2.5,1)$) .. controls ($(q1)+(2.5,0)$) and ($(q1)+(3,0)$) ..
+    ($(q1)+(3,1)$) .. controls ($(q1)+(3,2)$) and ($(q1)+(3.5,2)$) ..
+    ($(q1)+(3.5,1)$) .. controls ($(q1)+(3.5,0)$) and ($(q1)+(4,0)$) .. node[below] {$z$}
+    ($(q1)+(4,1)$) .. controls ($(q1)+(4,2)$) and ($(q1)+(4.5,2)$) ..
+    (q6);
+\end{tikzpicture}
+\end{center}
+กล่าวคือ เริ่มจาก start state, $M$ จะต้องเดินทางไปยัง state ที่ใช้ซ้ำ \enskip จากนั้น เนื่องจาก $M$ ต้องใช้ state นี้ซ้ำ จะได้ว่า ต้องมีเส้นทางที่วกกลับมาที่ state เดิมนี้ \enskip ในท้ายที่สุด $M$ ต้องเดินทางจาก state ที่ใช้ซ้ำนี้ไปยัง accept state เพื่อจบการทำงาน
+
+เมื่อเราทราบ state ที่ใช้ซ้ำแล้ว เราสามารถแบ่ง $s$ ได้ดังนี้
+\begin{itemize}
+\item $x$ เป็น string ที่ $M$ ต้องอ่านตั้งแต่ต้น และพา $M$ ไปถึง state ที่ใช้ซ้ำเป็นครั้งแรก
+\item $y$ เป็น string ที่ $M$ ต้องอ่านนับจาก state ที่ $M$ ใช้ซ้ำเป็นครั้งแรก และพา $M$ กลับมายัง state ที่ซ้ำนี้เป็นครั้งที่สอง
+\item $z$ เป็น string ที่เหลือที่ $M$ ต้องอ่านหลังจาก $M$ กลับมายัง state ที่ต้องใช้ซ้ำเป็นครั้งที่สองแล้ว
+\end{itemize}
+สังเกตว่า $xyz\in A$ เนื่องจากมีลำดับของ states จาก start state ไปยัง accept state โดยวนที่ $y$ หนึ่งครั้ง \enskip นอกจากนี้ $xyyz\in A$ ด้วย โดยวนที่ $y$ สองครั้ง \enskip ในกรณีทั่วไป ไม่ว่าจะวนที่ $y$ กี่ครั้ง $xy^iz$ ก็ยังคงเป็นสมาชิกของ $A$ เช่นเดิม \enskip ยิ่งไปกว่านั้น เราสามารถเลือกที่จะไม่วนที่ $y$ เลยก็ได้ แต่ $xy^0z=xz\in A$ อยู่ดี
+
+จากแนวคิดตามตัวอย่างข้างต้น สามารถเขียนเป็นบทพิสูจน์ในกรณีทั่วไปได้ดังต่อไปนี้
+
+ให้ $s\in A$ โดยที่ $s=s_1s_2\ldots s_n$ และ $n\geq p$ \enskip ให้ $r_1,r_2,\ldots,r_{n+1}$ เป็นลำดับของ states ที่ $M$ ต้องใช้ในการประมวลผล $s$ \enskip จะได้ว่า $n+1\geq p+1$ (เนื่องจาก $n\geq p$) \enskip ดังนั้น ใน $p+1$ states แรกที่ $M$ ต้องใช้ จะต้องมี state $q$ ที่ $M$ ใช้ซ้ำ \enskip ให้ $r_j$ เป็นตำแหน่งแรกของ $q$ และ $r_\ell$ เป็นตำแหน่งที่สองของ $q$ ในลำดับดังกล่าว (สังเกตว่า $\ell\leq p+1$ เนื่องจาก $q$ ต้องปรากฏในลำดับอย่างน้อยสองครั้งภายใน $p+1$ ตัวแรก)
+
+แบ่ง $s$ ออกเป็น $xyz$ โดยกำหนด $x\triangleq s_1\ldots s_{j-1}$, $y\triangleq s_j\ldots s_{\ell-1}$, และ $z\triangleq s_\ell\ldots s_n$ \enskip ต่อไป จะพิสูจน์ว่าการแบ่ง $s$ ดังกล่าวทำให้คุณสมบัติทั้งสามข้อใน pumping lemma เป็นจริง
+\begin{enumerate}
+\item เนื่องจาก $x$ พา $M$ จาก state $r_1$ ไปยัง state $r_j=q$, $y$ พา $M$ จาก state $r_j=q$ ไปยัง state $r_\ell=q$, และ $z$ พา $M$ จาก state $r_\ell=q$ ไปยัง state $r_{n+1}$ จะได้ว่า มีเส้นทางจาก $r_1$ ที่เป็น start state ไปยัง $r_{n+1}$ ที่เป็น accept state โดยในส่วนของ $y$ นั้นเริ่มและจบลงด้วย state เดียวกันคือ $q$ ดังนั้น ไม่ว่า $M$ จะอ่าน $y$ ทั้งหมดกี่ครั้ง (หลังจากที่อ่าน $x$ และก่อนที่จะอ่าน $z$) ก็ยังมีเส้นทางจาก $r_1$ ไป $r_{n+1}$ อยู่ดี \enskip สรุปได้ว่า $M$ ต้องตอบรับ $xy^iz$ สำหรับทุก $i\geq 0$ ด้วย
+\item เนื่องจาก $y=s_j\ldots s_{\ell-1}$ มี $\ell-j$ ตัว และ $j<\ell$ ในลำดับของ states ข้างต้น จะได้ว่า $\ell-j>0$ ดังนั้น $|y|>0$
+\item เนื่องจาก $xy=s_1\ldots s_{\ell-1}$ มี $\ell-1$ ตัว และ $\ell\leq p+1$ จะได้ว่า $\ell-1\leq p$ ดังนั้น $|xy|\leq p$
+\end{enumerate}
+ณ จุดนี้ เราได้แสดงแล้วว่าการแบ่ง $s$ ดังกล่าวทำให้ได้ส่วนต่างๆ ที่มีคุณสมบัติตามที่ต้องการ เป็นการเสร็จสิ้นบทพิสูจน์ของ pumping lemma โดยสมบูรณ์
+\end{pf}
+\end{theorem}
+
+ดังนั้น หากต้องการจะพิสูจน์ว่าภาษา $B$ นั้นไม่ regular สามารถใช้ขั้นตอนต่อไปนี้ในบทพิสูจน์ได้
+\begin{itemize}
+\item By contradiction.  สมมุติว่า $B$ นั้น regular
+\item By pumping lemma, $B$ มี pumping length $p$ ที่เราสามารถใช้ได้ในบทพิสูจน์ที่เหลือ
+\item หา $s\in B$ โดยที่ $|s|\geq p$ \enskip $s$ นี้จะทำให้เกิดข้อขัดแย้งขึ้น ดังจะได้กล่าวต่อไป
+\item จากนั้น ให้แสดงว่า ไม่ว่าจะแบ่ง $s=xyz$ อย่างไรก็ตาม โดยที่ $|y|>0$ (เงื่อนไขที่~\ref{pumping:middle} ใน pumping lemma เป็นจริง) และ $|xy|\leq p$ (เงื่อนไขที่~\ref{pumping:short} ใน pumping lemma เป็นจริง) แล้วจะมี $i\geq 0$ ที่ทำให้ $xy^iz\notin B$ และเกิดความขัดแย้งขึ้น
+\end{itemize}
+กล่าวอีกนัยหนึ่ง หากเราต้องการจะพิสูจน์ว่า $B$ ไม่ regular เราต้องแสดงว่าไม่มี pumping length ที่เป็นไปได้ \enskip ดังนั้น ไม่ว่าจะสมมุติว่า pumping length จะเป็นเท่าใดก็ตาม เราสามารถหา string $s\in B$ ที่มีความยาวอย่างน้อย pumping length นั้นๆ ที่ไม่สามารถแบ่งเป็นสามส่วนแล้วนำไป pump ได้ กล่าวคือ ไม่ว่าเราจะแบ่ง $s$ อย่างไรก็ตาม เงื่อนไขที่ตามมาทั้งสามข้อจะเป็นจริงพร้อมกันทั้งหมดไม่ได้ \enskip ในขั้นตอนข้างต้น เราให้เงื่อนไขข้อที่~\ref{pumping:middle} และ~\ref{pumping:short} เป็นจริง ดังนั้น เงื่อนไขที่~\ref{pumping:pumped} จะต้องไม่เป็นจริง \enskip หากจะแสดงว่าเงื่อนไขนี้ต้องเป็นเท็จ ก็ต้องหา $i\geq 0$ ที่ทำให้ $xy^iz\notin B$ ซึ่งทำให้เกิดความขัดแย้ง
+
+\begin{example}\label{ex:0n1n-nonreg}
+$B=\set{\str{0}^n\str{1}^n\mid n\geq 0}$ ไม่ regular
+
+Prove by contradiction.  สมมุติว่า $B$ นั้น regular \enskip ให้ $p$ เป็น pumping length จาก pumping lemma \enskip พิจารณา $s\triangleq\str{0}^p\str{1}^p$ \enskip ไม่ว่าจะแบ่ง $s=xyz$ ด้วยวิธีใดๆ ก็ตาม โดยที่ $|xy|\leq p$ และ $|y|>0$ จะได้ว่า $xy$ ต้องประกอบไปด้วย \str{0} เท่านั้น เนื่องจาก $p$ ตัวแรกของ $s$ เป็น \str{0} ทั้งหมด \enskip ดังนั้น $y$ ต้องประกอบไปด้วย \str{0} เท่านั้นด้วย และมี \str{0} อย่างน้อย 1 ตัว เนื่องจาก $|y|$ ต้องมากกว่า 0 \enskip สมมุติว่า $y=\str{0}^k$ โดยที่ $k\geq 1$ \enskip หากพิจารณา $s'\triangleq xyyz$ จะได้ว่า $s'$ เริ่มต้นด้วย \str{0} ทั้งหมด $p+k$ ตัว ตามด้วย \str{1} ทั้งหมด $p$ ตัว กล่าวคือ $xyyz=\str{0}^{p+k}\str{1}^p$ \enskip แต่นั่นแปลว่า $xyyz\notin B$ ซึ่งขัดแย้งกับคุณสมบัติข้อที่~\ref{pumping:pumped} ใน pumping lemma $\lightning$
+
+ดังนั้น $B$ ไม่ regular
+\end{example}
+
+\begin{example}
+$C=\set{w\mid\textup{$w$ มีจำนวน \str{0} และ \str{1} เท่ากัน}}$ ไม่ regular
+
+หากจะพิสูจน์โดยใช้ pumping lemma สามารถใช้บทพิสูจน์เดียวกันกับ Example~\ref{ex:0n1n-nonreg} ได้ ซึ่งจะทำให้ $xyyz$ มีจำนวน \str{0} และ \str{1} ไม่เท่ากัน
+
+อย่างไรก็ดี จะแสดงการพิสูจน์อีกวิธีหนึ่ง โดยใช้สมบัติที่ว่า intersection ของ regular languages ต้องเป็น regular language กล่าวคือ regular languages มีสมบัติปิดภายใต้ intersection (Remark~\ref{rem:reg-intersect-closed})
+
+Prove by contradiction.  สมมุติว่า $C$ นั้น regular \enskip เนื่องจาก $A\triangleq\str{0}^*\str{1}^*$ นั้น regular (เพราะเขียนเป็น regular expression ได้) จะได้ว่า $A\cap C$ ต้องเป็น regular language ด้วย \enskip แต่ \[A\cap C=\set{\str{0}^n\str{1}^n\mid n\geq 0}\] ซึ่งก็คือเซต $B$ จาก Example~\ref{ex:0n1n-nonreg} ที่เราได้พิสูจน์ไปแล้วว่าไม่ใช่ regular language $\lightning$
+\end{example}
+
+\begin{example}
+$E=\set{\str{0}^i\str{1}^j\mid i>j}$ ไม่ regular
+
+Prove by contradiction.  สมมุติว่า $E$ นั้น regular \enskip ให้ $p$ เป็น pumping length \enskip พิจารณา $s\triangleq\str{0}^{p+1}\str{1}^p$ \enskip ไม่ว่าจะแบ่ง $s=xyz$ ด้วยวิธีใดๆ ก็ตาม โดยที่ $|xy|\leq p$ และ $|y|>0$ จะได้ว่า $xy$ ต้องประกอบไปด้วย \str{0} เท่านั้น เนื่องจาก $p$ ตัวแรกของ $s$ เป็น \str{0} ทั้งหมด \enskip ดังนั้น สมมุติว่า $y=\str{0}^k$ โดยที่ $k\geq 1$ \enskip หากพิจารณา $s'\triangleq xyyz$ จะได้ว่า $s'$ เริ่มต้นด้วย \str{0} ทั้งหมด $p+1+k$ ตัว ตามด้วย \str{1} ทั้งหมด $p$ ตัว \enskip อย่างไรก็ดี ขณะนี้ยังไม่เกิดข้อขัดแย้งขึ้น เพราะ $xyyz\in E$ \enskip นอกจากนี้ $\forall i>0: xy^iz\in E$ ด้วยเหตุผลเดียวกัน
+
+แต่ถ้า $i=0$ จะได้ว่า $xy^0z=xz$ เริ่มต้นด้วย \str{0} $p+1-k$ ตัว ตามด้วย \str{1} $p$ ตัว \enskip แต่เนื่องจาก $k\geq 1$ จะได้ว่า $p+1-k\not>p$ \enskip ดังนั้น $xz\notin E$ $\lightning$
+
+จะเห็นว่า ในตัวอย่างนี้ เราไม่ได้ใช้ pumping lemma ในการเพิ่มจำนวนตัวอักษรเข้าไปให้เกิดข้อขัดแย้ง แต่ใช้ในการลดจำนวนตัวอักษรแทน \enskip การใช้ pumping lemma ในลักษณะนี้เรียกว่า \emph{pumping down}
+\end{example}
+
+\begin{example}\label{ex:twice-string-nonreg}
+$F=\set{ww\mid w\in\set{\str{0},\str{1}}^*}$ ไม่ regular
+
+ก่อนจะเริ่มบทพิสูจน์ ให้ทำความเข้าใจความหมายของเซตนี้ก่อน \enskip String $s\in F$ ก็ต่อเมื่อ $s$ เป็น binary string ที่สามารถแบ่งได้เป็นสองส่วน โดยที่ส่วนหน้าและส่วนหลังนั้นเหมือนกันทุกประการ เช่น $\varepsilon$ และ \str{011011}
+
+Prove by contradiction.  สมมุติว่า $F$ นั้น regular \enskip ให้ $p$ เป็น pumping length \enskip พิจารณา $s\triangleq\str{0}^p\str{0}^p$ (สังเกตว่า $s\in F$) \enskip ณ จุดนี้ เราต้องแสดงว่า ไม่ว่าจะแบ่ง $s$ ด้วยวิธีใดๆ ก็ตาม จะทำให้ pump ส่วนตรงกลางที่แบ่งออกมาแล้วไม่ได้ทั้งหมด \enskip อย่างไรก็ดี $s$ ที่เลือกมานี้สามารถแบ่งเป็นสามส่วน $s=xyz$ ได้ โดยที่ $x\triangleq\str{0}^{p-2}$, $y\triangleq\str{00}$, และ $z\triangleq\str{0}^p$ (สังเกตว่า $|y|=2>0$ และ $|xy|=p\leq p$ ตรงตามเงื่อนไขข้อที่~\ref{pumping:middle} และ~\ref{pumping:short} ของ pumping lemma) \enskip พิจารณา $xy^iz$ \enskip ถ้า $i=0$ จะได้ว่า $xz=\str{0}^{p-2}\str{0}^p=\str{0}^{p-1}\str{0}^{p-1}\in F$ \enskip ถ้า $i=2$ จะได้ว่า $xyyz=\str{0}^{p-2}\str{0}^4\str{0}^p=\str{0}^{p+1}\str{0}^{p+1}\in F$ \enskip ในกรณีทั่วไป $xy^iz=\str{0}^{p-2}\str{0}^{2i}\str{0}^p=\str{0}^{p+i-1}\str{0}^{p+i-1}\in F$ \enskip ดังนั้น $s$ ที่เลือกมานี้ไม่ก่อให้เกิดความขัดแย้งขึ้น
+
+ด้วยเหตุนี้ เราจึงต้องเลือก $s$ ใหม่ที่จะสร้างความขัดแย้ง \enskip พิจารณา $s'\triangleq\str{0}^p\str{1}\str{0}^p\str{1}$ \enskip ไม่ว่าจะแบ่ง $s'=xyz$ ด้วยวิธีใดๆ ก็ตาม โดยที่ $|xy|\leq p$ และ $|y|>0$ จะได้ว่า $xy$ ต้องประกอบไปด้วย \str{0} เท่านั้น เนื่องจาก $p$ ตัวแรกของ $s'$ เป็น \str{0} ทั้งหมด \enskip ดังนั้น สมมุติว่า $y=\str{0}^k$ โดยที่ $k\geq 1$ \enskip หากพิจารณา $xyyz$ จะได้ว่า $xyyz=\str{0}^{p+k}\str{1}\str{0}^p\str{1}\notin F$ $\lightning$
+\end{example}

@@ -1,0 +1,169 @@
+\section{State machines}
+
+\emph{เครื่องสถานะจำกัด} (finite state machines) เป็นแบบจำลองการทำงานของกระบวนการที่เป็นขั้นเป็นตอนต่างๆ อาทิ โปรแกรมคอมพิวเตอร์ เครื่องจักรกล และคอมพิวเตอร์
+
+\begin{example}
+สวิตช์เปิดปิดอุปกรณ์เครื่องใช้ไฟฟ้าต่างๆ ในปัจจุบันนั้น ถ้ากดในขณะอุปกรณ์ปิดอยู่ จะทำการเปิดอุปกรณ์ แต่ถ้ากดในขณะอุปกรณ์ปิดอยู่ จะทำการปิดอุปกรณ์นั้นๆ ทั้งนี้ เราไม่สามารถบอกได้โดยใช้การสัมผัสปุ่มว่า ขณะนี้เครื่องใช้เปิดหรือปิดอยู่ สวิตช์ในลักษณะนี้จะต้องจดจำว่า สถานะปัจจุบันของอุปกรณ์คืออะไร เพื่อที่การกดปุ่มครั้งต่อไปจะได้เปิดหรือปิดอุปกรณ์ได้ถูกต้อง
+
+การทำงานของสวิตช์ดังกล่าวเขียนเป็นแผนภาพสถานะ (state diagram) ได้ดังนี้
+\begin{center}
+\begin{tikzpicture}[state/.style={circle,draw,minimum size=1cm}]
+\node[initial,state] (c) {ปิด};
+\node[state] (o) [right=of c] {เปิด};
+
+\path[arrow]
+ (c) edge [bend left] node [above] {press} (o)
+ (o) edge [bend left] node [below] {press} (c);
+\end{tikzpicture}
+\end{center}
+จะได้ว่า กระบวนการของสวิตช์นี้ เริ่มที่สถานะปิด และหากกดปุ่ม อุปกรณ์ก็จะเปลี่ยนสถานะไปอีกสถานะหนึ่ง
+\end{example}
+
+\begin{example}\label{ex:door-diagram}
+ประตูเลื่อนอัตโนมัติ มีตัวรับรู้ (sensors) อยู่ด้านนอกและด้านในของประตู โดยที่ประตูจะเปิดหากมีคนอยู่ด้านนอก ด้านใน หรือทั้งคู่ (both) ของประตู แต่ประตูจะปิดหากไม่มีคนอยู่ทั้งสองด้าน (none)
+
+State diagram ของการทำงานของระบบดังกล่าวเป็นดังนี้
+\begin{center}
+\begin{tikzpicture}[state/.style={circle,draw,minimum size=1cm,node distance=3cm}]
+\node[initial,state] (c) {ปิด};
+\node[state] (o) [right=of c] {เปิด};
+
+\path[arrow]
+ (c) edge [loop above] node [above] {none} (c)
+     edge [bend left] node [above] {นอก, ใน, both} (o)
+ (o) edge [loop above] node [above right] {นอก, ใน, both} (o)
+     edge [bend left] node [below] {none} (c);
+\end{tikzpicture}
+\end{center}
+\end{example}
+
+\begin{example}
+โปรแกรมที่ตรวจสอบว่าสายอักขระฐานสอง (binary strings) ที่ให้มานั้นมี 1 อยู่เฉพาะตำแหน่งแรกและตำแหน่งสุดท้ายหรือไม่ สามารถเขียนเป็น state diagram ได้ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (q0) {$q_0$};
+\node[state] (q1) [right=of q0] {$q_1$};
+\node[state,accepting] (q2) [right=of q1] {$q_2$};
+\node[state] (f) [below=of q1] {$f$};
+
+\path[arrow]
+ (q0) edge node [above] {1} (q1)
+     edge node [below left] {0} (f)
+ (q1) edge [loop above] node [above] {0} (q1)
+     edge node [above] {1} (q2)
+ (q2) edge node [below right] {0,1} (f)
+ (f) edge [loop below] node [below] {0,1} (f);
+\end{tikzpicture}
+\end{center}
+เริ่มแรก state machine นี้อยู่ที่สถานะ $q_0$ แล้วทำการอ่าน binary string ที่ให้มาทีละตัวอักษร หากตัวแรกเป็น 1 ให้ย้ายสถานะไปที่ $q_1$ แต่ถ้าเป็น 0 ให้ย้ายสถานะไปที่ $f$ ซึ่งเป็นสถานะที่บ่งชี้ว่า binary string ที่ให้มานั้นไม่มีทางเป็นไปตามเงื่อนไขได้ กล่าวคือ ถ้า state machine อยู่ในสถานะ $f$ แล้ว binary string จะไม่มีทางที่ 1 จะอยู่เฉพาะตำแหน่งแรกและตำแหน่งสุดท้าย
+
+หากตัวแรกของ string เป็น 1 เราต้องตรวจสอบว่าตัวสุดท้ายเท่านั้นที่เป็น 1 กล่าวคือ หากตัวต่อไปยังเป็น 0 ให้คงอยู่ในสถานะ $q_1$ ไปก่อน แต่ถ้าตัวต่อไปเป็น 1 ให้ย้ายสถานะไปที่ $q_2$
+
+เมื่ออยู่ที่ $q_2$ state machine นั้นได้เห็นเลข 1 มาแล้วสองตัว ซึ่งอยู่หน้าสุดและท้ายสุดเท่านั้นหากพิจารณาจากตัวอักษรที่ได้ประมวลผลไปแล้ว \enskip หากไม่มีตัวอักษรเหลือใน binary string จะได้ว่า เลข 1 ตัวที่สองนี้เป็นตัวสุดท้ายด้วย ซึ่งจะทำให้ state machine จบการทำงานที่สถานะ $q_2$ อย่างไรก็ดี หากยังมีตัวอักษรเหลืออยู่อีก แสดงว่าเลข 1 ตัวที่สองนี้ไม่ได้อยู่ท้าย binary string ซึ่งจะทำให้ state machine ย้ายสถานะไปที่ $f$
+
+ดังนั้น เมื่อ state machine ประมวลผลสายอักขระครบทุกตัวอักษรแล้ว ให้ดูว่าสถานะสุดท้ายนั้นอยู่ที่ใด หากจบที่ $q_2$ แสดงว่า binary string ที่ให้มานั้นตรงตามเงื่อนไข แต่ถ้าจบที่ states อื่นๆ แสดงว่าไม่ตรง \enskip $q_2$ นี้เรียกว่า\emph{สถานะตอบรับ} (accept state)
+
+ตัวอย่างการประมวลผลสายอักขระต่างๆ ว่า state machine ข้างต้นจะผ่าน states ใดบ้าง มีดังนี้
+\begin{itemize}
+\item 10001: $q_0 \xrightarrow{1} q_1 \xrightarrow{0} q_1 \xrightarrow{0} q_1 \xrightarrow{0} q_1 \xrightarrow{1} q_2$ (accept)
+\item 101: $q_0 \xrightarrow{1} q_1 \xrightarrow{0} q_1 \xrightarrow{1} q_2$ (accept)
+\item 11: $q_0 \xrightarrow{1} q_1 \xrightarrow{1} q_2$ (accept)
+\item 10010: $q_0 \xrightarrow{1} q_1 \xrightarrow{0} q_1 \xrightarrow{0} q_1 \xrightarrow{1} q_2 \xrightarrow{0} f$ (reject)
+\item 0010: $q_0 \xrightarrow{0} f \xrightarrow{0} f \xrightarrow{1} f \xrightarrow{0} f$ (reject)
+\item 1000: $q_0 \xrightarrow{1} q_1 \xrightarrow{0} q_1 \xrightarrow{0} q_1 \xrightarrow{0} q_1$ (reject)
+\end{itemize}
+\end{example}
+
+\begin{definition}
+\emph{เครื่องสถานะเชิงกำหนด} (deterministic state machine) ประกอบด้วย
+\begin{itemize}
+\item $S$ เป็นเซตของสถานะ
+\item $s_0\in S$ เป็นสถานะเริ่มต้น
+\item $\Sigma$ เป็น\emph{ชุดตัวอักษร} (alphabet) ซึ่งเป็นเซตของการกระทำต่างๆ หรือ\emph{สัญลักษณ์นำเข้า} (input symbols) แต่ละตัว
+\item $\delta$ เป็นฟังก์ชันจาก $S\times\Sigma\to S$ ซึ่งแสดง\emph{การเปลี่ยนสถานะ} (transitions) จาก state หนึ่งไปยังอีก state หนึ่ง กล่าวคือ หากทราบว่าสถานะปัจจุบันคืออะไร และข้อมูลที่จะต้องประมวลผลตัวต่อไปคืออะไร จะบอกได้ว่าสถานะต่อไปคืออะไร เขียนเป็นเชิงสัญลักษณ์ได้ว่า $(\textup{current state},\textup{next input symbol})\mapsto\textup{next state}$
+\item $F\subseteq S$ เป็นเซตของสถานะตอบรับ (ในกรณีที่ state machine นั้นต้องตอบรับหรือปฏิเสธเมื่อจบการทำงาน)
+\end{itemize}
+\end{definition}
+
+หากมี state diagram สามารถเขียนเป็นเชิงคณิตศาสตร์ตามนิยามข้างต้นได้ และหากมี state machine ที่เขียนเป็นเชิงคณิตศาสตร์ตามนิยามข้างต้น ก็สามารถแปลงเป็น state diagram ได้เช่นกัน
+
+\begin{example}
+state machine สำหรับสวิตช์ เขียนเป็นเชิงคณิตศาสตร์ได้ดังนี้
+\begin{itemize}
+\item $S=\set{\textup{ปิด},\textup{เปิด}}$
+\item $s_0=\textup{ปิด}$
+\item $\Sigma=\set{\textup{press}}$
+\item $\delta$:
+\begin{tabular}[t]{c|c}
+ & press \\ \hline
+ปิด & เปิด \\
+เปิด & ปิด
+\end{tabular}
+\item $F$ นั้นไม่สำคัญในกรณีนี้ เนื่องจากสวิตช์ทำงานไปเรื่อยๆ ไม่จำเป็นต้องสิ้นสุด
+\end{itemize}
+\end{example}
+
+\begin{example}
+state machine สำหรับประตูเลื่อนอัตโนมัติ เขียนเป็นเชิงคณิตศาสตร์ได้ดังนี้
+\begin{itemize}
+\item $S=\set{\textup{ปิด},\textup{เปิด}}$
+\item $s_0=\textup{ปิด}$
+\item $\Sigma=\set{\textup{นอก},\textup{ใน},\textup{both},\textup{none}}$
+\item $\delta$:
+\begin{tabular}[t]{c|cccc}
+ & นอก & ใน & both & none \\ \hline
+ปิด & เปิด & เปิด & เปิด & ปิด \\
+เปิด & เปิด & เปิด & เปิด & ปิด
+\end{tabular}
+\item $F$ นั้นไม่สำคัญในกรณีนี้เช่นกัน
+\end{itemize}
+\end{example}
+
+\begin{example}
+state machine สำหรับโปรแกรมที่ตรวจสอบว่า binary string มี 1 เฉพาะหน้าสุดและท้ายสุดเท่านั้น เขียนเป็นเชิงคณิตศาสตร์ได้ดังนี้
+\begin{itemize}
+\item $S=\set{q_0,q_1,q_2,f}$
+\item $s_0=q_0$
+\item $\Sigma=\set{0,1}$
+\item $\delta$:
+$
+\begin{array}[t]{c|cc}
+ & 0 & 1 \\ \hline
+q_0 & f & q_1 \\
+q_1 & q_1 & q_2 \\
+q_2 & f & f \\
+f & f & f
+\end{array}
+$
+\item $F=\set{q_2}$
+\end{itemize}
+\end{example}
+
+\subsection{Nondeterministic state machines}
+
+ที่ผ่านมานั้น การเปลี่ยนสถานะแต่ละครั้งมีแบบแผนแน่ชัด กล่าวคือ หากทราบว่าปัจจุบันอยู่สถานะใด และสัญลักษณ์นำเข้าตัวต่อไปเป็นอะไร แล้วเราจะบอกได้ทันทีว่า สถานะต่อไปต้องเป็นอะไร แต่ในบางปัญหา เราอาจจะไม่สามารถบอกได้อย่างแน่ชัดว่า สถานะต่อไปจะต้องเป็นอะไร
+
+\begin{example}
+พิจารณาหุ่นยนต์ที่เดินไปมาบนระนาบ $XY$ ได้ในแนวทแยงเท่านั้น โดยเริ่มที่พิกัด $(0,0)$ จะได้ว่า มี 4 พิกัดที่หุ่นยนต์ตัวนี้ไปถึงได้เมื่อเดิน 1 ครั้ง ได้แก่
+\begin{itemize}
+\item $(1,1)$
+\item $(1,-1)$
+\item $(-1,1)$
+\item $(-1,-1)$
+\end{itemize}
+ดังนั้น หากเราพยายามจำลองปัญหานี้เป็น state machine โดยเขียนในเชิงคณิตศาสตร์ จะได้ว่า
+\begin{itemize}
+\item $S=\set{(x,y)\mid x,y\in\mathbb{Z}}=\mathbb{Z}\times\mathbb{Z}$
+\item $s_0=(0,0)$
+\item $\Sigma=\set{\textup{move}}$
+\end{itemize}
+ส่วน $\delta$ นั้น เราไม่สามารถบ่งชี้ได้อีกต่อไปว่า หลังจาก state ปัจจุบันจะเป็น state ใด ดังนั้น จึงต้องบอกว่า สถานะที่เป็นไปได้นั้นมีอะไรบ้างในรูปของเซต เช่น สถานะที่เป็นไปได้หลังจาก $(0,0)$ เป็นสมาชิกของเซต \[\set{(1,1),(1,-1),(-1,1),(-1,-1)}\] ดังนั้น ในกรณีทั่วไป หากสถานะปัจจุบันคือพิกัด $(x,y)$ จะได้ว่า สถานะต่อไปที่เป็นไปได้จะเป็นสมาชิกของเซต \[\set{(x+1,y+1),(x+1,y-1),(x-1,y+1),(x-1,y-1)}\] กล่าวคือ transition function ของ state machine ในลักษณะนี้จะคืนค่าเป็นเซต แทนที่จะเป็นสถานะใดสถานะหนึ่ง
+\end{example}
+
+\begin{definition}
+\emph{เครื่องสถานะเชิงไม่กำหนด} (nondeterministic state machine) ประกอบด้วย
+\begin{itemize}
+\item $S,s_0,\Sigma,F$ เช่นเดียวกับ deterministic state machine
+\item $\delta$ เป็น transition function จาก $S\times\Sigma\to\pow(S)$ กล่าวคือ หากทราบว่าสถานะปัจจุบันคืออะไร และข้อมูลที่จะต้องประมวลผลตัวต่อไปคืออะไร จะบอกได้ว่าสถานะต่อไปที่เป็นไปได้คืออะไรได้บ้าง เขียนเป็นเชิงสัญลักษณ์ได้ว่า \[(\textup{current state},\textup{next input symbol})\mapsto\textup{set of possible next states}\]
+\end{itemize}
+\end{definition}

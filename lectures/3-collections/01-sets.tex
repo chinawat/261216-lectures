@@ -1,0 +1,251 @@
+\section{Sets}
+
+\emph{เซต} (set) เป็นกลุ่มของสิ่งต่างๆ ที่
+\begin{itemize}
+\item ไม่นับซ้ำ (repetition free)
+\item ไม่มีลำดับ (unordered)
+\end{itemize}
+กล่าวคือ สิ่งใดสิ่งหนึ่งจะอยู่ในเซตได้เพียงครั้งเดียว หรือไม่อยู่ในเซตนั้นๆ \enskip นอกจากนี้ ลำดับของสิ่งต่างๆ ในเซตไม่สำคัญ
+%
+\begin{example}
+$\set{x\in\mathbb{Z}: 2\mid x}$ คือเซตที่มีสมาชิกเป็นเลขคู่
+\end{example}
+
+\begin{definition}
+หาก $x$ อยู่ในเซต $A$ จะเรียก $x$ ว่า\emph{สมาชิก} (element) ของ $A$ (denoted $x\in A$)
+\end{definition}
+%
+\begin{example}
+$0\in\mathbb{N}$, $-1\notin\mathbb{N}$, $\frac{1}{2}\notin\mathbb{Z}$, $\sqrt{2}\notin\mathbb{Q}$
+\end{example}
+
+\begin{definition}
+$A\cup B\triangleq\set{x\mid x\in A\vee x\in B}$
+\end{definition}
+เขียนเป็น Venn diagram ได้ดังรูปที่~\ref{fig:union}
+%
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.8]
+    \draw[outline] \vennRect;
+    \draw[filled] \vennCircA \vennCircB;
+    \node[anchor=south] at (current bounding box.north) {$A \cup B$};
+\end{tikzpicture}
+\caption{Venn diagram for set union}
+\label{fig:union}
+\end{figure}
+
+\begin{definition}
+$A\cap B\triangleq\set{x\mid x\in A\wedge x\in B}$
+\end{definition}
+เขียนเป็น Venn diagram ได้ดังรูปที่~\ref{fig:intersection}
+%
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.8]
+    \draw[outline] \vennRect;
+    \begin{scope}
+        \clip \vennCircA;
+        \fill[filled] \vennCircB;
+    \end{scope}
+    \draw[outline] \vennCircA \vennCircB;
+    \node[anchor=south] at (current bounding box.north) {$A \cap B$};
+\end{tikzpicture}
+\caption{Venn diagram for set intersection}
+\label{fig:intersection}
+\end{figure}
+
+\begin{definition}
+$A-B\triangleq\set{x\mid x\in A\wedge x\notin B}$
+\end{definition}
+เขียนเป็น Venn diagram ได้ดังรูปที่~\ref{fig:difference}
+%
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.8]
+    \draw[outline] \vennRect;
+    \begin{scope}
+        \clip \vennCircA;
+        \draw[filled, even odd rule] \vennCircA \vennCircB;
+    \end{scope}
+    \draw[outline] \vennCircA \vennCircB;
+    \node[anchor=south] at (current bounding box.north) {$A-B$};
+\end{tikzpicture}
+\caption{Venn diagram for set difference}
+\label{fig:difference}
+\end{figure}
+
+\begin{definition}
+ให้ $D$ เป็นโดเมนที่เราสนใจ \enskip $\overline{A}\triangleq D-A$
+\end{definition}
+เขียนเป็น Venn diagram ได้ดังรูปที่~\ref{fig:complement}
+%
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.8]
+    \draw[outline] \vennRect;
+    \begin{scope}
+        \clip \vennRect;
+        \draw[filled, even odd rule] \vennRect \vennCircA;
+    \end{scope}
+    \node[anchor=south] at (current bounding box.north) {$\overline{A}$};
+\end{tikzpicture}
+\caption{Venn diagram for set complement}
+\label{fig:complement}
+\end{figure}
+
+ถัดไป จะกล่าวถึงความสัมพันธ์ระหว่างเซต
+
+\begin{definition}
+$A$ เป็น\emph{เซตย่อย} (subset) ของ $B$ [denoted $A\subseteq B$] หาก $\forall x: x\in A\implies x\in B$
+\end{definition}
+หากเขียนความสัมพันธ์ของเซต $A$ และ $B$ ในนิยามดังกล่าวเป็น\emph{แผนภาพเวนน์} (Venn diagram) จะได้ดังรูปที่~\ref{fig:subset}
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.8]
+\draw[outline] \vennRect;
+\draw[outline] {{(0.5,0) circle (0.75cm)} node {$A$}};
+\draw[outline] {{(0:1cm) circle (1.75cm)}};
+\node at (2,0) {$B$};
+\node[anchor=south] at (current bounding box.north) {$A \subseteq B$};
+\end{tikzpicture}
+\caption{Venn diagram for subset}
+\label{fig:subset}
+\end{figure}
+%
+\begin{example}
+$\mathbb{N}\subseteq\mathbb{Q}$
+\end{example}
+\begin{example}
+ให้ $A=\set{1,2,\set{3,4}}$ จะได้ว่า
+\begin{itemize}
+\item $\set{1,2}\subseteq A$
+\item $\set{3,4}\in A$
+\item $\set{\set{3,4}}\subseteq A$
+\item $\emptyset\subseteq A$ \enskip ทั้งนี้ เนื่องจาก $\forall x: x\in\emptyset\implies x\in A$ เนื่องจาก $x\in\emptyset$ นั้นเป็นจริงโดยปริยาย
+\end{itemize}
+\end{example}
+
+\begin{theorem}
+ให้ $A=\set{x\in\mathbb{Z}: 6\mid x}$ และ $B=\set{x\in\mathbb{Z}: 2\mid x}$ จะได้ว่า $A\subseteq B$
+\begin{pf}
+ต้องพิสูจน์ว่า $\forall x: x\in A\implies x\in B$ \enskip สมมุติว่า $x\in A$ กล่าวคือ $6\mid x$ แสดงว่ามี $x\in\mathbb{Z}$ ที่ทำให้ $x=6y$ นั่นคือ $x=2(3y)$ แต่นั่นแปลว่า $2\mid x$ จึงสรุปได้ว่า $x\in B$
+
+ดังนั้น $A\subseteq B$ ตามที่ต้องการ
+\end{pf}
+\end{theorem}
+
+\begin{theorem}
+ให้ $A=\set{x\in\mathbb{Z}\mid x=y+z\ \textup{โดยที่ $y,z$ เป็นเลขคู่}}$ และ $B=\set{x\in\mathbb{Z}\mid x\ \textup{เป็นเลขคู่}}$ จะได้ว่า $A\subseteq B$
+\begin{pf}
+ให้ $x\in A$ นั่นคือ $x=y+z$ (ตามนิยามของ $A$) โดยที่ $y,z$ เป็นเลขคู่ \enskip จาก Theorem~2 ใน Lecture~3 จะได้ว่า $x$ เป็นเลขคู่ด้วย นั่นคือ $x\in B$ (ตามนิยามของ $B$) \enskip ดังนั้น เนื่องจากเราได้พิสูจน์ว่า $x\in B$ จากสมมุติฐานว่า $x\in A$ จะได้ว่า $A\subseteq B$ ตามที่ต้องการ
+\end{pf}
+\end{theorem}
+
+\begin{theorem}
+ให้ $a,b\in\mathbb{Z}$ \enskip ให้ $A=\set{x\in\mathbb{Z}:a\mid x}$ และ $B=\set{x\in\mathbb{Z}:b\mid x}$ จะได้ว่า \[A\subseteq B\iff b\mid a\]
+\begin{pf}
+($\Rightarrow$) เนื่องจาก $A\subseteq B$ จะได้ว่า $\forall x\in A: x\in B$ \enskip นอกจากนี้ $a\in A$ เพราะ $a\mid a$ \enskip ดังนั้น $a\in B$ เพราะ $A\subseteq B$ \enskip นั่นคือ $b\mid a$ ตามนิยามของเซต $B$
+
+ในที่นี้ $b\mid a$ เป็น\emph{เงื่อนไขที่จำเป็น} (necessary condition) ของ $A\subseteq B$ กล่าวคือ หาก $A\subseteq B$ แล้ว $b\mid a$ อย่างแน่นอน
+
+($\Leftarrow$) เนื่องจาก $b\mid a$ จะได้ว่า $a=bn$ โดยที่ $n\in\mathbb{Z}$ \enskip ให้ $x\in A$ กล่าวคือ $a\mid x$ จะได้ว่า $x=ak$ โดยที่ $k\in\mathbb{Z}$ \enskip ดังนั้น $x=bnk$ นั่นคือ $b\mid x$ ซึ่งแปลว่า $x\in B$ ตามนิยามของ $B$ \enskip เพราะฉะนั้น $A\subseteq B$
+
+ในที่นี้ $b\mid a$ เป็น\emph{เงื่อนไขที่เพียงพอ} (sufficient condition) ของ $A\subseteq B$ กล่าวคือ แค่เพียง $b\mid a$ ก็พอที่ทำให้ $A\subseteq B$
+\end{pf}
+\end{theorem}
+
+\begin{definition}[set equality]
+$A=B$ หาก $\forall x: x\in A\iff x\in B$
+\end{definition}
+%
+\begin{theorem}
+$A=B$ iff $A\subseteq B$ และ $B\subseteq A$
+\begin{pf}
+($\Rightarrow$) ให้ $A=B$ กล่าวคือ $\forall x: x\in A\implies x\in B$ ต้องพิสูจน์ว่า $A\subseteq B$ และ $B\subseteq A$
+
+พิจารณา $x$ ใดๆ \enskip เนื่องจาก $x\in A\iff x\in B$ (จาก $A=B$) จะได้ว่า
+\begin{itemize}
+\item $x\in A\implies x\in B$ นั่นคือ $A\subseteq B$
+\item $x\in B\implies x\in A$ นั่นคือ $B\subseteq A$
+\end{itemize}
+ดังนั้น $A\subseteq B$ และ $B\subseteq A$ ตามที่ต้องการ
+
+($\Leftarrow$) สมมุติว่า $A\subseteq B$ และ $B\subseteq A$ ต้องพิสูจน์ว่า $A=B$
+
+พิจารณา $x$ ใดๆ ต้องพิสูจน์ว่า $x\in A\iff x\in B$\enskip เนื่องจาก
+\begin{itemize}
+\item $x\in A\implies x\in B$ (จาก $A\subseteq B$)
+\item $x\in B\implies x\in A$ (จาก $B\subseteq A$)
+\end{itemize}
+จะได้ว่า $x\in A\iff x\in B$ กล่าวคือ $A=B$ นั่นเอง ตามที่ต้องการ
+\end{pf}
+\end{theorem}
+
+\subsection{Connections between logic and sets}
+
+ตัวดำเนินการเกี่ยวกับเซต และความสัมพันธ์ระหว่างเซต สามารถเชื่อมโยงกับตัวดำเนินการทางตรรกะได้ดังนี้
+\begin{itemize}[]
+\item ตัวดำเนินการ and ($\wedge$) นั้นเทียบเคียงได้กับตัวดำเนินการ intersection ($\cap$) เนื่องจากประพจน์ทั้งสองต้องเป็นจริง ประพจน์ผลลัพธ์จึงจะเป็นจริง และสมาชิกต้องอยู่ในทั้งสองเซต สมาชิกดังกล่าวจึงจะอยู่ใน intersection
+\item ตัวดำเนินการ or ($\vee$) นั้นเทียบเคียงได้กับตัวดำเนินการ union ($\cup$) เนื่องจากประพจน์เพียงตัวใดตัวหนึ่งต้องเป็นจริง ประพจน์ผลลัพธ์จึงจะเป็นจริง และสมาชิกต้องอยู่ในเซตใดเซตหนึ่ง สมาชิกดังกล่าวจึงจะอยู่ใน union
+\item ตัวดำเนินการ not ($\neg$) นั้นเทียบเคียงได้กับตัวดำเนินการ complement ($\overline{\cdot}$) เนื่องจากประพจน์ตั้งต้นต้องเป็นจริง ประพจน์ผลลัพธ์จึงจะเป็นเท็จ และสมาชิกต้องอยู่ในเซตตั้งต้น สมาชิกดังกล่าวจึงจะไม่อยู่ใน complement
+\end{itemize}
+จะเห็นว่า ตัวดำเนินการทั้งสามคู่ที่กล่าวมาข้างต้นนั้น รับข้อมูลนำเข้าเป็นประพจน์ หรือเซต และให้ผลลัพธ์เป็นประพจน์ หรือเซต เช่นเดียวกับข้อมูลนำเข้า
+\begin{itemize}[]
+\item ตัวดำเนินการ implication ($\implies$) นั้นเทียบเคียงได้กับความสัมพันธ์ subset ($\subseteq$) เนื่องจากประพจน์ผลลัพธ์จะเป็นจริงหากประพจน์ซ้ายเป็นจริงและประพจน์ขวาเป็นจริง หรือหากประพจน์ขวาเป็นเท็จ เช่นเดียวกับการที่คุณสมบัติ subset จะเป็นจริงหากสมาชิกอยู่ในเซตหน้าและเซตหลัง หรือสมาชิกไม่อยู่ในเซตหน้า
+\item ตัวดำเนินการ iff ($\iff$) นั้นเทียบเคียงได้กับความสัมพันธ์ equality ($=$) เนื่องจากประพจน์สองตัวจะสมมูลกัน หากมีค่าความจริงเหมือนกัน เช่นเดียวกับเซตสองเซตที่เท่ากัน หากมีสมาชิกเหมือนกัน
+\end{itemize}
+จะเห็นว่า ความสัมพันธ์ทั้งสองคู่หลังนี้ รับข้อมูลนำเข้าเป็นประพจน์ หรือเซต แต่ให้ผลลัพธ์เป็นประพจน์เสมอ (นั่นคือ ผลลัพธ์เป็นจริงหรือเท็จ)
+
+ความเชื่อมโยงดังที่ได้กล่าวมา สามารถสรุปได้ดังตารางต่อไปนี้
+\begin{center}
+\begin{tabular}{cc||cc}
+\multicolumn{2}{c||}{\bf logic} & \multicolumn{2}{c}{\bf sets} \\ \hline
+ชนิดตัวดำเนินการ & logical operator & set operator & ชนิดตัวดำเนินการ \\ \hline\hline
+\ldelim\{{2}{4cm}[$\mathrm{Prop}\times\mathrm{Prop}\to\mathrm{Prop}$ ] & $\wedge$ & $\cap$ & \rdelim\}{2}{3.5cm}[ $\mathrm{Set}\times\mathrm{Set}\to\mathrm{Set}$] \\
+& $\vee$ & $\cup$ & \\
+$\mathrm{Prop}\to\mathrm{Prop}$ & $\neg$ & $\overline{\cdot}$ & $\mathrm{Set}\to\mathrm{Set}$ \\ \hline
+\ldelim\{{2}{4cm}[$\mathrm{Prop}\times\mathrm{Prop}\to\mathrm{Prop}$ ] & $\implies$ & $\subseteq$ & \rdelim\}{2}{3.5cm}[ $\mathrm{Set}\times\mathrm{Set}\to\mathrm{Prop}$] \\
+& $\iff$ & $=$ &
+\end{tabular}
+\end{center}
+
+\subsection{Power sets}
+
+\begin{definition}
+ให้ $A$ เป็นเซต \enskip \emph{เซตกำลัง} (power set) ของ $A$ (denoted $\pow(A)$) คือเซต $\set{X\mid X\subseteq A}$
+\end{definition}
+บางครั้ง เราอาจจะเห็น power set ของ $A$ ที่เขียนด้วย $\mathcal{P}(A)$ หรือ $2^A$
+%
+\begin{example}
+$\pow(\set{1,2})=\set{\emptyset,\set{1},\set{2},\set{1,2}}$
+\end{example}
+%
+\begin{theorem}
+$x\in A\iff\set{x}\in\pow(A)$
+\begin{pf}
+จากนิยามของ $\subseteq$ และ power set จะได้ว่า
+$x\in A\iff\set{x}\subseteq A\iff\set{x}\in\pow(A)$
+\end{pf}
+\end{theorem}
+ทั้งนี้ ในบทพิสูจน์ข้างต้น $x\in A\iff\set{x}\subseteq A$ อาจจะยังไม่ชัดเจนมากนัก จึงอาจเขียนเป็น\emph{บทตั้ง} (lemma) พร้อมบทพิสูจน์ที่ชัดเจนขึ้นได้ดังนี้
+\begin{lemma}
+$x\in A\iff\set{x}\subseteq A$
+\begin{pf}
+($\Rightarrow$): สมมุติว่า $x\in A$ ต้องพิสูจน์ว่า $\set{x}\subseteq A$ กล่าวคือ $\forall y: y\in\set{x}\implies y\in A$ \enskip ให้ $y\in\set{x}$ แสดงว่ามีค่าของ $y$ ที่เป็นไปได้เพียงตัวเดียวเท่านั้น กล่าวคือ $y=x$ \enskip ดังนั้น $y\in A$ เนื่องจาก $x\in A$ \qquad\yea
+
+($\Leftarrow$): สมมุติว่า $\set{x}\subseteq{A}$ ต้องพิสูจน์ว่า $x\in A$ \enskip เนื่องจาก $\set{x}\subseteq A$ แสดงว่า $\forall y: y\in\set{x}\implies y\in A$ \enskip หากเราเลือกให้ $y$ มีค่าเป็น $x$ จะเห็นว่า $y\in\set{x}$ \enskip ดังนั้น $x\in A$ ตามต้องการ \qquad\yea
+\end{pf}
+\end{lemma}
+
+\begin{theorem}
+ให้ $A$ และ $B$ เป็นเซต \enskip $\pow(A)\cup\pow(B)\subseteq\pow(A\cup B)$
+\begin{pf}
+จากนิยามของ $\subseteq$ หากให้ $x\in\pow(A)\cup\pow(B)$ เราต้องพิสูจน์ว่า $x\in\pow(A\cup B)$ \enskip เนื่องจาก $x\in\pow(A)\cup\pow(B)$ แสดงว่า $x\in\pow(A)$ หรือ $x\in\pow(B)$ ตามนิยามของ $\cup$ \enskip พิสูจน์โดยแยกกรณีดังนี้
+\begin{enumerate}[]
+\item\label{pf:powset-union-subset-l} $x\in\pow(A)$: จะได้ว่า $x\subseteq A$ (ตามนิยามของ power set) \enskip ดังนั้น $x\subseteq A\cup B$
+\item $x\in\pow(B)$: ในกรณีนี้ เราสามารถใช้เหตุผลเช่นเดียวกับในกรณีที่~\ref{pf:powset-union-subset-l} โดยสลับบทบาทของ $A$ และ $B$ \enskip จึงสรุปได้ว่า $x\in\pow(A\cup B)$ เช่นกัน
+\end{enumerate}
+ในทั้งสองกรณี เราสามารถสรุปได้ว่า $x\in\pow(A\cup B)$ \enskip ดังนั้น $\pow(A)\cup\pow(B)\subseteq\pow(A\cup B)$ ตามที่เราต้องการ
+\end{pf}
+\end{theorem}

@@ -1,0 +1,196 @@
+\section{Structural induction}
+
+เมื่อมีตัวดำเนินการต่างๆ เกี่ยวกับวัตถุที่สร้างโดยใช้นิยามแบบอุปนัย ก็สามารถเขียนและพิสูจน์ทฤษฎีบทเกี่ยวกับตัวดำเนินการนั้นๆ ได้ ด้วยวิธี\emph{อุปนัยเชิงโครงสร้าง} (structural induction)
+
+หลักการโดยคร่าวๆ ของวิธี structural induction เพื่อพิสูจน์ว่าคุณสมบัติ $P(x)$ เป็นจริงสำหรับวัตถุ $x$ ใดๆ มีสองขั้นตอน ได้แก่
+\begin{itemize}[]
+\item \emph{ขั้นฐาน} (base case): พิสูจน์ว่า $P(x)$ นั้นเป็นจริงกับวัตถุ $x$ ที่สร้างโดยกรณีฐาน
+\item \emph{ขั้นอุปนัย} (inductive step): พิสูจน์ว่า $P(x)$ นั้นเป็นจริงกับวัตถุ $x$ ที่สร้างโดยกรณีอุปนัย โดยตั้งสมมุติฐานว่าคุณสมบัติ $P$ นั้นเป็นจริงกับวัตถุชิ้นย่อยๆ ที่เป็นส่วนประกอบของ $x$ \enskip กล่าวคือ หากวัตถุที่มีขนาดเล็กกว่ามีคุณสมบัติตามที่ต้องการ เมื่อนำมาประกอบเป็นวัตถุที่ใหญ่ขึ้น ก็จะยังมีคุณสมบัตินี้เช่นเดิม \enskip สมมุติฐาน $P$ ที่เราตั้งขึ้นนี้เรียกว่า\emph{สมมุติฐานในการอุปนัย} (induction hypothesis) โดยจากนี้ไป บทพิสูจน์ต่างๆ จะใช้ ``I.H.'' เพื่อย่อวลี induction hypothesis
+\end{itemize}
+หลังจากทำสองขั้นตอนนี้แล้ว เราสามารถสรุปได้ว่า ไม่ว่าเราจะประกอบวัตถุให้มีขนาดใหญ่เท่าใดก็ตาม วัตถุดังกล่าวก็ยังมีคุณสมบัติที่ต้องการเสมอ
+%
+ตัวอย่างเช่น
+\begin{theorem}
+ให้ $\ell$ เป็น integer list ใดๆ จะได้ว่า $\ell\lconcat[]=\ell$
+\begin{pf}
+By structural induction โดยที่ \[P(\ell)\triangleq \ell\lconcat[]=\ell\]
+\begin{itemize}
+\item {\bf Base case}: ($\ell=[]$) จะได้ว่า $[]\lconcat[]=[]$ ตามนิยามของ \lconcat{} \qquad\yea
+\item {\bf Inductive step}: ($\ell=a:\ell'$) \quad สมมุติว่า $P(\ell')$ เป็นจริง กล่าวคือ $\ell'\lconcat[]=\ell'$ \enskip ต้องพิสูจน์ว่า $(a:\ell')\lconcat[]=a:\ell'$ \enskip จะเห็นว่า
+\begin{align*}
+(a:\ell')\lconcat[]
+ &= a:(\ell'\lconcat []) \qquad\textup{(จากนิยามของ \lconcat)} \\
+ &= a:\ell' \qquad\textup{(by I.H.)\qquad\yea}
+\end{align*}
+\end{itemize}
+ดังนั้น จึงสรุปได้ว่า $\ell\lconcat[]=\ell$ ไม่ว่า $\ell$ จะมีสมาชิกกี่ตัวก็ตาม
+\end{pf}
+\end{theorem}
+
+นั่นคือ การใช้ structural induction กับ integer lists เมื่อต้องการพิสูจน์ predicate $P(\ell)$ มีสองขั้นตอน
+\begin{itemize}
+\item base case: พิสูจน์ว่า $P([])$ เป็นจริง
+\item inductive step: สมมุติว่า $P(\ell)$ เป็นจริงกับ $\ell$ ใดๆ ต้องพิสูจน์ว่า $P(a:\ell)$ เป็นจริงด้วย ไม่ว่า $a$ จะเป็นจำนวนเต็มใดๆ ก็ตาม
+\end{itemize}
+หลังจากสองขั้นตอนนี้แล้ว เราสามารถสรุปได้ว่า $P(\ell)$ เป็นจริงสำหรับ integer list $\ell$ ทุกตัว เนื่องจากเราได้แสดงให้เห็นแล้วว่า $P$ เป็นจริงในทุกวิธีที่เราสามารถสร้าง integer list ขึ้นมาได้
+
+ลองดูอีกตัวอย่างหนึ่ง
+\begin{theorem}
+ให้ $\ell_1,\ell_2,\ell_3$ เป็น integer lists ใดๆ จะได้ว่า \[(\ell_1\lconcat\ell_2)\lconcat\ell_3=\ell_1\lconcat(\ell_2\lconcat\ell_3)\] กล่าวคือ $\lconcat$ มีสมบัติการเปลี่ยนหมู่ (associativity)
+\begin{pf}
+เราจะใช้ structural induction โดยแยกกรณีตามรูปร่างของ $\ell_1$ (นั่นคือ เราจะทำการพิสูจน์ by structural induction on $\ell_1$) \enskip ทั้งนี้ predicate ที่เราจะพิสูจน์โดยอุปนัยคือ \[P(\ell_1)\triangleq\forall\ell_2,\ell_3: (\ell_1\lconcat\ell_2)\lconcat\ell_3=\ell_1\lconcat(\ell_2\lconcat\ell_3)\]
+\begin{itemize}
+\item{\bf Base case}: ($\ell_1=[]$) \quad $([]\lconcat\ell_2)\lconcat\ell_3=\ell_2\lconcat\ell_3$ ตามนิยามของ \lconcat{} และ $[]\lconcat(\ell_2\lconcat\ell_3)=\ell_2\lconcat\ell_3$ ตามนิยามของ \lconcat{} ด้วย ทั้งสองข้างจึงเป็น $\ell_2\lconcat\ell_3$ เหมือนกัน \qquad\yea
+\item{\bf Inductive step}: ($\ell_1=a:\ell_1'$) \quad สมมุติว่า $\forall\ell_2,\ell_3:(\ell_1'\lconcat\ell_2)\lconcat\ell_3=\ell_1'\lconcat(\ell_2\lconcat\ell_3)$ \enskip \enskip ต้องพิสูจน์ว่า $\forall\ell_2,\ell_3:((a:\ell_1')\lconcat\ell_2)\lconcat\ell_3=(a:\ell_1')\lconcat(\ell_2\lconcat\ell_3)$ โดยจะทำการแปลง (rewrite) ด้านซ้ายของสมการให้เป็นด้านขวา \enskip ให้ $\ell_2,\ell_3$ เป็น integer lists ใดๆ จะได้ว่า
+\begin{align*}
+((a:\ell_1')\lconcat\ell_2)\lconcat\ell_3
+ &= (a:(\ell_1'\lconcat\ell_2))\lconcat\ell_3 \qquad\textup{(จากนิยามของ \lconcat ขาไป)} \\
+ &= a:((\ell_1'\lconcat\ell_2)\lconcat\ell_3) \qquad\textup{(จากนิยามของ \lconcat ขาไป)} \\
+ &= a:(\ell_1'\lconcat(\ell_2\lconcat\ell_3)) \qquad\textup{(by I.H.)} \\
+ &= (a:\ell_1')\lconcat(\ell_2\lconcat\ell_3) \qquad\textup{(จากนิยามของ \lconcat ขากลับ)\qquad\yea}
+\end{align*}
+\end{itemize}
+เนื่องจากเราได้พิจารณาทุกรูปร่างของ $\ell_1$ ที่เป็นไปได้แล้ว จึงสรุปได้ว่า $\lconcat$ มีสมบัติการเปลี่ยนหมู่
+\end{pf}
+\end{theorem}
+
+จะเห็นว่า inference rule ที่เราใช้ในบทพิสูจน์ข้างต้นคือ
+\[
+\inferrule*[Right=ilist-ind]
+{\Gamma\vdash P([]) \\ \Gamma\vdash\forall a,\ell:P(\ell)\implies P(a:\ell)}
+{\Gamma\vdash\forall \ell: P(\ell)}
+\]
+นั่นคือ หากต้องการพิสูจน์ว่าคุณสมบัติ $P$ เป็นจริงสำหรับ integer list ทุกตัว (ส่วนล่างของ inference rule) จะต้องพิสูจน์ว่า (1) $P$ เป็นจริงสำหรับ empty list (base case) และ (2) หากสมมุติว่า $P$ เป็นจริงสำหรับ integer list $\ell$ ใดๆ (induction hypothesis) แล้วเราสามารถพิสูจน์ได้ว่า $P(a:\ell)$ เป็นจริงด้วย เมื่อ $a$ เป็นจำนวนเต็มใดๆ นั่นคือ เราสามารถพิสูจน์ได้ด้วยว่าคุณสมบัติที่เรากำลังพิจารณานั้นยังเป็นจริงอยู่ แม้ว่าเราจะสร้าง integer list ที่ใหญ่ขึ้นด้วยวิธีการใดก็ตาม (inductive step) \enskip หากทำสองขั้นตอนนี้ได้ ก็จะทำให้บทพิสูจน์โดย structural induction นั้นครบถ้วนสมบูรณ์
+
+ในกรณีทั่วไป เราสามารถเขียนกฎ structural induction ได้ดังนี้
+\begin{axiom}[structural induction]
+ให้ $T$ เป็นชนิดของวัตถุที่เราสนใจ ที่สามารถนิยามแบบอุปนัยได้ดังต่อไปนี้
+\begin{itemize}
+\item กรณีฐาน ด้วยตัวสร้าง $B_1(\ldots),B_2(\ldots),\ldots,B_{k_b}(\ldots)$
+\item กรณีอุปนัย ด้วยตัวสร้าง $C_1(\ldots,t_{11},\ldots,t_{1{c_1}}),C_2(\ldots,t_{21},\ldots,t_{2{c_2}}),\ldots,C_{k_c}(\ldots,t_{{k_c}1},\ldots,t_{{k_c}{c_{k_c}}})$
+\end{itemize}
+และให้ $P(t)$ เป็น predicate on $t\in T$
+
+ถ้า $P(B_1(\ldots)),P(B_2(\ldots)),\ldots,P(B_{k_b}(\ldots))$ (base cases) และ
+\begin{itemize}
+\item $\forall \ldots,t_{11},\ldots,t_{1c_1}: P(t_{11})\wedge\ldots\wedge P(t_{1c_1})\implies P(C_1(\ldots,t_{11},\ldots,t_{1{c_1}}))$
+\item $\forall \ldots,t_{21},\ldots,t_{2c_2}: P(t_{21})\wedge\ldots\wedge P(t_{2c_2})\implies P(C_2(\ldots,t_{21},\ldots,t_{2{c_2}}))$
+\item $\vdots$
+\item $\forall \ldots,t_{{k_c}1},\ldots,t_{{k_c}c_{k_c}}: P(t_{{k_c}1})\wedge\ldots\wedge P(t_{{k_c}c_{k_c}})\implies P(C_{k_c}(\ldots,t_{{k_c}1},\ldots,t_{{k_c}{c_{k_c}}}))$
+\end{itemize}
+(inductive step) แล้ว $\forall t\in T: P(t)$
+\end{axiom}
+\begin{example}
+สำหรับ integer lists นั้น เราสามารถสร้างด้วยกรณีฐานได้หนึ่งวิธี คือ $[]$ และด้วยกรณีอุปนัยได้อีกหนึ่งวิธีคือ $a:\ell$ เมื่อ $a\in\mathbb{Z}$ และ $\ell$ เป็น integer list ใดๆ \enskip ดังนั้น structural induction axiom สำหรับ integer lists มีอยู่ว่า เมื่อ $P(\ell)$ เป็น predicate on integer list $\ell$ ถ้า $P([])$ (base case) และ $\forall a\in\mathbb{Z},\ell: P(\ell)\implies P(a:\ell)$ (inductive step) แล้ว $\forall\ell: P(\ell)$
+\end{example}
+
+\begin{definition}
+จำนวนนับ (natural numbers [nat]) สามารถนิยามแบบอุปนัยได้ดังนี้
+\begin{itemize}
+\item 0 เป็น nat (เรียกว่า $\mathrm{zero}$)
+\item[+] ถ้า $n$ เป็น nat แล้ว $\mathrm{succ}(n)$ (นับเพิ่มจาก $n$ ไปหนึ่ง) ก็เป็น nat ด้วย (ย่อมาจาก successor)
+\end{itemize}
+\end{definition}
+จะเห็นว่า natural numbers ทั้งหมดที่เป็นไปได้สามารถสร้างได้ด้วยวิธีดังกล่าว ตัวอย่างเช่น เลข 2 สามารถสร้างได้โดยสร้าง 1 ก่อน ซึ่งเกิดจากการนับเพิ่มจาก 0 ไปหนึ่ง นั่นคือ $1=\mathrm{succ}(0)$ \enskip จากนั้น เราสามารถสร้าง 2 ได้โดยนับเพิ่มจาก 1 ไปอีกหนึ่ง นั่นคือ $2=\mathrm{succ}(1)=\mathrm{succ}(\mathrm{succ}(0))$
+
+จากนิยามข้างต้น เราสามารถเขียน inference rule สำหรับ natural numbers ได้ดังนี้
+\[
+\inferrule*[Right=nat-ind]
+{\Gamma\vdash P(0) \\ \Gamma\vdash\forall n:P(n)\implies P(\mathrm{succ}(n))}
+{\Gamma\vdash\forall n: P(n)}
+\]
+นั่นคือ กำหนดให้ $P(n)$ เป็น predicate on natural numbers \enskip หากเราต้องการพิสูจน์ว่า $P$ เป็นจริงสำหรับจำนวนนับทุกตัว เราต้องพิสูจน์ว่า $P(0)$ เป็นจริงในขั้นฐาน และในขั้นอุปนัย เราต้องพิสูจน์ว่า $P(\mathrm{succ}(n))$ เป็นจริงโดยสามารถใช้ induction hypothesis ว่า $P(n)$ เป็นจริง ไม่ว่า $n$ จะเป็นจำนวนนับใดๆ ก็ตาม
+% จะเห็นว่า inference rule นี้ก็คือ induction axiom ที่เราคุ้นเคยจากก่อนหน้านี้นั่นเอง (โดยมอง $\mathrm{succ}(n)$ เป็น $n+1$)
+
+เมื่อมีนิยามของจำนวนนับแบบอุปนัยแล้ว เราสามารถนิยามฟังก์ชันและตัวดำเนินการต่างๆ ทางคณิตศาสตร์แบบเวียนบังเกิด (recursive) ได้ดังเช่น
+\begin{example}
+การทำให้เป็นสองเท่า ($\mathrm{double}$) เป็นฟังก์ชันจาก $\mathrm{nat}\to\mathrm{nat}$ โดยที่
+\begin{align*}
+\mathrm{double}\ 0 &\triangleq 0 \\
+\mathrm{double}\ s(n') &\triangleq s(s(\mathrm{double}\ n'))
+\end{align*}
+ทั้งนี้ $s(\ldots)$ ใช้ย่อ $\mathrm{succ}(\ldots)$
+\end{example}
+
+\begin{example}
+การทำให้เป็นสามเท่า ($\mathrm{triple}$) เป็นฟังก์ชันจาก $\mathrm{nat}\to\mathrm{nat}$ โดยที่
+\begin{align*}
+\mathrm{triple}\ 0 &\triangleq 0 \\
+\mathrm{triple}\ s(n') &\triangleq s(s(s(\mathrm{triple}\ n')))
+\end{align*}
+\end{example}
+
+\begin{exercise}
+    เขียนบทพิสูจน์โดยใช้ structural induction ว่า \[\forall n:\mathrm{triple}(\mathrm{double}\ n)=\mathrm{double}(\mathrm{triple}\ n)\]
+\end{exercise}
+
+\begin{definition}
+การบวก ($\mathrm{add}$ [$+$]) เป็นฟังก์ชันจาก $\mathrm{nat}\times\mathrm{nat}\to\mathrm{nat}$ โดยสามารถนิยามแบบ recursive ตามตัวหน้าได้ดังนี้
+\begin{align*}
+0+n &\triangleq n & (\forall n\in\mathrm{nat}) \\
+s(m')+n &\triangleq s(m'+n) & (\forall m',n\in\mathrm{nat})
+\end{align*}
+ทั้งนี้ $s(\ldots)$ ใช้ย่อ $\mathrm{succ}(\ldots)$
+\end{definition}
+หากจะกล่าวเป็นภาษาที่เราคุ้นเคย กรณีเวียนบังเกิดข้างต้น (บรรทัดล่าง) กล่าวว่า $(1+m')+n$ สามารถเขียนใหม่ได้เป็น $1+(m'+n)$ \enskip อย่างไรก็ดี ต้องพึงระวังว่าเครื่องหมายบวกสองตัวที่เห็นนี้ แท้จริงแล้วเป็นการดำเนินการคนละอย่างกัน กล่าวคือ เครื่องหมายบวกที่อยู่ระหว่าง $1$ กับ $m'$ นั้นเป็นการนับเพิ่มไปหนึ่งโดยใช้ $\mathrm{succ}$ ได้เท่านั้น ส่วนเครื่องหมายบวกที่อยู่ระหว่าง $m'$ กับ $n$ นั้นเป็นฟังก์ชันการบวกที่เรากำลังนิยามอยู่ \enskip หากจะเขียนให้ชัดเจน ควรใช้สัญลักษณ์เครื่องหมายบวกนี้ให้ไม่เหมือนกัน หรือเขียนเป็นชื่อฟังก์ชัน $\mathrm{add}$ ไปเลยเพื่อป้องกันความสับสน อาทิ
+\begin{align*}
+\mathrm{add}(0, n) &\triangleq n \\
+\mathrm{add}(s(m'), n) &\triangleq s(\mathrm{add}(m', n))
+\end{align*}
+
+เมื่อมีนิยามแบบอุปนัยสำหรับจำนวนนับ และนิยามแบบเวียนบังเกิดสำหรับตัวดำเนินการของจำนวนนับ เราสามารถเขียนบทพิสูจน์แบบอุปนับเชิงโครงสร้าง สำหรับสมบัติของตัวดำเนินการของจำนวนนับได้ ตัวอย่างเช่น
+\begin{theorem}\label{thm:add-commutative}
+$\forall m,n\in\mathrm{nat}: m+n=n+m$ กล่าวคือ การบวกจำนวนนับมีสมบัติการสลับที่
+
+ก่อนที่เราจะเขียนบทพิสูจน์ดังกล่าว จะขอเขียนบทพิสูจน์ของบทตั้ง (lemmas) ที่จะใช้ในบทพิสูจน์หลัก ดังนี้
+
+\begin{lemma}\label{thm:add-n-0-n}
+$\forall n\in\mathrm{nat}: n+0=n$
+\begin{pf}
+By structural induction on $n$ โดยให้ $P(n)\triangleq n+0=n$
+\begin{itemize}
+\item {\bf Base case}: ($n=0)$ $0+\underline{0}=\underline{0}$ ตามนิยามของ $+$ โดยแทนค่า $n$ ในนิยามเป็น $\underline{0}$ \qquad\yea
+\item {\bf Inductive step}: ($n=s(n')$) สมมุติว่า $P(n')$ เป็นจริง กล่าวคือ $n'+0=n'$ ต้องพิสูจน์ว่า $s(n')+0=s(n')$ \enskip จะได้ว่า
+\begin{align*}
+s(n')+0 &= s(n'+0) \qquad\textup{(จากนิยามของ $+$)} \\
+&= s(n') \qquad\textup{(by I.H.)\qquad\yea}
+\end{align*}
+\end{itemize}
+ดังนั้น $n+0=n$ ไม่ว่า $n$ จะเป็นจำนวนนับใดๆ
+\end{pf}
+\end{lemma}
+
+\begin{lemma}\label{thm:add-snm-nsm}
+$\forall n,m\in\mathrm{nat}: s(n+m)=n+s(m)$
+\begin{pf}
+By structural induction on $n$ โดยให้ $P(n)\triangleq \forall m\in\mathrm{nat}: s(n+m)=n+s(m)$
+\begin{itemize}
+\item {\bf Base case}: ($n=0)$ จะได้ว่า
+\begin{align*}
+s(0+m) &= s(m) \qquad\textup{(จากนิยามของ $0+m=m$)} \\
+&= 0+s(m) \qquad\textup{(จากนิยามของ $0+s(m)=s(m)$ ขากลับ)\qquad\yea}
+\end{align*}
+\item {\bf Inductive step}: ($n=s(n')$) สมมุติว่า $P(n')$ เป็นจริง กล่าวคือ $\forall m\in\mathrm{nat}: s(n'+m)=n'+s(m)$ ต้องพิสูจน์ว่า $\forall m\in\mathrm{nat}: s(s(n')+m)=s(n')+s(m)$ \enskip จะได้ว่า
+\begin{align*}
+s(s(n')+m) &= s(s(n'+m)) \qquad\textup{(จากนิยามของ $s(n')+m=s(n'+m)$)} \\
+&= s(n'+s(m)) \qquad\textup{(by I.H.)} \\
+&= s(n')+s(m) \qquad\textup{(จากนิยามของ $+$ ขากลับ)\qquad\yea}
+\end{align*}
+\end{itemize}
+\end{pf}
+\end{lemma}
+
+ณ ขณะนี้ เราพร้อมที่จะเขียนบทพิสูจน์ของสมบัติการสลับที่แล้ว
+\begin{pf}[Proof of Theorem~\ref{thm:add-commutative}]
+By structural induction on $m$ โดยให้ $P(m)\triangleq \forall n\in\mathrm{nat}: m+n=n+m$
+\begin{itemize}
+\item {\bf Base case}: ($m=0)$ จะเห็นว่า $0+n=n$ ตามนิยามของ $+$ และ $n+0=n$ จาก Lemma~\ref{thm:add-n-0-n} \enskip ทั้งสองข้างจึงเท่ากับ $n$ \qquad\yea
+\item {\bf Inductive step}: ($m=s(m')$) สมมุติว่า $P(m')$ เป็นจริง กล่าวคือ $\forall n\in\mathrm{nat}: m'+n=n+m'$ ต้องพิสูจน์ว่า $P(s(m'))$ เป็นจริง กล่าวคือ $\forall n\in\mathrm{nat}: s(m')+n=n+s(m')$ \enskip จะได้ว่า
+\begin{align*}
+s(m')+n &= s(m'+n) \qquad\textup{(จากนิยามของ $+$ ขาไป)} \\
+&= s(n+m') \qquad\textup{(by I.H.)} \\
+&= n+s(m') \qquad\textup{(by Lemma~\ref{thm:add-snm-nsm})\qquad\yea}
+\end{align*}
+\end{itemize}
+\end{pf}
+\end{theorem}

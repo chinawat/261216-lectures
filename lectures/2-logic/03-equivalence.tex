@@ -1,0 +1,40 @@
+\section{Proving equivalence}
+วิธีการพิสูจน์ $\iff$ สามารถเขียนแจกแจงเป็น proof tree ได้ดังนี้
+\[
+\inferrule*[Right=$\wedge$-intro]
+{
+  \inferrule*[Right=$\implies$-intro]
+  {\Gamma,P\vdash Q}
+  {\Gamma\vdash P\implies Q}
+  \\
+  \inferrule*[Right=$\implies$-intro,leftskip=-0.75in]
+  {\Gamma,Q\vdash P}
+  {\Gamma\vdash Q\implies P}
+}
+{\Gamma\vdash (P\implies Q)\wedge (Q\implies P)}
+\]
+
+ดังนั้น หากจะพิสูจน์ประพจน์ในรูป $P\iff Q$ ต้องทำสองขั้นตอน ดังนี้
+\begin{enumerate}
+\item พิสูจน์ว่า $P\implies Q$
+\item พิสูจน์ว่า $Q\implies P$
+\end{enumerate}
+อย่างไรก็ดี จะเห็นว่า เมื่อ $P\iff Q$ เป็นจริง จะได้ว่า
+\begin{enumerate}
+\item ถ้า $P$ จริง แล้ว $Q$ ต้องจริง นั่นคือ $P\implies Q$
+\item ถ้า $P$ เท็จ แล้ว $Q$ ต้องเท็จ นั่นคือ $\neg P\implies\neg Q$
+\end{enumerate}
+นั่นคือ แทนที่เราจะพิสูจน์ $Q\implies P$ เราสามารถพิสูจน์ $\neg P\implies\neg Q$ ได้เช่นกัน เนื่องจากประพจน์ทั้งสองนี้\emph{สมมูล} (equivalent) กัน ซึ่งแปลว่าค่าความจริงของทั้งสองประพจน์นี้ตรงกันในแต่ละกรณีจากตารางค่าความจริง \enskip ประพจน์ทั้งสองข้างต้นมีชื่อเรียกเฉพาะ คือ \emph{ประพจน์แย้งสลับที่} (contrapositive)
+
+\begin{theorem}
+ให้ $a$ และ $b$ เป็นจำนวนเต็ม \enskip $a<b$ ก็ต่อเมื่อ $a\leq b-1$
+\begin{pf}
+($\Rightarrow$) สมมุติว่า $a<b$ ต้องพิสูจน์ว่า $a\leq b-1$ \enskip เนื่องจาก $a<b$ จะได้ว่า $b-a>0$ \enskip แต่เนื่องจาก $a,b\in\mathbb{Z}$ เราสามารถสรุปได้ว่า $b-a\geq 1$ \enskip ดังนั้น เมื่อจัดรูป จะได้ $a\leq b-1$ \qquad\yea
+
+($\Leftarrow$) สมมุติว่า $a\leq b-1$ ต้องพิสูจน์ว่า $a<b$ \enskip เนื่องจาก $a\leq b-1$ จะได้ว่า $b-a\geq 1$ กล่าวคือ $b-a>0$ \enskip ดังนั้น $a<b$ \qquad\yea
+\end{pf}
+อย่างไรก็ดี ในบทพิสูจน์ขากลับนั้น เราสามารถเลือกที่จะพิสูจน์ contrapositive แทนได้เช่นกัน ดังนี้
+
+($\Leftarrow$) สมมุติว่า $a\geq b$ ต้องพิสูจน์ว่า $a>b-1$ \enskip เนื่องจาก $a\geq b$ จะได้ว่า $a-b\geq 0$ ดังนั้น $a+1-b>0$ จึงสรุปได้ว่า $a>b-1$ \qquad\yea
+\end{theorem}
+จากบทพิสูจน์ข้างต้น จะเห็นว่า บทพิสูจน์ขาไปนั้นมีความซับซ้อนกว่าบทพิสูจน์ขากลับอยู่ เนื่องจากเราต้องใช้สมมุติฐานที่ว่า $a$ และ $b$ เป็นจำนวนเต็ม (ในการให้เหตุผลว่า $b-a>0\implies b-a\geq 1$) \enskip โดยทั่วไปแล้ว การพิสูจน์ ``ก็ต่อเมื่อ'' จะมีทิศทางหนึ่งที่ท้าทายกว่าเสมอ \enskip ดังนั้น หากพยายามพิสูจน์ทิศทางหนึ่งแล้วไม่เป็นผล ให้ลองพิสูจน์อีกทิศทางหนึ่งก่อน ซึ่งอาจจะง่ายกว่าก็ได้

@@ -1,0 +1,273 @@
+\section{Relations}
+
+\emph{ความสัมพันธ์} (relation) เชื่อมโยงสิ่งสองสิ่งเข้าด้วยกัน
+%
+\begin{example}
+$a$ กับ $b$ สัมพันธ์กันถ้า $a$ แต่งงานกับ $b$
+\end{example}
+\begin{example}
+$a$ กับ $b$ สัมพันธ์กันถ้า $a$ ชอบ $b$
+\end{example}
+%
+จะเห็นว่า ลำดับก่อนหลังในความสัมพันธ์มีความสำคัญ
+
+\begin{definition}
+ให้ $A,B$ เป็นเซต \enskip \emph{ความสัมพันธ์จาก $A$ ไป $B$} (relation from $A$ to $B$) คือเซต $R\subseteq A\times B$
+
+เรียก $A$ ว่า\emph{โดเมน} (domain) และ $B$ ว่า\emph{โดเมนร่วมเกี่ยว} (codomain)\footnote{ไม่ใช้คำว่า range เนื่องจากอาจจะทำให้สับสนกับ image ได้} ของ $R$
+\end{definition}
+%
+\begin{example}\label{ex:rel-a-b}
+ให้ $A=\set{\str{d},\str{p}}$ และ $B=\set{\str{c},\str{x}}$ (จาก Example~\ref{ex:Cartesian}) \enskip $R=\set{(\str{d},\str{c}),(\str{p},\str{x})}\subseteq A\times B$ 
+\end{example}
+เมื่อมีความสัมพันธ์ $R$ from $A$ to $B$ ที่สามารถเขียนแจกแจงสมาชิกในรูปของคู่อันดับได้ เราสามารถวาด\emph{กราฟ} (graph) ของ $R$ ได้ โดยแจกแจงสมาชิกของ domain (เซต $A$) ไว้ด้านซ้าย และสมาชิกของ codomain (เซต $B$) ไว้ด้านขวา แล้วโยงลูกศรเชื่อมจาก $a$ ไป $b$ หาก $(a,b)\in R$ ดังตัวอย่างต่อไปนี้ ซึ่งแสดงกราฟความสัมพันธ์ของ $R$ ใน Example~\ref{ex:rel-a-b}
+\begin{center}
+\begin{tikzpicture}
+\node (d) {\str{d}};
+\node (p) [below=of d] {\str{p}};
+\node (c) [right=of d] {\str{c}};
+\node (x) [right=of p] {\str{x}};
+
+\draw[arrow] (d) -- (c);
+\draw[arrow] (p) -- (x);
+\end{tikzpicture}
+\end{center}
+ในขณะเดียวกัน หากมีกราฟของความสัมพันธ์ใดๆ เราก็สามารถเขียนแจกแจงเป็นเซตได้เช่นกัน
+%
+\begin{example}
+ให้ $A=\set{1,2,3,4}$ และ $B=\set{a,b,c,d}$ \enskip หากมีกราฟความสัมพันธ์ $R$ ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node (A1) {$1$};
+\node (A2) [below of=A1] {$2$};
+\node (A3) [below of=A2] {$3$};
+\node (A4) [below of=A3] {$4$};
+
+\node (Ba) [right=1in of A1] {$a$};
+\node (Bb) [below of=Ba] {$b$};
+\node (Bc) [below of=Bb] {$c$};
+\node (Bd) [below of=Bc] {$d$};
+
+\path (A1) -- node[above=2ex] {$R$} (Ba);
+
+\draw[->] (A1) -- (Ba);
+\draw[->] (A1) -- (Bb);
+\draw[->] (A3) -- (Bc);
+\draw[->] (A4) -- (Bb);
+\end{tikzpicture}
+\end{center}
+จะได้ว่า $R=\set{(1,a),(1,b),(3,c),(4,b)}$ \enskip นอกจากนี้ เราสามารถนับจำนวนลูกศรขาออกจากสมาชิกแต่ละตัวทางด้านซ้าย และจำนวนลูกศรขาเข้าไปยังสมาชิกแต่ละตัวทางด้านขวาได้ ตัวอย่างเช่น $1$ มี 2 ลูกศรออก, $2$ มี 0 ลูกศรออก, $b$ มี 2 ลูกศรเข้า, และ $c$ มี 1 ลูกศรเข้า
+\end{example}
+
+\begin{example}
+ให้ $A$ เป็นเซตของนักศึกษา และ $B$ เป็นเซตของวิชา \enskip $R=\set{(a,b)\mid\textrm{$a$ ลงทะเบียนวิชา $b$}}$
+\end{example}
+
+\begin{example}
+ให้ $A$ เป็นเซตผู้ชาย และ $B$ เป็นเซตของผู้หญิง \enskip $R=\set{(a,b)\mid\textrm{$a$ ชอบ $b$}}$
+\end{example}
+
+\begin{definition}
+ให้ $A$ เป็นเซต \enskip \emph{ความสัมพันธ์บนเซต $A$} (relation on $A$) คือเซต $R\subseteq A\times A$
+\end{definition}
+%
+\begin{example}
+ให้ $A=\set{\str{d},\str{p}}$ (จาก Example~\ref{ex:Cartesian}) \enskip \[R=\set{(\str{d},\str{p}),(\str{p},\str{d})}\subseteq A\times A=\set{(\str{d},\str{d}),(\str{d},\str{p}),(\str{p},\str{d}),(\str{p},\str{p})}\]
+\end{example}
+%
+\begin{example}
+$\leq$ is a relation on $\mathbb{Z}$.
+
+\[\leq\ =\set{(0,0),(0,1),(-1,0),(-2,-1),(2019,2562),\ldots}\]
+\end{example}
+
+\begin{example}
+$=$, $<$, $>$, $\geq$, $\neq$ are relations on $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$
+\end{example}
+
+\begin{example}
+ให้ $A$ เป็นเซตของ \textit{homo sapiens sapiens} \enskip $R=\set{(a_1,a_2)\mid\textrm{$a_1$ ชอบ $a_2$}}$ is a relation on $A$
+\end{example}
+
+\begin{definition}
+ให้ $R$ เป็น relation \enskip \emph{ความสัมพันธ์ผกผัน} (inverse) ของ $R$ (denoted $R^{-1}$) คือเซต \[R^{-1}\triangleq\set{(b,a)\mid(a,b)\in R}\]
+\end{definition}
+%
+\begin{example}
+ให้ $R=\set{(\str{d},\str{c}),(\str{p},\str{x})}$ จะได้ว่า $R^{-1}=\set{(\str{c},\str{d}),(\str{x},\str{p})}$
+\end{example}
+
+\begin{example}
+ให้ $R=\set{(a_1,a_2)\mid\textrm{$a_1$ ชอบ $a_2$}}$ จะได้ว่า $R^{-1}=\set{(a_1,a_2)\mid\textrm{$a_2$ ชอบ $a_1$}}$
+\end{example}
+
+\begin{definition}
+ให้ $R\subset A\times B$ และ $a\in A$ \enskip \emph{ภาพ} (image) ของ $a$ ภายใต้ $R$ (denoted $R(a)$) คือเซต \[R(a)\triangleq\set{b\in B\mid (a,b)\in R}\]
+\end{definition}
+\begin{definition}
+ให้ $R\subset A\times B$ และ $A'\subseteq A$ \enskip \emph{image of $A'$ under $R$} (denoted $R(A')$) คือเซต
+\begin{align*}
+R(A')&\triangleq\set{b\in B\mid\exists a\in A': (a,b)\in R} \\
+&=\bigcup_{a\in A'}{R(a)}
+\end{align*}
+\end{definition}
+%
+\begin{example}
+ให้ $R=\set{(1,4),(1,5),(2,6),(3,6)}$ จะได้ว่า
+\begin{itemize}
+\item $R(1)=\set{4,5}$
+\item $R(2)=\set{6}$
+\item $R^{-1}(4)=\set{1}$
+\item $R^{-1}(6)=\set{2,3}$
+\item $R(\set{1,2})=\set{4,5,6}$
+\item $R(\set{2,3})=\set{6}$
+\item $R^{-1}(\set{4,5})=\set{1}$
+\item $R^{-1}(\set{6})=\set{2,3}$
+\item $R(A)=\set{4,5,6}$
+\end{itemize}
+\end{example}
+จะเห็นว่า image ของสมาชิกหรือเซตย่อยของโดเมนนั้น ก็คือ subset ของ codomain ที่มีลูกศรชี้ไปหาจากสมาชิกหรือเซตย่อยที่เรากำลังพิจารณาอยู่ \enskip หากเซตย่อยที่เรากำลังพิจารณานั้นเป็นทั้งโดเมน จะได้ผลลัพธ์เป็นสมาชิกใน codomain ที่ปรากฎอยู่ในความสัมพันธ์ ซึ่งอาจจะไม่ครบทุกตัวก็ได้ \enskip ด้วยเหตุนี้ เราจึงหลีกเลี่ยงการใช้คำว่า range ในการอธิบายความสัมพันธ์ เนื่องจากเราอาจจะตีความว่า range เป็นสมาชิกที่เราสามารถสร้างลูกศรชี้ไปหาได้ (ซึ่งมีความหมายเดียวกับ codomain) หรืออาจจะตีความว่า range เป็นสมาชิกที่มีลูกศรในความสัมพันธ์ชี้ไปหาก็ได้ (ซึ่งมีความหมายเดียวกับ image)
+
+\subsection{Properties of relations}
+
+ใน Definitions~\ref{def:reflexive}--\ref{def:transitive} ให้ $R$ เป็น relation on $A$ \enskip เราสามารถนิยามคุณสมบัติของความสัมพันธ์แบบต่างๆ ได้ดังนี้
+
+\begin{definition}\label{def:reflexive}
+$R$ มีสมบัติ\emph{สะท้อน} (reflexive) หาก \[\forall x\in A: \R{x}{x}\]
+\end{definition}
+($\R{x}{x}$ เป็นอีกวิธีหนึ่งในการเขียน $(x,x)\in R$)
+
+\begin{definition}
+$R$ มีสมบัติ\emph{ไม่สะท้อน} (irreflexive) หาก \[\forall x\in A: \R[/\!\!\!R]{x}{x}\]
+\end{definition}
+
+\begin{definition}
+$R$ มีสมบัติ\emph{สมมาตร} (symmetric) หาก \[\forall x,y\in A: \R{x}{y}\implies\R{y}{x}\]
+\end{definition}
+
+\begin{definition}
+$R$ มีสมบัติ\emph{ปฏิสมมาตร} (antisymmetric) หาก \[\forall x,y\in A: \R{x}{y}\wedge\R{y}{x}\implies x=y\]
+\end{definition}
+
+\begin{definition}\label{def:transitive}
+$R$ มีสมบัติ\emph{ถ่ายทอด} (transitive) หาก \[\forall x,y,z\in A: \R{x}{y}\wedge\R{y}{z}\implies\R{x}{z}\]
+\end{definition}
+
+\begin{example}
+ความสัมพันธ์ต่างๆ ต่อไปนี้มีสมบัติดังปรากฏในตาราง
+\begin{center}
+\begin{longtable}{c|c||c|c|c|c|c}
+$A$ & relation & \rotatedhdr{reflexive} & \rotatedhdr{irreflexive} & \rotatedhdr{symmetric} & \rotatedhdr{antisymmetric} & \rotatedhdr{transitive} \\ \hline\hline
+\endhead
+\multirow{3}{*}{$\mathbb{Z}$}
+ & $=$ & \yea & \nay & \yea & \yea & \yea \\ \cline{2-7}
+ & $\leq$ & \yea & \nay & \nay & \yea & \yea \\ \cline{2-7}
+ & $<$ & \nay & \yea & \nay & \yea\footnote{เป็นจริงโดยปริยาย (vacuously true) เนื่องจากไม่มีจำนวนเต็ม $x$ และ $y$ ที่ $x<y$ และ $y<x$ ทั้งคู่} & \yea \\ \hline
+\multirow{2}{*}{\it homo sapiens sapiens}
+ & แต่งงาน\footnote{หาก $a$ แต่งงานกับ $b$ หมายถึง $a$ จดทะเบียนสมรสกับ $b$} & \nay & \yea & \yea & \nay & \nay \\ \cline{2-7}
+ & ชอบ & \yea & \nay & \nay & \nay & \nay
+\end{longtable}
+\end{center}
+\end{example}
+
+ใน Definitions~\ref{def:function}--\ref{def:bijection} ให้ $R$ เป็น relation from $A$ to $B$ 
+
+\begin{definition}\label{def:function}
+$R$ เป็น\emph{ฟังก์ชัน} (function) หากสมาชิกทุกตัวใน $A$ มี $\leq 1$ ออก กล่าวคือ \[\forall a\in A: |R(a)|\leq 1\]
+\end{definition}
+
+\begin{definition}
+$R$ นั้น\emph{ทุกส่วน} (total) หากสมาชิกทุกตัวใน $A$ มี $\geq 1$ ออก กล่าวคือ \[\forall a\in A: |R(a)|\geq 1\]
+\end{definition}
+
+\begin{definition}
+$R$ นั้น\emph{หนึ่งต่อหนึ่ง}\footnote{หากใช้ภาษาไทย อาจจะสับสนกับ bijection ได้} (injection) หากสมาชิกทุกตัวใน $B$ มี $\leq 1$ เข้า กล่าวคือ \[\forall b\in B: |R^{-1}(b)|\leq 1\]
+\end{definition}
+
+\begin{definition}
+$R$ นั้น\emph{ทั่วถึง} (surjection) หากสมาชิกทุกตัวใน $B$ มี $\geq 1$ เข้า กล่าวคือ \[\forall b\in B: |R^{-1}(b)|\geq 1\]
+\end{definition}
+
+\begin{definition}\label{def:bijection}
+$R$ นั้น\emph{หนึ่งต่อหนึ่งทั่วถึง}\footnote{หากใช้ภาษาไทย อาจจะลืมว่าเป็น total function ได้} (bijection) หากสมาชิกทุกตัวใน $A$ มี $=1$ ออก และสมาชิกทุกตัวใน $B$ มี $=1$ เข้า กล่าวคือ \[\forall a\in A: |R(a)|= 1 \wedge \forall b\in B: |R^{-1}(b)|= 1\]
+\end{definition}
+
+\begin{example}
+ความสัมพันธ์ต่างๆ ต่อไปนี้มีสมบัติดังปรากฏในตาราง
+\begin{center}
+\begin{longtable}{c|c|c||c|c|c|c|c}
+$A$ & $B$ & relation & \rotatedhdr{function} & \rotatedhdr{total} & \rotatedhdr{injection} & \rotatedhdr{surjection} & \rotatedhdr{bijection} \\ \hline\hline
+\endhead
+\multirow{4}{0.6in}{\centering $\mathbb{R}$} & \multirow{4}{0.6in}{\centering $\mathbb{R}$}
+ & $\R{x}{2x}$ & \yea & \yea & \yea & \yea & \yea \\ \cline{3-8}
+ & & $\R{x}{\frac{1}{x}}$ & \yea & \nay\footnote{หากเป็น function ที่ไม่ total จะเรียกว่า\emph{ฟังก์ชันบางส่วน} (partial function)} & \yea & \nay & \nay \\ \cline{3-8}
+ & & $\R{x^2}{x}$ & \nay & \nay & \yea & \yea & \nay \\ \cline{3-8}
+ & & $\leq$ & \nay & \yea & \nay & \yea & \nay \\ \hline
+\multicolumn{2}{c|}{\multirow{2}{*}{\it homo sapiens sapiens}}
+ & แต่งงาน\footnote{สมบัติต่างๆ อาจขึ้นกับความเชื่อส่วนบุคคล โปรดใช้วิจารณญาณในการอ่าน} & \yea & \nay & \yea & \nay & \nay \\ \cline{3-8}
+\multicolumn{2}{c|}{}
+ & ชอบ & \nay & \nay & \nay & \nay & \nay
+\end{longtable}
+\end{center}
+\end{example}
+
+\subsection{Relational compositions}
+เราสามารถนำความสัมพันธ์มาเกี่ยวโยงกันได้
+\begin{definition}
+ให้ $R$ เป็น relation from $A$ to $B$ และ $S$ เป็น relation from $B$ to $C$ \enskip \emph{ความสัมพันธ์ประกอบ} (composition) ของ $R$ และ $S$ (denoted $S\circ R$) คือเซต \[S\circ R\triangleq\set{(a,c)\mid\exists b\in B: \R{a}{b} \wedge \R[S]{b}{c}}\]
+\end{definition}
+นั่นคือ เราสามารถสร้างความสัมพันธ์ที๋มีลูกศรโยงจากสมาชิกในเซต $A$ ไปยังสมาชิกในเซต $C$ ได้ หากมีสมาชิกในเซต $B$ ที่เป็นตัวกลางเชื่อมสมาชิกทั้งสองเซตก่อนหน้านี้ กล่าวคือ มีลูกศรโยงจากสมาชิกในเซต $A$ ไปยังสมาชิกในเซต $B$ และมีลูกศรโยงจากสมาชิกตัวนี้ในเซต $B$ ไปยังสมาชิกในเซต $C$
+%
+\begin{example}
+นิยาม $R$ และ $S$ ตามกราฟต่อไปนี้
+\begin{center}
+\begin{tikzpicture}
+\node (A1) {$\pi$};
+\node (A2) [below of=A1] {$\sqrt{2}$};
+
+\node (B1) [right=1in of A1] {$1$};
+\node (B2) [below of=B1] {$2$};
+\node (B3) [below of=B2] {$3$};
+\node (B4) [below of=B3] {$4$};
+
+\node (Ca) [right=1in of B1] {$a$};
+\node (Cb) [below of=Ca] {$b$};
+\node (Cc) [below of=Cb] {$c$};
+\node (Cd) [below of=Cc] {$d$};
+
+\path (A1) -- node[above=2ex] {$R$} (B1) -- node[above=2ex] {$S$} (Ca);
+
+\draw[->] (A1) -- (B2);
+\draw[->] (A1) -- (B4);
+\draw[->] (A2) -- (B1);
+
+\draw[->] (B1) -- (Ca);
+\draw[->] (B1) -- (Cb);
+\draw[->] (B3) -- (Cc);
+\draw[->] (B4) -- (Cb);
+\end{tikzpicture}
+\end{center}
+จะได้ว่า $S\circ R=\set{(\sqrt{2},a),(\sqrt{2},b),(\pi,b)}$
+\end{example}
+%
+\begin{example}
+ให้ $f(x)=x+1$ และ $g(x)=x^2$ จะได้ว่า
+\begin{align*}
+(g\circ f)(x)
+&= g(f(x)) \\
+&= g(x+1) \\
+&= (x+1)^2
+\end{align*}
+หากเขียนในรูปความสัมพันธ์ จะได้ว่า $\R[f]{x}{(x+1)}$ และ $\R[g]{x}{x^2}$ กล่าวคือ $\R[g]{(x+1)}{(x+1)^2}$ \enskip ดังนั้น \[\R[(g\circ f)]{x}{(x+1)^2}\]
+\end{example}
+
+\begin{example}
+ให้ $A$ เป็นเซตของนักศึกษามหาวิทยาลัยเชียงใหม่, $B$ เป็นเซตของกระบวนวิชาในมหาวิทยาลัยเชียงใหม่, และ $C$ เป็นเซตของอาจารย์มหาวิทยาลัยเชียงใหม่ \enskip ให้ $R\subseteq A\times B$ เป็นความสัมพันธ์ระหว่างนักศึกษา $a$ กับกระบวนวิชา $b$ โดยที่ $\R{a}{b}$ หาก $a$ ลงทะเบียนเรียนวิชา $b$ ในภาคเรียนนี้, และ $S\subseteq B\times C$ เป็นความสัมพันธ์ระหว่างกระบวนวิชา $b$ กับอาจารย์ $c$ โดยที่ $\R[S]{b}{c}$ หาก $c$ สอนวิชา $b$ ในภาคเรียนนี้ \enskip จะได้ว่า
+\begin{itemize}[]
+\item $R(A)$ (image of $A$ under $R$) เป็นเซตของวิชาที่มีนักศึกษาลงทะเบียนในภาคเรียนนี้ (นั่นคือ วิชาใดมีลูกศรชี้มาจากนักศึกษาบ้างในความสัมพันธ์ $R$)
+\item $S^{-1}(\textrm{ชิน})$ (image of ชิน under $S^{-1}$) เป็นเซตของวิชาที่ อ.ชินสอนในภาคเรียนนี้ (นั่นคือ วิชาใดมีลูกศรชี้ไปหา อ.ชินบ้างในความสัมพันธ์ $S$)
+\item $S\circ R\subseteq A\times C$ เป็นความสัมพันธ์ที่เชื่อมโยงนักศึกษากับอาจารย์ โดยที่ $\R[S\circ R]{a}{c}$ หากนักศึกษา $a$ เรียนกับอาจารย์ $c$
+\item $R\circ R^{-1}\subseteq B\times B$ เป็นความสัมพันธ์ที่เชื่อมโยงสองวิชาเข้าด้วยกัน โดยที่ $\R[R\circ R^{-1}]{b_1}{b_2}$ หากวิชา $b_1$ และ $b_2$ ไม่สามารถจัดสอบปลายภาคพร้อมกันได้ เนื่องจากมีนักศึกษาที่ลงทะเบียนวิชา $b_1$ และ $b_2$ ทั้งคู่ (หรือ $b_1$ และ $b_2$ นี้เป็นวิชาเดียวกัน)
+\item $R^{-1}\circ R\subseteq A\times A$ เป็นความสัมพันธ์ที่เชื่อมโยงนักศึกษาสองค้นเข้าด้วยกัน โดยที่ $\R[R^{-1}\circ R]{a_1}{a_2}$ หากนักศึกษา $a_1$ และ $a_2$ ลงทะเบียนเรียนวิชาเดียวกัน (หรือ $a_1$ และ $a_2$ เป็นนักศึกษาคนเดียวกัน)
+\end{itemize}
+\end{example}

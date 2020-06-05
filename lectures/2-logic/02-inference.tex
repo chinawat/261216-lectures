@@ -1,0 +1,324 @@
+\section{Logical inference}
+ในการอนุมานทางตรรกะที่เราได้เห็นไปก่อนหน้านี้นั้น เราสามารถเขียนประพจน์ต่างๆ ในรูปสัญลักษณ์ โดยใช้ตัวแปรและตัวดำเนินการทางตรรกะเพื่อช่วยให้เกิดความกระชับมากยิ่งขึ้น
+
+\begin{example}
+หากจะเขียนข้อมูลใน Example~\ref{ex:baseball-reasoning} เป็นสัญลักษณ์ เริ่มแรก กำหนดความหมายของประพจน์ดังนี้
+\begin{itemize}
+\item $P$: ฉันอ่านหนังสือ
+\item $Q$: ฉันผ่านวิชา 261216
+\item $R$: ฉันเล่นเบสบอล
+\end{itemize}
+จะได้ว่า ข้อมูลที่ให้มาสามารถเขียนได้เป็น
+\begin{enumerate}
+\item $P\implies Q$
+\item $\neg R\implies P$
+\item $\neg Q$
+\end{enumerate}
+และเราสรุปได้ว่า $[(P\implies Q)\wedge(\neg R\implies P)\wedge\neg Q]\implies R$ นั้นเป็นจริง
+
+จากประพจน์ดังกล่าว กรณีที่เราต้องสนใจคือเมื่อ $(P\implies Q)\wedge(\neg R\implies P)\wedge\neg Q$ เป็นจริง กล่าวคือ $Q$ เป็นเท็จ ซึ่งแปลว่า $P$ ต้องเป็นเท็จด้วย ทำให้ $\neg R$ ต้องเป็นเท็จ นั่นคือ $R$ ต้องเป็นจริง ดังนั้น กรณีที่ต้องสนใจคือเมื่อฉันไม่อ่านหนังสือ ฉันเล่นเบสบอล และฉันตกวิชา 261216 ซึ่งทำให้สรุปได้ทันทีว่า ฉันเล่นเบสบอล
+\end{example}
+
+\begin{example}\label{ex:modus-ponens}
+หากทราบว่า
+\begin{enumerate}[ref=(\arabic*)]
+\item\label{ex:lotto} ครูถูกหวย
+\item\label{ex:lotto-quit} ถ้าครูถูกหวย ครูจะลาออก
+\end{enumerate}
+แล้วถ้าเราจะสรุปว่า ดังนั้น ครูลาออก จะสมเหตุสมผลหรือไม่
+\begin{pf}
+ข้อสรุปดังกล่าวสมเหตุสมผล เนื่องจากครูถูกหวย~\ref{ex:lotto} และถ้าครูถูกหวยจะลาออก~\ref{ex:lotto-quit} จึงสรุปได้ว่า ครูลาออก
+\end{pf}
+
+หากจะเขียนข้อมูลดังกล่าวเป็นสัญลักษณ์ เริ่มแรก กำหนดความหมายของประพจน์ดังนี้
+\begin{itemize}
+\item $P$: ครูถูกหวย
+\item $Q$: ครูลาออก
+\end{itemize}
+จะได้ว่า ข้อมูลข้างต้นสามารถเขียนได้เป็น
+\begin{enumerate}
+\item $P$
+\item $P\implies Q$
+\end{enumerate}
+และเราสรุปได้ว่า $P\wedge(P\implies Q)\implies Q$ นั้นเป็นจริง
+\end{example}
+
+\subsection{Inference rules}
+
+การใช้เหตุผลดังเช่น Example~\ref{ex:modus-ponens} เป็นการให้เหตุผลขั้นพื้นฐาน ที่สามารถเขียนเป็น\emph{กฎการอนุมาน} (inference rule) ได้ \enskip Inference rules เป็นกฎที่เราสามารถนำมาประกอบกันเพื่อใช้ในการให้เหตุผลที่ซับซ้อนขึ้น
+
+รูปร่างลักษณะของ inference rules เป็นดังนี้
+\[
+\inferrule*[Right=\textup{ชื่อกฎ}]
+{\textup{สิ่งที่เราต้องทำ}_1 \\ \textup{สิ่งที่เราต้องทำ}_2 \\ \cdots \\ \textup{สิ่งที่เราต้องทำ}_n}
+{\textup{สิ่งที่เราต้องการสรุป}}
+\]
+ด้านล่างของเส้น คือสิ่งที่เราต้องการสรุป เป็นเป้าหมายหลักของการให้เหตุผล ส่วนด้านบนของเส้น คือสิ่งที่เราต้องทำ ซึ่งก็คือเป้าหมายย่อยต่างๆ ที่หากทำได้สำเร็จทั้งหมด เป้าหมายหลักที่เราต้องการก็จะสำเร็จด้วย \enskip กล่าวอีกนัยหนึ่ง หากต้องการทำเป้าหมายหลักให้สำเร็จ เราสามารถทำเป้าหมายย่อยทุกตัวให้สำเร็จได้ก็เพียงพอ \enskip ทั้งนี้ เป้าหมายย่อยที่เราต้องทำ อาจจะไม่มีเลยก็ได้ ซึ่งแปลว่าเราสามารถสรุปสิ่งที่อยู่ด้านล่างของเส้นได้ทันที หรือเป้าหมายย่อยอาจจะมีเพียงหนึ่งเป้าหมายเท่านั้น ไม่จำเป็นต้องมีหลายเป้าหมาย
+
+เป้าหมายต่างๆ ใน inference rule มีรูปร่างลักษณะดังนี้ \[\textup{เซตของสมมุติฐาน}\vdash\textup{ข้อสรุป}\] ทางด้านซ้ายของ $\vdash$ (turnstile) เป็นเซตของสมมุติฐานที่เราสามารถใช้ในการให้เหตุผลได้ ส่วนด้านขวาของ turnstile เป็นข้อสรุปที่เราต้องพยายามสรุปให้ได้
+%
+\begin{example}
+เป้าหมาย $\Gamma,P,P\implies Q\vdash Q$ กล่าวว่า หากเรามีสมมุติฐาน $\Gamma$ (ซึ่งเป็นเซตของสมมุติฐานอื่นๆ ที่เราไม่ได้ใช้ในการให้เหตุผลในขั้นตอนนี้), $P$, และ $P\implies Q$ แล้วเราต้องพยายามสรุป $Q$ ให้ได้
+\end{example}
+
+\paragraph{Inference rules for implications}
+กฎการอนุมานที่เกี่ยวกับตัวดำเนินการ $\implies$ มีดังนี้
+\[
+\inferrule*[Right=$\implies$-intro]
+{\Gamma,P\vdash Q}
+{\Gamma\vdash P\implies Q}
+\]
+Inference rule นี้กล่าวว่า หากเราต้องการพิสูจน์ว่า $P\implies Q$ (โดยมี $\Gamma$ เป็นสมมุติฐาน) ให้เพิ่ม $P$ เป็นสมมุติฐานเข้าไปอีกหนึ่ง แล้วพยายามพิสูจน์ $Q$ นั่นคือ เราจะพิจารณาเฉพาะกรณีที่ $P$ เป็นจริงเท่านั้นในการพิสูจน์ $Q$
+
+\[
+\inferrule*[Right=$\implies$-elim]
+{\Gamma\vdash P \\ \Gamma\vdash P\implies Q}
+{\Gamma\vdash Q}
+\]
+Inference rule นี้กล่าวว่า หากเราพิสูจน์ $P$ ได้ (จากสมมุติฐาน $\Gamma$) และพิสูจน์ $P\implies Q$ ได้ ก็สามารถพิสูจน์ $Q$ ได้ \enskip หากจะกล่าวในทางกลับกัน ถ้าเราต้องการพิสูจน์ $Q$ จากสมมุติฐาน $\Gamma$ ให้หาประพจน์ $P$ ที่เราสามารถพิสูจน์ทั้ง $P$ และ $P\implies Q$ ได้ มาช่วยทำให้การพิสูจน์ลุล่วงไปได้ \enskip กฎนี้มีอีกชื่อหนึ่งว่า \emph{modus ponens}
+
+กฎ \textsc{$\implies$-elim} นี้เองที่ใช้ในการให้เหตุผลใน Example~\ref{ex:modus-ponens}
+
+\begin{example}\label{ex:modus tollens}
+หากทราบว่า
+\begin{enumerate}[ref=(\arabic*)]
+\item\label{ex:lotto-quit-mt} ถ้าครูถูกหวย ครูจะลาออก
+\item\label{ex:noquit} ครูไม่ลาออก
+\end{enumerate}
+แล้วถ้าเราจะสรุปว่า ดังนั้น ครูไม่ถูกหวย จะสมเหตุสมผลหรือไม่
+\begin{pf}
+ข้อสรุปดังกล่าวสมเหตุสมผล เนื่องจากถ้าครูถูกหวยจะลาออก~\ref{ex:lotto-quit-mt} แต่ครูไม่ลาออก~\ref{ex:noquit} จึงเป็นไปไม่ได้ที่ครูจะถูกหวย ดังนั้น สรุปได้ว่า ครูไม่ถูกหวย
+\end{pf}
+
+หากจะเขียนข้อมูลดังกล่าวเป็นสัญลักษณ์ เริ่มแรก กำหนดความหมายของประพจน์ดังนี้
+\begin{itemize}
+\item $P$: ครูถูกหวย
+\item $Q$: ครูลาออก
+\end{itemize}
+จะได้ว่า ข้อมูลข้างต้นสามารถเขียนได้เป็น
+\begin{enumerate}
+\item $P\implies Q$
+\item $\neg Q$
+\end{enumerate}
+และเราสรุปได้ว่า $[(P\implies Q)\wedge\neg Q]\implies \neg P$ นั้นเป็นจริง
+\end{example}
+
+ในตัวอย่างนี้ เราใช้กฎการอนุมานที่ชื่อว่า \emph{modus tollens}:
+\[
+\inferrule*[Right=modus tollens]
+{\Gamma\vdash P\implies Q \\ \Gamma\vdash \neg Q}
+{\Gamma\vdash \neg P}
+\]
+อย่างไรก็ดี หากเราทราบมาก่อนว่า ประพจน์ $P\implies Q$ นั้นสมมูล (equivalent) กับประพจน์ $\neg Q\implies\neg P$ เราสามารถเรียกใช้กฎ modus ponens ได้โดยไม่จำเป็นต้องสร้างกฎใหม่ขึ้นมา โดยแทนค่า $P$ ในกฎด้วย $\neg Q$ และค่าของ $Q$ ในกฎด้วย $\neg P$ ดังนี้
+\[
+\inferrule*[Right=$\implies$-elim]
+{\Gamma\vdash \neg Q \\ \Gamma\vdash \neg Q\implies \neg P}
+{\Gamma\vdash \neg P}
+\]
+
+\paragraph{Inference rule for axioms}
+กฎการอนุมานที่เกี่ยวกับ axioms มีดังนี้
+\[
+\inferrule*[Right=axiom]
+{ }
+{\Gamma,P\vdash P}
+\]
+Inference rule นี้กล่าวว่า ถ้าเรามี $P$ เป็นสมมุติฐาน ก็สามารถสรุป $P$ ได้ทันที โดยไม่ต้องทำอะไรเพิ่มเติมอีก
+
+\begin{example}
+    หากต้องการพิสูจน์ว่า $P\implies P$ สามารถเขียนขั้นตอนการพิสูจน์เป็น \emph{proof tree} ได้ดังนี้
+    \[
+        \inferrule*[Right=$\implies$-intro]
+        {\inferrule*[Right=axiom]{ }{P\vdash P}}
+        {\vdash P\implies P}
+    \]
+    เราสามารถตีความ proof tree ดังกล่าวจากล่างขึ้นบนได้ดังนี้ \enskip สิ่งเราต้องการพิสูจน์คือ $P\implies P$ โดยไม่มีสมมุติฐานอื่นเพิ่มเติม (กล่าวคือ $\Gamma=\emptyset$) \enskip อันดับแรก เราจะใช้กฎ \textsc{$\implies$-intro} เพื่อเพิ่ม $P$ ที่อยู่ทางด้านซ้ายของ $\implies$ เป็นสมมุติฐานก่อน ทำให้เราได้เป้าหมายใหม่ คือ ต้องพิสูจน์ว่า $P$ เป็นจริง โดยมีสมมุติฐานว่า $P$ เป็นจริง \enskip จะเห็นว่า ในขั้นตอนนี้ เราสามารถใช้กฎ \textsc{axiom} ซึ่งไม่กำหนดเป้าหมายเพิ่มเติม ทำให้เราเสร็จสิ้นกระบวนการพิสูจน์ได้ทันที
+
+    หากจะเขียนบทพิสูจน์นี้เป็นร้อยแก้ว จะได้ดังนี้
+
+    สมมุติว่า $P$ เป็นจริง ต้องพิสูจน์ว่า $P$ เป็นจริง (\textsc{$\implies$-intro}) \enskip เนื่องจากเรามีสมมุติฐานแล้วว่า $P$ เป็นจริง เราจึงสรุปได้ว่า $P$ เป็นจริง (\textsc{axiom}) ตามที่ต้องการ
+\end{example}
+
+\begin{example}\label{ex:pf-modus-ponens}
+หากต้องการพิสูจน์ว่า $P,P\implies Q\vdash Q$ สามารถเขียนขั้นตอนการพิสูจน์เป็น proof tree ได้ดังนี้
+\[
+\inferrule*[Right=$\implies$-elim]
+{\inferrule*[right=axiom]{ }{P,P\implies Q\vdash P} \\
+ \inferrule*[Right=axiom]{ }{P,P\implies Q\vdash P\implies Q}}
+{P,P\implies Q\vdash Q}
+\]
+เราสามารถตีความ proof tree ดังกล่าวได้ดังนี้ \enskip หากต้องการพิสูจน์ $Q$ จากสมมุติฐาน $P$ และ $P\implies Q$ (ในที่นี้ $\Gamma=\emptyset$) เราจะใช้ประพจน์ $P$ เป็นตัวช่วยในการพิสูจน์ โดยใช้กฎ \textsc{$\implies$-elim} ในขั้นตอนนี้ กล่าวคือ เป้าหมายหลักในการพิสูจน์ $Q$ ได้ถูกแปรเปลี่ยนเป็นสองเป้าหมายย่อยๆ คือการพิสูจน์ $P$ และการพิสูจน์ $P\implies Q$ \enskip ถัดไป สังเกตว่า ในแต่ละเป้าหมายย่อย สิ่งที่เราต้องการพิสูจน์นั้นเป็นสมมุติฐานที่เรามีอยู่แล้ว ดังนั้น จึงสามารถใช้กฎ \textsc{axiom} สรุปเป้าหมายที่เราต้องทำได้ทันที โดยไม่มีเป้าหมายย่อยเพิ่มเติม เป็นการเสร็จสิ้นขั้นตอนการพิสูจน์โดยสมบูรณ์
+\end{example}
+
+\paragraph{Inference rules for conjunctions}
+กฎการอนุมานที่เกี่ยวกับตัวดำเนินการ $\wedge$ มีดังนี้
+\[
+\inferrule*[Right=$\wedge$-intro]
+{\Gamma\vdash P \\ \Gamma\vdash Q}
+{\Gamma\vdash P\wedge Q}
+\]
+Inference rule นี้กล่าวว่า หากเราพิสูจน์ $P$ ได้ และพิสูจน์ $Q$ ได้ ก็พิสูจน์ $P\wedge Q$ ได้ นั่นคือ หากต้องการพิสูจน์ว่า $P\wedge Q$ ให้พิสูจน์ $P$ กับ $Q$ แยกกัน
+
+\[
+\inferrule*[Right=$\wedge$-elim]
+{\Gamma,P,Q\vdash R}
+{\Gamma, P\wedge Q\vdash R}
+\]
+Inference rule นี้กล่าวว่า ถ้าเรามี $P\wedge Q$ เป็นสมมุติฐาน แล้วต้องการพิสูจน์ $R$ เราสามารถแยก $P\wedge Q$ เป็นสองสมมุติฐาน $P$ และ $Q$ แล้วพยายามพิสูจน์ $R$ ได้ \enskip กล่าวอีกนัยหนึ่ง ถ้ารู้ว่า $P\wedge Q$ เป็นจริง ก็ย่อมรู้ว่า $P$ กับ $Q$ แต่ละตัวเป็นจริงด้วย
+
+\begin{example}
+    หากต้องการพิสูจน์ว่า $P\wedge(P\implies Q)\implies Q$ สามารถเขียนขั้นตอนแรกๆ ของการพิสูจน์เป็น proof tree ได้ดังนี้
+    \[
+        \inferrule*[Right=$\implies$-intro]
+        {\inferrule*[Right=$\wedge$-elim]{P, P\implies Q\vdash Q}
+            {P\wedge(P\implies Q)\vdash Q}}
+        {\vdash P\wedge(P\implies Q)\implies Q}
+    \]
+    จะเห็นว่า เป้าหมายบนสุด ก็คือเป้าหมายล่างสุดใน Example~\ref{ex:pf-modus-ponens} นั่นเอง โดยเราสามารถนำ proof tree ในตัวอย่างดังกล่าวมาต่อเติม proof tree ข้างต้นให้สมบูรณ์ได้
+
+    หากจะเขียนบทพิสูจน์นี้เป็นร้อยแก้ว จะได้ดังนี้
+    
+    สมมุติว่า $P$ และ $P\implies Q$ เป็นจริง ต้องพิสูจน์ว่า $Q$ เป็นจริง (\textsc{$\implies$-intro}, \textsc{$\wedge$-elim}) \enskip เนื่องจากเราทราบว่า $P$ เป็นจริง (\textsc{axiom}) และจาก $P\implies Q$ (\textsc{axiom}) ทำให้เราทราบด้วยว่า ถ้า $P$ เป็นจริงแล้ว $Q$ จะเป็นจริงด้วย จึงสามารถสรุปได้ว่า $Q$ เป็นจริง (\textsc{$\implies$-elim}) ตามที่เราต้องการ
+\end{example}
+
+\begin{example}
+ในตัวอย่างนี้ จะเขียนบทพิสูจน์ของ $(P\implies Q\implies R)\implies (P\wedge Q\implies R)$ ออกมาเป็น proof tree ได้ผลลัพธ์ดังรูปที่~\ref{fig:curry-proof}
+%
+\begin{sidewaysfigure}
+\[
+\inferrule*[Right=$\implies$-intro,leftskip=2in]
+{
+  \inferrule*[Right=$\implies$-intro,leftskip=5in,rightskip=5in]
+  {
+    \inferrule*[Right=$\wedge$-elim,leftskip=5in,rightskip=5in]
+    {
+      \inferrule*[Right=$\implies$-elim,leftskip=5in,rightskip=5in]
+      {\inferrule*[right=axiom]{ }{P\implies Q\implies R,P,Q\vdash Q} \\ 
+       \inferrule*[Right=$\implies$-elim,rightskip=1.75in]
+       {\inferrule*[right=axiom]{ }{P\implies Q\implies R,P,Q\vdash P} \\
+        \inferrule*[Right=axiom]{ }{P\implies Q\implies R,P,Q\vdash P\implies(Q\implies R)}}
+       {P\implies Q\implies R,P,Q\vdash Q\implies R}
+      }
+      {P\implies Q\implies R,P,Q\vdash R}
+    }
+    {P\implies Q\implies R,P\wedge Q\vdash R}
+  }
+  {P\implies (Q\implies R)\vdash P\wedge Q\implies R}
+}
+{\vdash (P\implies Q\implies R)\implies (P\wedge Q\implies R)}
+\]
+\caption{Proof tree ของ $(P\implies Q\implies R)\implies (P\wedge Q\implies R)$}
+\label{fig:curry-proof}
+\end{sidewaysfigure}
+
+หากจะเขียนบทพิสูจน์ดังกล่าวเป็นร้อยแก้ว จะได้ดังนี้
+
+สมมุติว่า $P\implies(Q\implies R)$ และ $P\wedge Q$ เราต้องพิสูจน์ว่า $R$ เป็นจริง (\textsc{$\implies$-intro} สองครั้ง) \enskip เนื่องจาก $P\wedge Q$ จะได้ว่า $P$ และ $Q$ เป็นจริงทั้งคู่ (\textsc{$\wedge$-elim}) \enskip เนื่องจากเราทราบว่า $P$ และ $P\implies Q\implies R$ (\textsc{axiom} สองครั้ง) จึงสรุปได้ว่า $Q\implies R$ (\textsc{$\implies$-elim}) \enskip แต่เนื่องจาก $Q$ เป็นจริงด้วย (\textsc{axiom}) จึงสรุปได้อีกด้วยว่า $R$ เป็นจริง (\textsc{$\implies$-elim}) ตามที่ต้องการ
+\end{example}
+
+\begin{exercise}
+    เขียน proof tree ของประพจน์ $(P\wedge Q\implies R)\implies(P\implies Q\implies R)$ แล้วกลั่นกรองเป็นบทพิสูจน์เชิงร้อยแก้ว
+\end{exercise}
+
+\paragraph{Inference rules for disjunctions}
+กฎการอนุมานบางส่วนที่เกี่ยวกับตัวดำเนินการ $\vee$ มีดังนี้
+
+\[
+\inferrule*[Right=$\vee$-intro-L]
+{\Gamma\vdash P}
+{\Gamma\vdash P\vee Q}
+\]
+Inference rule นี้กล่าวว่า หากเราพิสูจน์ $P$ ได้ ก็พิสูจน์ $P\vee Q$ ได้ นั่นคือ หากต้องการพิสูจน์ว่า $P\vee Q$ ให้พิสูจน์ $P$ ก็เพียงพอ
+\[
+\inferrule*[Right=$\vee$-intro-R]
+{\Gamma\vdash Q}
+{\Gamma\vdash P\vee Q}
+\]
+ในทำนองเดียวกัน หากเราพิสูจน์ $Q$ ได้ ก็พิสูจน์ $P\vee Q$ ได้เช่นกัน ดังนั้น หากต้องการพิสูจน์ว่า $P\vee Q$ ให้เลือกพิสูจน์ $P$ หรือ $Q$ อย่างใดอย่างหนึ่งก็พอ (หากเราพิสูจน์ได้ทั้งคู่ แสดงว่าเราได้พิสูจน์ $P\wedge Q$ ซึ่งมีความแข็งแรงกว่า $P\vee Q$)
+
+ในส่วนของ inference rules สำหรับตัวดำเนินการอื่นๆ จะได้กล่าวถึงในภายหลัง
+
+\subsection{Simple proofs}
+เราได้เห็นนิยามของการพิสูจน์ทางคณิตศาสตร์ พร้อมด้วยคำจำกัดความของส่วนประกอบต่างๆ ของ proof แล้ว ก็ได้เวลาที่จะลองเขียน proof กันเสียที ก่อนอื่น เริ่มด้วยนิยามที่จะต้องใช้ในประพจน์ที่เราจะพิสูจน์
+
+\begin{definition}[divisibility]
+กำหนดให้ $a$ และ $b$ เป็นจำนวนเต็ม \emph{$a$ หาร $b$ ลงตัว} (เขียนเป็นสัญลักษณ์ (denoted) ว่า $a\mid b$) ถ้ามีจำนวนเต็ม $c$ ที่ทำให้ $b=ac$
+\end{definition}
+
+\begin{example}
+$2\mid 4$ และ $2\mid 8$ \enskip กรณีหลังนี้เป็นจริง เนื่องจากมีจำนวนเต็ม ซึ่งก็คือ 4 ที่ทำให้ $8=2\cdot 4$
+\end{example}
+
+\begin{theorem}\label{thm:div-transitive}
+ถ้า $a\mid b$ และ $b\mid c$ แล้ว $a\mid c$
+\begin{pf}
+จากนิยามของ $a\mid b$ จะได้ว่ามีจำนวนเต็ม $m$ ที่ทำให้ $b=am$ เช่นเดียวกับ $b\mid c$ ที่มีจำนวนเต็ม $n$ ที่ทำให้ $c=bn$ ดังนั้น เมื่อแทนค่า $b$ จะได้ว่า \[c=(am)n=a(mn)\] ในที่นี้ สมการสุดท้ายได้มาด้วย axiom (สมบัติการเปลี่ยนหมู่ / associativity) \enskip นั่นคือ $c=a(mn)$ โดยสรุปได้ด้วยสมบัติการถ่ายทอด ซึ่งเป็นอีก axiom หนึ่ง
+
+แต่ $mn$ ก็เป็นจำนวนเต็มเช่นกัน (axiom อีกหนึ่ง: สมบัติปิด / closure ของการคูณ) ดังนั้น ถ้าให้ $\ell=mn$ จะได้ว่า $c=a\ell$ ซึ่งแปลว่า $a\mid c$ จากนิยามของ $\mid$ นั่นเอง ตามที่ต้องการ
+\end{pf}
+\end{theorem}
+จะเห็นว่า การพิสูจน์นั้น เริ่มจากการขยายความสมมุติฐาน โดยใช้นิยามที่เรามีอยู่ จากนั้น ให้เหตุผลเพื่อแปลงรูปสมมุติฐานที่เรามีให้เข้าใกล้จุดหมายมากขึ้น สุดท้าย ใช้บทนิยามเพื่อจำกัดความของสิ่งที่เราแปลงรูปมา ให้กลับเป็นเป้าหมายที่เราต้องการพิสูจน์แต่แรก ตามที่เราต้องการ
+
+\begin{definition}
+จำนวนเต็ม $a$ เป็น\emph{เลขคู่} (even) ถ้า $2\mid a$
+\end{definition}
+
+\begin{theorem}
+ผลบวกของเลขคู่สองตัวเป็นเลขคู่
+
+\begin{pf}
+ต้องแสดงว่า ถ้า $a$ และ $b$ เป็นเลขคู่ แล้ว $a+b$ เป็นเลขคู่
+
+จากนิยามของเลขคู่และการหารลงตัว $a$ เป็นเลขคู่ แปลว่า $2\mid a$ ซึ่งแปลว่ามีจำนวนเต็ม $m$ ที่ทำให้ $a=2m$ เช่นเดียวกัน $b$ เป็นเลขคู่ แปลว่า $2\mid b$ ซึ่งแปลว่ามีจำนวนเต็ม $n$ ที่ทำให้ $b=2n$
+
+จะได้ว่า \[a+b=2m+2n=2(m+n)\] ในที่นี้ สมการสุดท้ายได้มาด้วย axiom (สมบัติการแจกแจง / distributivity)
+
+แต่ $m+n$ ก็เป็นจำนวนเต็มเช่นกัน (axiom อีกหนึ่ง: สมบัติปิด / closure ของการบวก) ดังนั้น ถ้าให้ $\ell=m+n$ จะได้ว่า $a+b=2\ell$ ซึ่งแปลว่า $2\mid (a+b)$ นั่นคือ $a+b$ เป็นเลขคู่ ตามที่ต้องการ
+\end{pf}
+\end{theorem}
+บทพิสูจน์นี้ยังคงความเรียบง่าย แต่เพิ่มความซับซ้อนขึ้นมาอีกเล็กน้อย กล่าวคือ ในการขยายความสมมุติฐานโดยใช้นิยาม เราต้องขยายความสองต่อ ก่อนที่เราจะสามารถให้เหตุผลเพื่อแปลงรูปสมมุติฐานได้ เช่นเดียวกับขั้นตอนสุดท้าย ที่เราต้องจำกัดความโดยใช้สองนิยาม ให้ได้เป้าหมายตามที่เราต้องการ
+
+บทพิสูจน์ที่ผ่านๆ มานั้นกล่าวถึง axioms ที่ใช้โดยละเอียด แต่การเขียนบทพิสูจน์โดยทั่วไปนั้น axioms ที่เป็นพื้นฐานและเข้าใจตรงกันมักจะถูกละไว้ในฐานที่เข้าใจ ดังนั้น ในบทพิสูจน์ต่อๆ ไป จะละเว้นการบ่งชี้ axioms เพื่อความกระชับ และป้องกันการเบี่ยงเบนความสนใจของผู้อ่านบทพิสูจน์ ที่ควรให้ความสนใจกับส่วนที่สำคัญกว่าในบทพิสูจน์
+
+เราสามารถใช้ inference rules ต่างๆ ที่ได้นำเสนอมาในการพิจารณาว่าการให้เหตุผลต่างๆ นั้นถูกต้องมีตรรกะหรือไม่ ซึ่งจะทำให้เราสามารถใช้วิจารณญาณได้อย่างเต็มประสิทธิภาพในการตีความและเลือกที่จะเชื่อข้ออ้างต่างๆ ไม่ว่าข้ออ้างเหล่านั้นจะเกิดขึ้นในวิชาชีพของเรา หรือโดยทั่วไปในชีวิตประจำวัน \enskip นอกจากนี้ หากเราต้องการเขียนข้อความต่างๆ การใช้เหตุผลดังกล่าวยังทำให้เรามีความระมัดระวังในการที่จะเขียนข้อความเหล่านั้นให้รัดกุม ไม่กำกวม อันจะป้องกันความเสียหายที่อาจจะเกิดขึ้นต่อตัวเราเองโดยรู้เท่าไม่ถึงการณ์ด้วย
+%
+\begin{example}
+การให้เหตุผลต่อไปนี้ถูกต้องหรือไม่
+
+ถ้าวงดนตรีวิศวะไม่เล่นเพลงร็อกหรือเหล้าหมด แล้วปาร์ตี้หลังขึ้นดอยจะเลิกก่อนเที่ยงคืนและผมจะให้ F \enskip นอกจากนี้ ถ้าปาร์ตี้หลังขึ้นดอยเลิกก่อนเที่ยงคืน แล้วนักศึกษาจะถอนวิชา 261216 \enskip แต่ในท้ายที่สุด นักศึกษาไม่ถอนวิชา 261216 \enskip ดังนั้น วงดนตรีวิศวะต้องเล่นเพลงร็อก
+
+การให้เหตุผลดังกล่าวนั้นถูกต้อง เนื่องจากสามารถเขียนบทพิสูจน์ได้ \enskip ก่อนอื่น เพื่อความสะดวก จะแทนประพจน์ต่างๆ ด้วยสัญลักษณ์ดังต่อไปนี้
+\begin{itemize}
+\item $P$: วงดนตรีวิศวะเล่นเพลงร็อก
+\item $Q$: เหล้าหมด
+\item $R$: ปาร์ตี้หลังขึ้นดอยเลิกก่อนเที่ยงคืน
+\item $S$: ผมให้ F
+\item $T$: นักศึกษาถอนวิชา 261216
+\end{itemize}
+ข้อมูลดังกล่าวสามารถเขียนเป็นสัญลักษณ์ได้ดังนี้
+\begin{enumerate}[ref=(\arabic*)]
+\item\label{ex:rock-impl} ถ้าวงดนตรีวิศวะไม่เล่นเพลงร็อกหรือเหล้าหมด แล้วปาร์ตี้หลังขึ้นดอยจะเลิกก่อนเที่ยงคืนและผมจะให้ F เขียนได้เป็น $\neg P\vee Q \implies R\wedge S$
+\item\label{ex:party-impl} ถ้าปาร์ตี้หลังขึ้นดอยเลิกก่อนเที่ยงคืน แล้วนักศึกษาจะถอนวิชา 261216 เขียนได้เป็น $R\implies T$
+\item\label{ex:nodrop} นักศึกษาไม่ถอนวิชา 261216 เขียนได้เป็น $\neg T$
+\end{enumerate}
+และต้องการสรุปว่า วงดนตรีวิศวะต้องเล่นเพลงร็อก ซึ่งเขียนได้เป็น $P$
+\begin{pf}
+เนื่องจาก $\neg T$~\ref{ex:nodrop} จะได้ว่า $\neg R$ มิฉะนั้น $R\implies T$~\ref{ex:party-impl} จะเป็นไปไม่ได้ (\textsc{modus tollens}) \enskip เนื่องจาก $\neg R$ จะได้ว่า $R\wedge S$ เป็นเท็จ กล่าวคือ $\neg(R\wedge S)$ เป็นจริง ดังนั้น $\neg P\vee Q$ ต้องเป็นเท็จด้วย (มิฉะนั้น $\neg P\vee Q \implies R\wedge S$~\ref{ex:rock-impl} จะเป็นไปไม่ได้) (\textsc{modus tollens}) แสดงว่า $\neg(\neg P\vee Q)\equiv P\wedge\neg Q$ ต้องเป็นจริง กล่าวคือ $P$ เป็นจริง
+\end{pf}
+
+\begin{exercise}
+  เหล้าหมดหรือไม่
+\end{exercise}
+\begin{exercise}
+  ผมให้ F หรือไม่
+\end{exercise}
+\iffalse
+นอกจากนี้ เรายังสรุปได้ด้วยว่า $\neg Q$ เป็นจริง กล่าวคือ เหล้าไม่หมด
+
+อย่างไรก็ดี หากจะพยายามสรุปว่าผมให้ F หรือไม่ (กล่าวคือ ว่า $S$ เป็นจริงหรือเท็จ) ข้อมูลที่เกี่ยวข้องที่เราทราบคือ $\neg(R\wedge S)$ เป็นจริง กล่าวคือ $\neg R\vee\neg S$ เป็นจริง แต่เนื่องจากเราทราบด้วยว่า $\neg R$ เป็นจริง ไม่ว่า $S$ จะเป็นจริงหรือเท็จก็ไม่ส่งผลต่อค่าความจริงของ $\neg R\vee\neg S$ \enskip ดังนั้น จึงไม่สามารถสรุปได้แน่ชัดว่าผมจะให้ F หรือไม่
+\fi
+\end{example}
+
+\begin{exercise}
+  เขียน proof tree ของประพจน์ $\neg R \implies \neg(R\wedge S)$ แล้วกลั่นกรองเป็นบทพิสูจน์เชิงร้อยแก้ว (พึงระลึกว่า $\neg R$ มีความหมายเช่นเดียวกับ $R\implies\False$)
+\end{exercise}

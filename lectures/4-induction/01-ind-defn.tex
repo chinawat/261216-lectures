@@ -1,0 +1,104 @@
+\section{Inductive definitions}
+
+บทนิยามแบบอุปนัย (inductive definitions) เป็นการกำหนดวิธีการสร้างวัตถุที่มีขนาดใหญ่ขึ้น จากวัตถุต่างๆ ที่มีขนาดเล็กกว่า
+
+\begin{example}
+นิพจน์เลขคณิต (arithmetic expressions) สามารถนิยามได้ดังนี้
+\begin{itemize}
+\item จำนวนตรรกยะ เป็น arithmetic expression
+\item ตัวแปร ($x,y,z,\ldots$) เป็น arithmetic expression
+\item[+] ถ้า $a_1$ และ $a_2$ เป็น arithmetic expressions แล้ว $a_1+a_2$, $a_1-a_2$, $a_1\times a_2$, และ $a_1\div a_2$ ก็เป็น arithmetic expressions ด้วย
+\end{itemize}
+ตัวอย่างของ arithmetic expressions จากนิยามดังกล่าวได้แก่ $1,0,-3,\frac{2}{3},x,z,x+z,x-(-3),24+48-56$ สังเกตว่า arithmetic expression แต่ละตัวสามารถแยกย่อยเป็น arithmetic expression(s) ที่เล็กกว่าได้เรื่อยๆ หาก arithmetic expression ตั้งต้นนั้นไม่ได้เล็กที่สุดอยู่แล้ว
+\end{example}
+
+\begin{example}\label{ex:ind-bexp}
+นิพจน์บูลเลียน (boolean expressions) สามารถนิยามได้ดังนี้
+\begin{itemize}
+\item $\mathrm{true}$ เป็น boolean expression
+\item $\mathrm{false}$ เป็น boolean expression
+\item ถ้า $a_1$ และ $a_2$ เป็น arithmetic expressions แล้ว $a_1=a_2$, $a_1<a_2$, และ $a_1>a_2$ เป็น boolean expressions
+\item[+] ถ้า $b$ เป็น boolean expression แล้ว $\neg b$ ก็เป็น boolean expression ด้วย
+\item[+] ถ้า $b_1$ และ $b_2$ เป็น boolean expressions แล้ว $b_1\wedge b_2$ และ $b_1\vee b_2$ ก็เป็น boolean expressions ด้วย
+\end{itemize}
+\end{example}
+
+\begin{definition}
+\emph{บทนิยามแบบอุปนัย} (inductive definition) ประกอบด้วย 2 ส่วน
+\begin{itemize}
+\item \emph{กรณีฐาน} (base case) ซึ่งกำหนดวิธีการสร้างวัตถุตั้งต้น โดยไม่พึ่งพาวัตถุอื่นๆ ที่มีชนิดเดียวกันในการสร้างขึ้นมา
+\item[+] \emph{กรณีอุปนัย} (inductive case) ซึ่งกำหนดวิธีการสร้างวัตถุที่มีขนาดใหญ่ขึ้น โดยมีวัตถุ\emph{ชนิดเดียวกัน}ที่มีขนาดเล็กกว่าเป็นส่วนประกอบอย่างน้อย 1 ชิ้น
+\end{itemize}
+\end{definition}
+จากนิยามดังกล่าว จะเห็นว่าใน Example~\ref{ex:ind-bexp} การสร้าง boolean expressions จาก arithmetic expressions โดยใช้การเปรียบเทียบไม่ถือว่าเป็นกรณีอุปนัย เนื่องจากวัตถุที่เป็นส่วนประกอบไม่ใช่ boolean expressions เช่นเดียวกับผลลัพธ์
+
+\begin{example}
+รายการที่มีสมาชิกเป็นจำนวนเต็ม (integer lists) สามารถนิยามแบบอุปนัยได้ดังนี้
+\begin{itemize}
+\item{} [] (รายการว่าง / empty list) เป็น integer list (เรียกว่า $\mathrm{nil}$)
+\item[+] ถ้า $\ell$ เป็น integer list และ $a\in\mathbb{Z}$ แล้ว $a:\ell$ ($a$ ตามด้วยสมาชิกตามลำดับใน $\ell$) ก็เป็น integer list ด้วย (เรียกว่า $\mathrm{cons}(a,\ell)$)
+\end{itemize}
+Integer lists ทั้งหมดที่เป็นไปได้สามารถสร้างได้ด้วยวิธีดังกล่าว ตัวอย่างเช่น หากต้องการสร้าง list ที่ประกอบไปด้วยสมาชิกสองตัว $[4,7]$ สามารถสร้างได้จากการนำ 7 มาปะหน้า empty list ได้ผลลัพธ์เป็น $7:[]$ แล้วนำ 4 มาปะหน้า list ดังกล่าว ได้ผลลัพธ์เป็น $4:(7:[])=\mathrm{cons}(4, \mathrm{cons}(7, \mathrm{nil}))$
+
+หากจะแปลงนิยามแบบอุปนัยข้างต้นเป็นโปรแกรมในภาษา Java สามารถเขียนได้ดังนี้
+\begin{lstlisting}[language=Java]
+class Node {
+  int hd;
+  Node tl;
+  ...
+}
+Node l1 = null;            // nil = []
+Node l2 = new Node(7, l1); // cons(7, l1) = [7]
+Node l3 = new Node(4, l2); // cons(4, l2) = [4, 7]
+\end{lstlisting}
+\end{example}
+
+\begin{example}
+โครงสร้างข้อมูลชนิดต้นไม้ที่มีสมาชิกเป็นจำนวนเต็ม (integer trees) สามารถนิยามแบบอุปนัยได้ดังนี้
+\begin{itemize}[]
+\item empty tree เป็น integer tree
+\item[+] ถ้า $a\in\mathbb{Z}$ และ $t_1,t_2$ เป็น integer trees แล้ว $\mathrm{Tree}(a, t_1, t_2)$ (ต้นไม้ที่มี $a$ เป็นราก ต้นไม้ย่อยด้านซ้ายเป็น $t_1$ และต้นไม้ย่อยด้านขวาเป็น $t_2$) ก็เป็น integer tree ด้วย ดังรูป
+\begin{center}
+\begin{tikzpicture}
+\node[circle,draw] (a) {$a$};
+\node[draw,regular polygon, regular polygon sides=3,below left=of a] (t1) {$t_1$};
+\node[draw,regular polygon, regular polygon sides=3,below right=of a] (t2) {$t_2$};
+\draw (a) -- (t1.north);
+\draw (a) -- (t2.north);
+\end{tikzpicture}
+\end{center}
+\end{itemize}
+หากจะแปลงนิยามแบบอุปนัยข้างต้นเป็นโปรแกรมในภาษา Java สามารถเขียนได้ดังนี้
+\begin{lstlisting}[language=Java]
+class Tree {
+  int a;
+  Tree left, right;
+  ...
+}
+\end{lstlisting}
+\end{example}
+
+เมื่อมีนิยามแบบอุปนัย ก็สามารถนิยามตัวดำเนินการและฟังก์ชันต่างๆ เกี่ยวกับวัตถุชนิดนั้นๆ ได้โดยวิธีเวียนบังเกิด (recursion)
+\begin{definition}
+ให้ $\ell_1$ และ $\ell_2$ เป็น integer lists \enskip นิยาม\emph{การต่อกัน} (concatenation) ของ $\ell_1$ และ $\ell_2$ [denoted $\ell_1\lconcat\ell_2$] ดังนี้
+\begin{itemize}
+\item หาก $\ell_1=[]$ จะได้ $[]\lconcat\ell_2\triangleq\ell_2$ \\
+กล่าวคือ หากจะนำ list ใดๆ มาต่อ empty list ก็จะได้ list นั้นๆ
+
+\item หาก $\ell_1=a:\ell_1'$ จะได้ $(a:\ell_1')\lconcat\ell_2\triangleq a:(\ell_1'\lconcat\ell_2)$ \\
+กล่าวคือ หากตัวหน้าไม่ใช่ empty list ก็ย่อมมีหัว ($a$) และหาง ($\ell_1'$) \enskip ผลลัพธ์ของ $\lconcat$ ก็คือ นำ $\ell_2$ ไปต่อท้าย $\ell_1'$ ก่อน โดยวิธีเวียนบังเกิด (recursion) ได้ผลลัพธ์เป็น $\ell_1'\lconcat\ell_2$ \enskip จากนั้น ค่อยนำ $a$ มาปะหน้าผลลัพธ์ดังกล่าว
+\end{itemize}
+\end{definition}
+%
+\begin{example}
+ให้ $\ell_1=[2,5]$ และ $\ell_2=[4,7]$ เราสามารถหา $\ell_1\lconcat\ell_2$ ตามลำดับดังนี้
+\begin{itemize}
+\item $(2:5:[])\lconcat(4:7:[])=2:((5:[])\lconcat(4:7:[]))$
+\item $(5:[])\lconcat(4:7:[])=5:([]\lconcat(4:7:[]))$
+\item $[]\lconcat(4:7:[])=4:7:[]$
+\item ดังนั้น $5:([]\lconcat(4:7:[]))=5:4:7:[]$
+\item ดังนั้น $2:((5:[])\lconcat(4:7:[]))=2:(5:([]\lconcat(4:7:[])))=2:5:4:7:[]$
+\end{itemize}
+สรุปได้ว่า ผลลัพธ์คือ $[2,5,4,7]$
+\end{example}
+

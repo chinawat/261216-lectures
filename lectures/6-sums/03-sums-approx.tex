@@ -1,0 +1,157 @@
+\section{Approximating sums}
+
+ก่อนหน้านี้ เราสามารถหา closed form ของผลรวมหลายๆ ตัวได้ แต่ก็มีผลรวมบางตัวที่เราไม่สามารถหา closed form ที่ใช้คำนวณค่าของผลรวมออกมาได้อย่างแม่นยำ
+%
+\begin{example}\label{ex:sum-sqrt}
+$\sum_{i=1}^{n}{\sqrt{i}}$ ไม่มี closed form
+\end{example}
+%
+แม้ว่าเราจะไม่สามารถหา closed form ของผลรวมบางตัวได้ แต่เรายังมีวิธีการที่จะประมาณค่าของผลรวมดังกล่าวว่ามีค่าอย่างน้อยเท่าใด และไม่เกินเท่าใด \enskip วิธีการที่เราจะใช้ คือการหา\emph{ขอบเขตปริพันธ์} (integration bounds) สำหรับฟังก์ชันที่ใช้กำหนดค่าแต่ละพจน์ในผลรวมนั้นๆ
+
+หากผลรวมของเราอยู่ในรูปของ $\sum_{i=1}^n{f(i)}$ อาทิ จาก Example~\ref{ex:sum-sqrt} จะได้ว่า $f(i)=\sqrt{i}$ เราสามารถประมาณค่าผลรวมได้หาก $f$ เข้าข่ายกรณีใดกรณีหนึ่งดังต่อไปนี้
+
+\def\incfn{1/1/1.81,2/2/2.89,3/3/3.85,4/4/4.64,5//5.24,6//6.82,7/n-2/7.52,8/n-1/8.39,9/n/9.12,10/n+1/10.49}
+\def\decfn{1/1/9.12,2/2/8.39,3/3/7.52,4/4/6.82,5//5.24,6//4.64,7/n-2/3.85,8/n-1/2.89,9/n/1.81,10/n+1/0.61}
+
+\newcommand\smoothplot[2]{%
+\begin{tikzpicture}[scale=0.5,every node/.style={scale=0.75}]
+\draw (-0.5,0) -- (10.5,0) node[right] {$x$};
+\draw (0,-0.5) -- (0,9.5) node[above] {$y$};
+
+\foreach \x/\i/\y [remember=\x-1 as \xprev] in #1 {
+  \ifthenelse{\x<5 \OR \x>6}{
+    \draw (\x,-0.25) node[below] {\rotatebox{90}{$\i$}} -- (\x,0.25);
+    \ifthenelse{\x<4 \OR \x>7 \AND \x<10}{
+      \draw (-0.25,\y) node[left] {$f(\i)$} -- (0.25,\y);
+      \begin{scope}[on background layer]
+        \draw[fill=lightgray] ($(\x,0)+(#2-1,0)$) rectangle node{\rotatebox{90}{$f(\i)$}} ($(\x,\y)+(#2,0)$);
+      \end{scope}
+      \node[graphpt] (p\x) at (\x,\y) {};
+    }{
+      \node (p\x) at (\x,\y) {};
+    }
+  }{
+    \node (p\x) at (\x,\y) {};
+  }
+}
+\node [above=0.15in of p5] {$f(x)$};
+\draw[smooth] plot coordinates {(p1.center) (p2.center) (p3.center) (p4.center) (p5.center) (p6.center) (p7.center) (p8.center) (p9.center)};
+
+\draw (5.5,-0.25) node[below] {\rotatebox{90}{$\vdots$}};
+\draw (-0.25,5.75) node[left] {$\vdots$};
+\end{tikzpicture}
+}
+
+\subsection{Approximating sums for positive increasing functions}
+
+หาก $f$ มีค่าบวกและเพิ่ม (positive, increasing function) กล่าวคือ $\forall i: f(i)>0$ และ $\forall i,j: i<j \implies f(i)<f(j)$ สามารถประมาณค่าผลรวมได้ดังนี้
+
+เริ่มแรก หากวาดกราฟของ $f(x)$ (โดยพิจารณา $x\in\mathbb{R}$) จะได้ดังรูปที่~\ref{fig:sums-approx-pos-inc} โดยที่จุดดำแต่ละจุดแสดงค่าของ $f(i)$ เมื่อ $i$ เป็นจำนวนเต็มที่ทำให้ $f(i)$ เป็นหนึ่งในพจน์ที่อยู่ในผลรวม \enskip จากนั้น หากเราวาดสี่เหลี่ยมที่มีความกว้าง 1 หน่วย และความสูง $f(i)$ หน่วยสำหรับแต่ละค่า $i$ ที่เราสนใจ จะได้ว่า สี่เหลี่ยมแต่ละรูปมีพื้นที่ $f(i)$ \enskip หากคำนวณพื้นที่รวมทั้งหมด จะได้ผลลัพธ์เป็นผลรวมที่เราต้องการ
+%
+\begin{figure}
+\begin{center}
+\smoothplot{\incfn}{0}
+%
+\smoothplot{\incfn}{1}
+\end{center}
+\caption{Approximating sums for positive increasing functions}
+\label{fig:sums-approx-pos-inc}
+\end{figure}
+%
+ในรูปด้านซ้าย สี่เหลี่ยมแต่ละรูปที่วาดจะเยื้องไปทางซ้ายของพิกัดของ $f(i)$ แต่ละค่า \enskip หากพิจารณาพื้นที่ใต้กราฟของ $f(x)$ เมื่อ $1\leq x\leq n$ จะเห็นว่าพื้นที่ดังกล่าวนั้นมีค่าน้อยกว่า $f(2)+f(3)+\cdots+f(n)$ เนื่องจากมีส่วนที่แรเงาเกินออกมาเหนือกราฟของ $f(x)$ \enskip อย่างไรก็ดี พื้นที่ใต้กราฟของ $f(x)$ ก็คือปริพันธ์ (integral) ของ $f$ นั่นเอง \enskip จะได้ว่า
+\begin{align*}
+\int_1^n{f(x)dx} &\leq f(2)+f(3)+\cdots+f(n) \\
+\int_1^n{f(x)dx} &\leq \sum_{i=2}^n{f(i)} \\
+f(1)+\int_1^n{f(x)dx} &\leq f(1)+\sum_{i=2}^n{f(i)} \\
+f(1)+\int_1^n{f(x)dx} &\leq \sum_{i=1}^n{f(i)}
+\end{align*}
+นั่นคือ \emph{ขอบเขตล่าง} (lower bound) ของผลรวมดังกล่าวคือ $f(1)+\int_1^n{f(x)dx}$
+
+ในทางกลับกัน ในรูปด้านขวา สี่เหลี่ยมแต่ละรูปจะเยื้องไปทางขวาของพิกัดของ $f(i)$ แต่ละค่า \enskip หากพิจารณาพื้นที่ใต้กราฟของ $f(x)$ เมื่อ $1\leq x\leq n$ จะเห็นว่าพื้นที่ดังกล่าวนั้นมีค่ามากกว่า $f(1)+f(2)+\cdots+f(n-1)$ เนื่องจากมีส่วนที่ไม่ได้แรเงาปรากฏอยู่ใต้กราฟของ $f(x)$ \enskip จะได้ว่า
+\begin{align*}
+f(1)+f(2)+\cdots+f(n-1) &\leq \int_1^n{f(x)dx} \\
+\sum_{i=1}^{n-1}{f(i)} &\leq \int_1^n{f(x)dx} \\
+f(n)+\sum_{i=1}^{n-1}{f(i)} &\leq f(n)+\int_1^n{f(x)dx} \\
+\sum_{i=1}^{n}{f(i)} &\leq f(n)+\int_1^n{f(x)dx}
+\end{align*}
+นั่นคือ \emph{ขอบเขตบน} (upper bound) ของผลรวมดังกล่าวคือ $f(n)+\int_1^n{f(x)dx}$
+
+ดังนั้น สรุปได้ว่า \[f(1)+\int_1^n{f(x)dx} \leq \sum_{i=1}^{n}{f(i)} \leq f(n)+\int_1^n{f(x)dx}\] จะเห็นว่า ค่าความคลาดเคลื่อน (error) จากการประมาณดังกล่าวไม่เกิน \[\left(f(n)+\int_1^n{f(x)dx}\right)-\left(f(1)+\int_1^n{f(x)dx}\right)=f(n)-f(1)\]
+
+\begin{example}
+หาก $f(i)=\sqrt{i}$ จะได้ว่า \[\int_1^n{\sqrt{x}dx}=\left.\frac{x^{3/2}}{3/2}\right|_1^n=\frac{2}{3}(n^{3/2}-1)=\frac{2}{3}n^{3/2}-\frac{2}{3}\] แสดงว่า \[
+\begin{array}{rcl}
+\sqrt{1}+\frac{2}{3}n^{3/2}-\frac{2}{3} &\leq \sum_{i=1}^{n}{\sqrt{i}} &\leq \sqrt{n}+\frac{2}{3}n^{3/2}-\frac{2}{3} \\
+\frac{2}{3}n^{3/2}+\frac{1}{3} &\leq \sum_{i=1}^{n}{\sqrt{i}} &\leq \sqrt{n}+\frac{2}{3}n^{3/2}-\frac{2}{3}
+\end{array}
+\]
+หาก $n=100$ จะได้ว่า \[
+\begin{array}{rcl}
+\frac{2}{3}100^{3/2}+\frac{1}{3} &\leq \sum_{i=1}^{100}{\sqrt{i}} &\leq \sqrt{100}+\frac{2}{3}100^{3/2}-\frac{2}{3} \\
+667 &\leq \sum_{i=1}^{100}{\sqrt{i}} &\leq 676
+\end{array}
+\]
+นั่นคือ ค่าความคลาดเคลื่อนจากการประมาณดังกล่าวไม่เกิน 9 ซึ่งน้อยกว่า 10\% ของค่าที่ประมาณได้
+
+จากขอบเขตผลรวมข้างต้น พจน์ในค่าประมาณที่มีความสำคัญมากที่สุดคือ $\frac{2}{3}n^{3/2}$ เนื่องจากเมื่อ $n$ มีค่ามากๆ พจน์นี้จะมีบทบาทต่อค่าประมาณมากที่สุด \enskip กล่าวอีกนัยหนึ่ง พจน์ที่เหลือจะไม่สำคัญเท่าเมื่อ $n$ มีค่ามากๆ \enskip ดังนั้น เราสามารถเขียนผลรวมดังกล่าวเป็นอีกรูปหนึ่งได้ดังนี้ \[\sum_{i=1}^{n}{\sqrt{i}}=\frac{2}{3}n^{3/2}+\delta(n)\] โดยที่ $\delta(n)$ เป็นพจน์ที่มีความสำคัญน้อยกว่าพจน์หน้าสุด (leading term) ซึ่งก็คือ $\frac{2}{3}n^{3/2}$ \enskip ในที่นี้ $\delta(n)\leq\sqrt{n}$
+
+หากจะเขียนผลรวมดังกล่าวในรูปของ\emph{การประมาณเชิงเส้นกำกับ} (asymptotic approximation) โดยใช้สัญลักษณ์ $\sim$ (tilde) จะได้ว่า \[\sum_{i=1}^{n}{\sqrt{i}}\sim\frac{2}{3}n^{3/2}\]
+\end{example}
+
+\begin{definition}
+ฟังก์ชัน $h(x)$ เป็นค่าประมาณเชิงเส้นกำกับ (asymptotic approximation) ของฟังก์ชัน $g(x)$ (denoted $g(x)\sim h(x)$) หาก $\lim_{x\to\infty}{\frac{g(x)}{h(x)}}=1$
+\end{definition}
+%
+\begin{example}
+$\sum_{i=1}^{n}{\sqrt{i}}\sim\frac{2}{3}n^{3/2}$ เพราะว่า \[\lim_{n\to\infty}\frac{\frac{2}{3}n^{3/2}+\delta(n)}{\frac{2}{3}n^{3/2}}=\lim_{n\to\infty}{1+\frac{\delta(n)}{\frac{2}{3}n^{3/2}}}=1\]
+\end{example}
+
+\subsection{Approximating sums for positive decreasing functions}
+
+หาก $f$ มีค่าบวกและลด (positive, decreasing function) กล่าวคือ $\forall i,j: i<j \implies f(i)>f(j)$ สามารถประมาณค่าผลรวมได้ในลักษณะเดียวกันดังนี้
+
+เริ่มแรก หากวาดกราฟของ $f(x)$ (โดยพิจารณา $x\in\mathbb{R}$) จะได้ดังรูปที่~\ref{fig:sums-approx-pos-dec} \enskip จากนั้น หากเราวาดสี่เหลี่ยมที่มีความกว้าง 1 หน่วย และความสูง $f(i)$ หน่วยสำหรับแต่ละค่า $i$ ที่ใช้ในผลรวม จะได้ว่า สี่เหลี่ยมแต่ละรูปมีพื้นที่ $f(i)$ \enskip หากคำนวณพื้นที่รวมทั้งหมด จะได้ผลลัพธ์เป็นผลรวมที่เราต้องการ
+%
+\begin{figure}
+\begin{center}
+\smoothplot{\decfn}{1}
+%
+\smoothplot{\decfn}{0}
+\end{center}
+\caption{Approximating sums for positive decreasing functions}
+\label{fig:sums-approx-pos-dec}
+\end{figure}
+%
+ในรูปด้านซ้าย สี่เหลี่ยมแต่ละรูปที่วาดจะเยื้องไปทางขวาของพิกัดของ $f(i)$ แต่ละค่า \enskip หากพิจารณาพื้นที่ใต้กราฟของ $f(x)$ เมื่อ $1\leq x\leq n$ จะเห็นว่าพื้นที่ดังกล่าวนั้นมีค่าน้อยกว่า $f(1)+f(2)+\cdots+f(n-1)$ เนื่องจากมีส่วนที่แรเงาเกินออกมาเหนือกราฟของ $f(x)$ \enskip จะได้ว่า
+\begin{align*}
+\int_1^n{f(x)dx} &\leq f(1)+f(2)+\cdots+f(n-1) \\
+\int_1^n{f(x)dx} &\leq \sum_{i=1}^{n-1}{f(i)} \\
+f(n)+\int_1^n{f(x)dx} &\leq f(n)+\sum_{i=1}^{n-1}{f(i)} \\
+f(n)+\int_1^n{f(x)dx} &\leq \sum_{i=1}^n{f(i)}
+\end{align*}
+นั่นคือ ขอบเขตล่าง (lower bound) ของผลรวมดังกล่าวคือ $f(n)+\int_1^n{f(x)dx}$
+
+ในทางกลับกัน ในรูปด้านขวา สี่เหลี่ยมแต่ละรูปจะเยื้องไปทางซ้ายของพิกัดของ $f(i)$ แต่ละค่า \enskip หากพิจารณาพื้นที่ใต้กราฟของ $f(x)$ เมื่อ $1\leq x\leq n$ จะเห็นว่าพื้นที่ดังกล่าวนั้นมีค่ามากกว่า $f(2)+f(3)+\cdots+f(n)$ เนื่องจากมีส่วนที่ไม่ได้แรเงาปรากฏอยู่ใต้กราฟของ $f(x)$ \enskip จะได้ว่า
+\begin{align*}
+f(2)+f(3)+\cdots+f(n) &\leq \int_1^n{f(x)dx} \\
+\sum_{i=2}^{n}{f(i)} &\leq \int_1^n{f(x)dx} \\
+f(1)+\sum_{i=2}^{n}{f(i)} &\leq f(1)+\int_1^n{f(x)dx} \\
+\sum_{i=1}^{n}{f(i)} &\leq f(1)+\int_1^n{f(x)dx}
+\end{align*}
+นั่นคือ ขอบเขตบน (upper bound) ของผลรวมดังกล่าวคือ $f(1)+\int_1^n{f(x)dx}$
+
+ดังนั้น สรุปได้ว่า \[f(n)+\int_1^n{f(x)dx} \leq \sum_{i=1}^{n}{f(i)} \leq f(1)+\int_1^n{f(x)dx}\] สังเกตว่า ขอบเขตผลรวมนั้นคล้ายคลึงกับในกรณี positive, increasing functions ทุกประการ เว้นแต่ว่าขอบเขตบนกับล่างได้สลับตำแหน่งกัน
+
+\begin{example}
+หาก $f(i)=1/\sqrt{i}$ จะได้ว่า \[\int_1^n{\frac{1}{\sqrt{x}}dx}=\left.\frac{\sqrt{x}}{1/2}\right|_1^n=2(\sqrt{n}-1)=2\sqrt{n}-2\] แสดงว่า \[
+\begin{array}{rcl}
+\frac{1}{\sqrt{n}}+2\sqrt{n}-2 &\leq \sum_{i=1}^{n}{\frac{1}{\sqrt{i}}} &\leq \frac{1}{\sqrt{1}}+2\sqrt{n}-2 \\
+\frac{1}{\sqrt{n}}+2\sqrt{n}-2 &\leq \sum_{i=1}^{n}{\frac{1}{\sqrt{i}}} &\leq 2\sqrt{n}-1
+\end{array}
+\]
+เนื่องจาก $2\sqrt{n}-2<\frac{1}{\sqrt{n}}+2\sqrt{n}-2$ เมื่อ $n>0$ จึงสรุปได้ว่า \[2\sqrt{n}-2 < \sum_{i=1}^{n}{\frac{1}{\sqrt{i}}} \leq 2\sqrt{n}-1
+\]
+นั่นคือ ความคลาดเคลื่อนจากการประมาณดังกล่าวมีค่าไม่เกิน 1
+
+หากจะเขียนผลรวมดังกล่าวในรูปของ asymptotic approximation จะได้ว่า \[\sum_{i=1}^{n}{\frac{1}{\sqrt{i}}}\sim 2\sqrt{n}\]
+\end{example}

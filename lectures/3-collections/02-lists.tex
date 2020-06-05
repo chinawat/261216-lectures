@@ -1,0 +1,28 @@
+\section{Lists}
+\emph{รายการ} (lists) เป็น collections อีกชนิดหนึ่งที่มีสมบัติดังนี้
+\begin{itemize}[]
+\item สมาชิกซ้ำได้ (repetitions allowed)
+\item ลำดับสำคัญ (ordered)
+\end{itemize}
+ในส่วนนี้ เราจะพิจารณาเฉพาะ lists ที่กำหนดความยาวแน่นอนก่อน \enskip Lists ในลักษณะนี้เรียกว่า \emph{tuples} ซึ่งสามารถสร้างขึ้นได้โดยใช้ Cartesian product
+\begin{definition}
+ให้ $A$ และ $B$ เป็นเซต \enskip \emph{ผลคูณคาร์ทีเซียน} (Cartesian product) ของ $A$ และ $B$ [denoted $A\times B$] คือเซตของ\emph{คู่อันดับ} (ordered pairs) ทั้งหมด โดยที่ตัวหน้าของคู่อันดับเป็นสมาชิกของ $A$ และตัวหลังของคู่อันดับเป็นสมาชิกของ $B$ กล่าวคือ
+\[A\times B\triangleq\set{(a,b)\mid a\in A\wedge b\in B}\]
+\end{definition}
+%
+\begin{example}\label{ex:Cartesian}
+ให้ $A=\set{\str{d},\str{p}}$ และ $B=\set{\str{c},\str{x}}$ จะได้ว่า $A\times B=\set{(\str{d},\str{c}),(\str{d},\str{x}),(\str{p},\str{c}),(\str{p},\str{x})}$ และ $B\times A=\set{(\str{c},\str{d}),(\str{c},\str{p}),(\str{x},\str{d}),(\str{x},\str{p})}$
+\end{example}
+จะเห็นว่า $A\times B\neq B\times A$ กล่าวคือ Cartesian product ไม่มีสมบัติการสลับที่
+
+เมื่อเราสร้าง ordered pairs ได้แล้ว เราสามารถสร้าง tuples ได้โดยใช้ Cartesian products ซ้ำกันหลายๆ ครั้ง ดังนี้ \enskip ให้ $A$, $B$, และ $C$ เป็นเซต และเราต้องการสร้าง tuples ที่มีความยาว 3 โดยตำแหน่งแรกเป็นสมาชิกของ $A$ ตำแหน่งที่สองเป็นสมาชิกของ $B$ และตำแหน่งสุดท้ายเป็นสมาชิกของ $C$ \enskip เริ่มแรก ให้หา Cartesian product $A\times B$ ก่อน จากนั้นนำผลลัพธ์ที่ได้ไปทำ Cartesian product กับ $C$ อีกครั้งหนึ่ง ได้ผลลัพธ์ดังนี้
+\[(A\times B)\times C =\set{(x,c)\mid x\in A\times B\wedge c\in C}\]
+แต่เนื่องจาก $x\in A\times B$ จะเห็นว่า $x$ นั้นต้องอยู่ในรูปคู่อันดับ $(a,b)$ โดยที่ $a\in A$ และ $b\in B$ กล่าวคือ
+\[(A\times B)\times C =\set{((a,b),c)\mid (a\in A\wedge b\in B)\wedge c\in C}\]
+อย่างไรก็ดี เราสามารถลบวงเล็บชั้นในที่ล้อมรอบ $a$ และ $b$ ออกได้โดยไม่เสียตำแหน่งของ $a$ และ $b$ ในผลลัพธ์ \enskip นอกจากนี้ Cartesian product นั้นมีสมบัติการเปลี่ยนหมู่ กล่าวคือ
+\[(A\times B)\times C = A\times B\times C = A\times (B\times C)\]
+ดังนั้น เราจึงเขียนเซตผลลัพธ์ใหม่ได้เป็น
+\[A\times B\times C = \set{(a,b,c)\mid a\in A\wedge b\in B\wedge c\in C}\]
+ซึ่งทำให้เราได้ tuples ที่มีความยาวเป็น 3 \enskip หากต้องการ tuples ที่มีความยาวมากกว่านี้ สามารถใช้วิธีเดียวกัน โดยเพิ่มจำนวนเซตที่นำมา Cartesian product กัน
+
+ทั้งนี้ หากเราต้องการสร้าง $n$-tuples (tuples ที่มีความยาว $n$) โดยที่สมาชิกในแต่ละตำแหน่งนั้นมาจากเซต $A$ ทั้งหมด เราสามารถเขียนสัญกรณ์ (notation) ได้เป็น $A^n\triangleq\underbrace{A\times A\times\cdots\times A}_{\textrm{$n$ ตัว}}$

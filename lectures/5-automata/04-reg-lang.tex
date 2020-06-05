@@ -1,0 +1,289 @@
+\section{Regular languages}
+
+\begin{definition}
+ให้ $A$ เป็น language \enskip เรียก $A$ ว่า\emph{ภาษาปรกติ} (regular language) หากมี DFA ที่รับรู้ $A$
+\end{definition}
+%
+\begin{example}
+$\set{w\mid\textup{$w$ ลงท้ายด้วย \str{1}}}$ เป็น regular language เนื่องจาก $M_1$ รับรู้ภาษานี้
+\end{example}
+\begin{example}
+$\set{w\mid\textup{$w=\varepsilon$ หรือ $w$ ลงท้ายด้วย \str{0}}}$ เป็น regular language เนื่องจาก $M_2$ รับรู้ภาษานี้
+\end{example}
+
+\subsection{Automata construction}
+
+โดยทั่วไปแล้ว เรามักจะสนใจว่า เซตของ strings ที่ให้มานั้นเป็น regular language หรือไม่ กล่าวคือ หากให้เซตมา ต้องพิจารณาว่ามี DFA ที่รับรู้เซตนั้นๆ หรือไม่ \enskip ที่ผ่านๆ มานั้น เราได้ทำในทางกลับกัน กล่าวคือ หากให้ DFA มา ต้องพิจารณาว่า DFA ดังกล่าวรับรู้เซตใด ซึ่งอาจจะสวนทางกับที่ควรจะเป็น เนื่องจากมนุษย์นั้นเข้าใจนิยามที่เป็นในลักษณะเงื่อนไข (ดังเช่นเงื่อนไขในเซต) ได้ง่ายกว่านิยามที่เป็นในลักษณะเครื่องจักรกลที่มีหลายๆ สถานะ \enskip ในที่นี้ เราจะสร้าง DFAs จากเซตต่างๆ ที่กำหนดมาให้
+
+\begin{example}
+สร้าง DFA $M_3$ ที่นับจำนวนคนที่เข้ามาครั้งละ 1--2 คน แล้วพิจารณาว่าจำนวนคนทั้งหมดนั้นหารด้วย 3 ลงตัวหรือไม่ อย่างไรก็ดี เราสามารถกดปุ่ม reset ที่ทำให้ลืมทุกอย่างที่เคยนับมาก่อนหน้านี้ได้
+
+ก่อนอื่น พิจารณา alphabet ที่เหมาะสมกับปัญหานี้ก่อน \enskip จะเห็นว่า ในแต่ละครั้งที่สถานการณ์เปลี่ยนแปลง อาจจะมีคนเข้ามา 1 คน 2 คน หรือเรากดปุ่ม reset รวมแล้วเป็นไปได้ทั้งหมด 3 กรณี \enskip ดังนั้น ให้ $\Sigma=\set{\str{1},\str{2},\str{R}}$
+
+หากพิจารณาสิ่งที่เราต้องจดจำในการแก้ปัญหานี้ จะเห็นว่า เราต้องทราบว่าจำนวนคนที่เข้าไปแล้ว (หลังจากกด reset ครั้งหลังสุด) นั้นหารด้วย 3 ลงตัวหรือไม่ \enskip ดังนั้น DFA ที่เราจะสร้างขึ้นควรจะมีอย่างน้อย 3 states \enskip ให้ $r_i$ เป็น state ที่ DFA จะไปถึงหากจำนวนคนดังกล่าวนั้นหารด้วย 3 แล้วเหลือเศษ $i$ โดยที่ $i=0,1,2$ \enskip จะได้ว่า accept state ควรจะเป็น $r_0$ ซึ่งแปลว่าจำนวนคนทั้งหมดหลังกด reset นั้นหารด้วย 3 ลงตัว
+
+ณ state ใดๆ หากมีคนเข้ามาเพิ่มเติม ให้เปลี่ยน state ไปตามเศษที่หารด้วย 3 หลังจากนับคนเพิ่มแล้ว อาทิ หากขณะนี้จำนวนคนหารด้วย 3 แล้วเหลือเศษ 2 (นั่นคือ อยู่ที่ $r_2$) แล้วมีคนเข้ามาเพิ่ม 2 คน จะได้ว่า จำนวนคนนั้นหารด้วย 3 แล้วเหลือเศษ 1 แทน (เช่น หากตอนแรกมี 47 คน แล้วเพิ่มมาอีกสองเป็น 49 จะได้ว่า 49 หารด้วย 3 แล้วเหลือเศษ 1) ดังนั้น ควรจะมี transition จาก $r_2$ ไป $r_1$ หาก input ตัวต่อไปเป็น \str{2} \enskip นอกจากนี้ ไม่ว่าเราจะอยู่ ณ state ใดก็ตาม หากกด reset แสดงว่าจำนวนคนที่เราจะนับนั้นกลายเป็น 0 ใหม่ ซึ่งแปลว่าควรจะมี transition จาก state ใดๆ ไปยัง $r_0$ หาก input ตัวต่อไปเป็น \str{R}
+
+จากแนวคิดดังกล่าว สามารถเขียน DFA ออกมาได้ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node (o) at (0,0) {};
+\node[initial,state,accepting] (r0) [below left=of o] {$r_0$};
+\node[state] (r1) [above=of o] {$r_1$};
+\node[state] (r2) [below right=of o] {$r_2$};
+
+\path[arrow]
+ (r0) edge [bend left=20] node [left] {\str{1}} (r1)
+      edge [bend left=20] node [above] {\str{2}} (r2)
+      edge [loop,out=150,in=120,looseness=7] node [above] {\str{R}} (r0)
+ (r1) edge [bend left=20] node [right] {\str{1}} (r2)
+      edge [bend left=20] node [left] {\str{2},\str{R}} (r0)
+ (r2) edge [bend left=20] node [right] {\str{2}} (r1)
+      edge [bend left=20] node [above] {\str{1},\str{R}} (r0);
+\end{tikzpicture}
+\end{center}
+\end{example}
+
+\begin{example}
+ให้ $\Sigma=\set{\str{a},\str{b}}$ \enskip สร้าง DFA $M_4$ ที่รับรู้ $\set{w\mid\textup{$w$ ขึ้นต้นและลงท้ายด้วยตัวอักษรเดียวกัน}}$
+
+DFA ที่รับรู้ภาษาดังกล่าวเป็นดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (o) at (0,0) {};
+\node[state,accepting] (a0) [below left=of o] {};
+\node[state] (a1) [below=of a0] {};
+\node[state,accepting] (b0) [below right=of o] {};
+\node[state] (b1) [below=of b0] {};
+
+\path[arrow]
+ (o) edge node [above] {\str{a}} (a0)
+     edge node [above] {\str{b}} (b0)
+ (a0) edge [loop left] node [left] {\str{a}} (a0)
+      edge [bend right] node [left] {\str{b}} (a1)
+ (a1) edge [bend right] node [right] {\str{a}} (a0)
+      edge [loop left] node [left] {\str{b}} (a1)
+ (b0) edge [bend right] node [left] {\str{a}} (b1)
+      edge [loop right] node [right] {\str{b}} (b0)
+ (b1) edge [loop right] node [right] {\str{a}} (b1)
+      edge [bend right] node [right] {\str{b}} (b0);      
+\end{tikzpicture}
+\end{center}
+เริ่มแรก แยกกรณีว่าตัวอักษรตัวแรกเป็นตัวใด หากขึ้นต้นด้วยตัว \str{a} ให้คอยติดตามว่าตัวสุดท้ายจะต้องเป็นตัว \str{a} ด้วย \enskip ในที่นี้ $M_4$ นั้นจะเริ่มทำงานใน states ทางด้านซ้ายของแผนภาพข้างต้น \enskip หากตัวสุดท้ายที่เพิ่งอ่านเข้ามาไม่ใช่ตัว \str{a} ให้ลงมาที่ states ซ้ายล่าง แต่ถ้าตัวสุดท้ายที่เพิ่งอ่านเข้ามาเป็นตัว \str{a} ให้ไปที่ accept state ทางด้านซ้ายของแผนภาพ \enskip ในกรณีที่ตัวแรกเป็น \str{b} ก็คอยติดตามในลักษณะเดียวกัน โดยสลับที่บทบาทของ \str{a} และ \str{b} ดั่งทางด้านขวาของ state diagram \enskip ในทั้งสองกรณีนี้ หากตัวอักษรตัวแรกและตัวสุดท้ายของ input string เป็นตัวเดียวกัน $M_4$ ก็จะสิ้นสุดการทำงานที่ accept state
+\end{example}
+
+\begin{example}\label{ex:dfa-001sub}
+ให้ $\Sigma=\set{\str{0},\str{1}}$ \enskip สร้าง DFA $M_5$ ที่ตอบรับ strings ที่มี \str{001} เป็นสายอักขระย่อย (substring) เช่น \str{\underline{001}0}, \str{1\underline{001}}, และ \str{1101\underline{001}11}
+
+ในการแก้ปัญหานี้ ต้องพึงสังเกตว่า เราจะทราบได้อย่างไรว่าเราพบ substring ที่ตรงตามเงื่อนไขแล้ว \enskip ในที่นี้ หากตัวอักษรสามตัวสุดท้ายที่เพิ่งอ่านเข้ามานั้นเป็น \str{001} แสดงว่าเราพบ substring ที่ต้องการแล้ว \enskip ดังนั้น ไม่ว่า input ที่เหลือจะเป็นอะไรก็ตาม ย่อมไม่กระทบต่อผลลัพธ์ของ DFA \enskip เนื่องจากเราต้องพิจารณาสามตัวสุดท้าย (หากยังไม่พบ substring) จะได้ว่าเราจะต้องใช้อย่างน้อย 4 states (ตรงแล้ว $0,1,2,3$ ตัว)
+
+หากยังไม่พบ \str{0} เลย แสดงว่าที่ผ่านมานั้นเป็น \str{1} ทั้งหมด \enskip หากตัวต่อไปยังเป็น \str{1} อีก ก็ยังไม่มีความคืบหน้า ดังนั้น $M_5$ จึงควรอยู่ใน state เดิม \enskip แต่ถ้าตัวต่อไปเป็น \str{0} แสดงว่าเราพบตัวอักษรตัวแรกที่ตรงกับ substring ที่เราสนใจแล้ว \enskip ในกรณีนี้ $M_5$ จึงควรย้ายไปอยู่ใน state ที่พบตัวอักษรแล้ว 1 ตัว
+
+หากพบ \str{0} แล้ว 1 ตัว และตัวต่อไปเป็น \str{0} ด้วย แสดงว่าเราพบสองตัวแรกที่ตรงกับ substring แล้ว จึงควรย้ายไปอยู่ใน state ที่พบตัวอักษรแล้ว 2 ตัว \enskip แต่ถ้าตัวต่อไปเป็น \str{1} แสดงว่าตัวอักษร \str{0} ที่เพิ่งอ่านเข้ามาก่อนหน้านี้ไม่มีประโยชน์ เพราะไม่สามารถเป็นส่วนหนึ่งของ substring ที่เราต้องการได้ (ดังเช่น \str{0} ใน \str{101}) ดังนั้น เราจึงต้องกลับไปเริ่มต้นใหม่
+
+หากพบ \str{0} แล้ว 2 ตัว และตัวต่อไปเป็น \str{1} แสดงว่าเราพบ substring ที่เราต้องการแล้ว จึงย้ายไป accept state ได้ \enskip แต่ถ้าเราพบ \str{0} เป็นตัวถัดไป แสดงว่าขณะนี้เราได้อ่าน \str{0} เข้ามาติดกันสามตัวแล้ว แต่เนื่องจากเราต้องการ \str{0} เพียงแค่สองตัว ตัวแรกในสามตัวข้างต้นจึงไม่มีประโยชน์ \enskip ดังนั้น เราจึงลืม \str{0} ตัวแรกสุดไปได้ แล้วจำเพียงว่า ขณะนี้เราเห็น \str{0} มาติดกันแล้วสองตัว \enskip นั่นคือ $M_5$ ควรจะคงอยู่ใน state เดิมในกรณีนี้
+
+จากแนวคิดดังกล่าว สามารถเขียน DFA ออกมาได้ดังนี้
+\begin{center}
+\begin{tikzpicture}[state/.style={circle,draw,minimum size=1cm}]
+\node[initial,state] (q) at (0,0) {$q$};
+\node[state] (q0) [right=of q] {$q_\str{0}$};
+\node[state] (q00) [right=of q0] {$q_\str{00}$};
+\node[state,accepting] (q001) [right=of q00] {$q_\str{001}$};
+
+\path[arrow]
+ (q) edge node [above] {\str{0}} (q0)
+     edge [loop above] node [above] {\str{1}} (q)
+ (q0) edge node [above] {\str{0}} (q00)
+      edge [bend right] node [above] {\str{1}} (q)
+ (q00) edge [loop above] node [above] {\str{0}} (q00)
+      edge node [above] {\str{1}} (q001)
+ (q001) edge [loop above] node [above] {\str{0},\str{1}} (q001);
+\end{tikzpicture}
+\end{center}
+\end{example}
+
+\subsection{Regular operations}
+
+เมื่อมีภาษาตามที่ได้กล่าวถึงข้างต้นแล้ว เราสามารถนำภาษาเหล่านี้มาดำเนินการกันได้
+\begin{definition}
+ให้ $A$ และ $B$ เป็นภาษา \enskip นิยาม\emph{ตัวดำเนินการปรกติ} (regular operators) ดังต่อไปนี้
+\begin{itemize}
+\item \emph{union}: $A\cup B\triangleq\set{w\mid w\in A \vee w\in B}$ กล่าวคือ string อยู่ใน union หากอยู่ในภาษาตั้งต้นสักภาษาหนึ่ง
+\item \emph{ต่อกัน} (concatenation): $A\circ B\triangleq\set{xy\mid x\in A\wedge y\in B}$ กล่าวคือ string อยู่ใน concatenation หากแบ่งได้เป็นสองส่วน โดยส่วนแรกอยู่ในภาษาตั้งต้นภาษาแรก และส่วนหลังอยู่ในภาษาตั้งต้นภาษาที่สอง
+\item \emph{Kleene star}: $A^*\triangleq\set{w_1w_2\ldots w_k\mid k\geq 0\wedge\forall i: w_i\in A}$ กล่าวคือ string อยู่ใน Kleene star หากเกิดจากการนำ string ในภาษาตั้งต้นมาต่อกันอย่างน้อยศูนย์ครั้ง (นั่นคือ $\varepsilon\in A^*$ ด้วยไม่ว่า $A$ จะเป็นภาษาใดๆ)
+\end{itemize}
+\end{definition}
+%
+\begin{example}
+ให้ $A=\set{\str{หนุ่ม},\str{สาว}}$ และ $B=\set{\str{เอ๊าะ},\str{แว้น}}$
+\begin{itemize}
+\item $A\cup B=\set{\str{หนุ่ม},\str{สาว},\str{เอ๊าะ},\str{แว้น}}$
+\item $A\circ B=\set{\str{หนุ่มเอ๊าะ},\str{หนุ่มแว้น},\str{สาวเอ๊าะ},\str{สาวแว้น}}$
+\item $A^*=\set{\varepsilon,\str{หนุ่ม},\str{สาว},\str{หนุ่มหนุ่ม},\str{หนุ่มสาว},\str{สาวหนุ่ม},\str{สาวสาว},\str{หนุ่มหนุ่มหนุ่ม},\str{สาวสาวสาว},\ldots}$
+\end{itemize}
+\end{example}
+%
+\begin{example}
+ให้ $\Sigma=\set{\str{0},\str{1}}$ จะได้ว่า
+\begin{align*}
+\Sigma^*
+&=\set{\varepsilon,\str{0},\str{1},\str{00},\str{01},\str{10},\str{11},,\str{000},\str{001},\ldots} \\
+&=\textup{set of all strings of \str{0}s and \str{1}s (possibly empty)}
+\end{align*}
+\end{example}
+
+ต่อไป จะพิจารณาคุณสมบัติของ regular operators
+\begin{theorem}\label{thm:dfa-union-closed}
+Regular languages มีสมบัติปิดภายใต้ union กล่าวคือ ถ้า $A_1,A_2$ เป็น regular languages แล้ว $A_1\cup A_2$ ก็เป็นด้วย
+
+\noindent{\bf\it Proof idea}:
+เนื่องจาก $A_1,A_2$ นั้น regular จะได้ว่า มี DFA ที่รับรู้แต่ละภาษา \enskip ให้ $M_1$ รับรู้ $A_1$ และ $M_2$ รับรู้ $A_2$ \enskip ถ้าต้องการแสดงว่า $A_1\cup A_2$ นั้น regular ต้องหา DFA $M$ ที่รับรู้ $A_1\cup A_2$ ให้ได้ \enskip ดังนั้น ต้องพิจารณาว่า $M$ ที่เราจะสร้างขึ้นมานั้นควรจะทำงานอย่างไร
+
+วิธีหนึ่งที่อาจจะทำได้คือ เมื่อ $M$ รับ input string $w$ ใดๆ เข้ามา ให้ $M$ จำลองการทำงานของ $M_1$ ก่อน โดยส่งมอบ $w$ ให้ $M_1$ พิจารณา \enskip หาก $M_1$ accepts $w$ แล้ว $M$ ก็ควรจะ accept ด้วย เนื่องจาก $w$ นั้นต้องอยู่ใน union \enskip แต่ถ้า $M_1$ rejects $w$ เราต้องให้ $M$ จำลองการทำงานของ $M_2$ โดยส่งมอบ $w$ ให้ $M_2$ พิจารณา \enskip หาก $M_2$ accepts $w$ แล้ว $M$ ก็ควรจะ accept ด้วยเช่นกัน มิฉะนั้น ทั้ง $M_1$ และ $M_2$ reject $w$ ซึ่งแปลว่า $M$ ก็ควร reject $w$ ด้วย
+
+อย่างไรก็ดี วิธีการที่กล่าวมาข้างต้นนั้นใช้ไม่ได้ เนื่องจากตัวอักษรแต่ละตัวใน input string นั้นสามารถอ่านได้เพียงครั้งเดียว กล่าวคือ หาก $M$ จำลองการทำงานของ $M_1$ ไปแล้ว แต่ $M_1$ นั้น rejects $w$ เราจะไม่สามารถย้อนรอยกลับไปเริ่มต้นที่ตัวแรกของ $w$ ในการจำลองการทำงานของ $M_2$ ได้อีก \enskip กล่าวอีกนัยหนึ่ง input symbol แต่ละตัวอักษรนั้นใช้แล้วใช้เลย ไม่สามารถย้อนกลับไปพิจารณารอบที่สองได้ พิจารณาแต่ละตัวได้เพียงครั้งเดียว
+
+ดังนั้น หากต้องการอ่าน input symbol แต่ละตัวไม่เกินหนึ่งครั้ง จะต้องจำลองการทำงานของ $M_1$ และ $M_2$ ไปพร้อมๆ กัน โดยติดตามว่า หลังจากอ่าน input symbol ตัวใดตัวหนึ่งแล้ว $M_1$ จะอยู่ที่ state ใด และ $M_2$ จะอยู่ที่ state ใด \enskip หากอ่าน input string ครบทั้งหมดแล้ว DFA ที่เรากำลังจำลองการทำงานอยู่สักตัวหนึ่งจบการทำงานที่ accept state ก็แสดงว่า $M$ ควรจะ accept input string ด้วย
+\begin{pf}
+ก่อนอื่น เขียนแจกแจงส่วนประกอบของ DFA ตั้งต้นแต่ละตัว \enskip ให้ $M_1:(Q_1,q_1,\Sigma,\delta_1,F_1)$ รับรู้ $A_1$ (พึงระลึกว่า $\delta_1:Q_1\times\Sigma\to Q_1$) และ $M_2:(Q_2,q_2,\Sigma,\delta_2,F_2)$ รับรู้ $A_2$ (พึงระลึกว่า $\delta_2:Q_2\times\Sigma\to Q_2$) \enskip สร้าง $M$ ที่รับรู้ $A_1\cup A_2$ ดังนี้
+\begin{itemize}
+\item $Q=Q_1\times Q_2$ กล่าวคือ state ใน DFA ที่เราสร้างขึ้นจะเป็นคู่อันดับของ states จาก DFAs ตั้งต้น เพื่อติดตามว่าขณะนี้แต่ละตัวอยู่ที่ state ใดแล้วบ้าง
+\item $(q_1,q_2)$ เป็น start state
+\item $\Sigma$ คงเดิม
+\item $\delta:(Q_1\times Q_2)\times\Sigma\to Q_1\times Q_2$ โดยที่ \[\delta((r_1,r_2),a)\triangleq(\delta_1(r_1,a),\delta_2(r_2,a))\]
+นั่นคือ หากขณะนี้ $M_1$ อยู่ที่ state $r_1$ และ $M_2$ อยู่ที่ state $r_2$ กล่าวคือ $M$ อยู่ใน state $(r_1,r_2)$ และ input symbol ตัวต่อไปเป็น $a$ จะได้ว่า state ต่อไปที่ $M_1$ ควรจะย้ายไปคือ $\delta_1(r_1,a)$ ตามที่ได้กำหนดไว้แต่เดิม \enskip เช่นเดียวกับ $M_2$ ที่ state ต่อไปควรเป็น $\delta_2(r_2,a)$ \enskip ดังนั้น หาก $M$ ต้องการจำลองการทำงานของ DFA ทั้งสอง จะได้ว่า state ต่อไปที่ $M$ ควรจะย้ายไปคือ $(\delta_1(r_1,a),\delta_2(r_2,a))$ (พึงระลึกว่า states ใน $M$ เป็นคู่อันดับของ states จาก $M_1$ และ $M_2$)
+\item
+$
+\begin{array}[t]{@{}r@{\ }l}
+F
+&=\set{(r_1,r_2)\in Q_1\times Q_2\mid r_1\in F_1\vee r_2\in F_2} \\
+&=\set{(r_1,r_2)\mid r_1\in F_1\wedge r_2\in Q_2\vee r_1\in Q_1\wedge r_2\in F_2} \\
+&=\set{(r_1,r_2)\mid (r_1,r_2)\in F_1\times Q_2\vee (r_1,r_2)\in Q_1\times F_2} \\
+&=(F_1\times Q_2)\cup(Q_1\times F_2)
+\end{array}
+$
+\\
+นั่นคือ state ใดๆ ใน $M$ จะเป็น accept state ก็ต่อเมื่อ $M$ จำลองการทำงานของ $M_1$ และ $M_2$ แล้วมีตัวใดตัวหนึ่งจบการทำงานที่ accept state
+\end{itemize}
+เนื่องจากเราได้เขียนคำอธิบาย $M$ เชิงรูปนัย (formal description) ดังข้างต้นแล้ว ก็ถือว่าเป็นการสร้าง DFA ที่รับรู้ $A_1\cup A_2$ โดยสมบูรณ์
+\end{pf}
+\end{theorem}
+
+\begin{remark}\label{rem:reg-intersect-closed}
+หากเรานิยาม $F$ ในบทพิสูจน์ข้างต้นใหม่เป็น \[F=F_1\times F_2=\set{(r_1,r_2)\in Q_1\times Q_2\mid r_1\in F_1\wedge r_2\in F_2}\] จะได้ว่า $M$ accepts an input string ก็ต่อเมื่อ $M$ จำลองการทำงานของ $M_1$ และ $M_2$ กับ input string ตัวนี้แล้ว\emph{ทั้งสองตัว}จบการทำงานที่ accept state \enskip นั่นคือ $M_1$ และ $M_2$ accept the input string \enskip ในกรณีนี้ เราจะได้บทพิสูจน์ที่ว่า regular languages มีสมบัติปิดภายใต้ intersection
+\end{remark}
+
+\begin{example}
+ให้ $M_1$ มาจาก Example~\ref{ex:dfa-001sub} (\str{001} เป็น substring) และ $M_2$ มาจาก Example~\ref{ex:dfa-nil-or-0end} ($\varepsilon$ หรือลงท้ายด้วย \str{0}) ซึ่งนำมาเขียนอีกครั้งแต่เปลี่ยนชื่อ states ดังนี้
+\begin{center}
+\begin{tabular}{c@{\qquad}c}
+\begin{tikzpicture}
+\node[initial,state] (q) at (0,0) {$q_0$};
+\node[state] (q0) [right=of q] {$q_1$};
+\node[state] (q00) [right=of q0] {$q_2$};
+\node[state,accepting] (q001) [right=of q00] {$q_3$};
+
+\path[arrow]
+ (q) edge node [above] {\str{0}} (q0)
+     edge [loop above] node [above] {\str{1}} (q)
+ (q0) edge node [above] {\str{0}} (q00)
+      edge [bend right] node [above] {\str{1}} (q)
+ (q00) edge [loop above] node [above] {\str{0}} (q00)
+      edge node [above] {\str{1}} (q001)
+ (q001) edge [loop above] node [above] {\str{0},\str{1}} (q001);
+\end{tikzpicture}
+&
+\begin{tikzpicture}
+\node[initial,state,accepting] (q1) {$r_0$};
+\node[state] (q2) [right=of q1] {$r_1$};
+
+\path[arrow]
+ (q1) edge [loop above] node [above] {\str{0}} (q1)
+      edge [bend left] node [above] {\str{1}} (q2)
+ (q2) edge [bend left] node [above] {\str{0}} (q1)
+      edge [loop above] node [above] {\str{0}} (q2);
+\end{tikzpicture}
+\\
+$M_1$
+&
+$M_2$
+\end{tabular}
+\end{center}
+หากต้องการสร้าง $M$ ที่รับรู้ union ของทั้งสองภาษา โดยทำตามขั้นตอนวิธีจาก Theorem~\ref{thm:dfa-union-closed} จะได้ผลลัพธ์ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state,accepting] (q) at (0,0) {$(q_0,r_0)$};
+\node[state,accepting] (q0) [right=of q] {$(q_1,r_0)$};
+\node[state,accepting] (q00) [right=of q0] {$(q_2,r_0)$};
+\node[state,accepting] (q001) [right=of q00] {$(q_3,r_0)$};
+\node[state] (r) [below=of q] {$(q_0,r_1)$};
+\node[state] (r0) [right=of r] {$(q_1,r_1)$};
+\node[state] (r00) [right=of r0] {$(q_2,r_1)$};
+\node[state,accepting] (r001) [right=of r00] {$(q_3,r_1)$};
+
+\path[arrow]
+ (q) edge node [above] {\str{0}} (q0)
+     edge node [left] {\str{1}} (r)
+ (q0) edge node [above] {\str{0}} (q00)
+      edge [bend left=20] node [above] {\str{1}} (r)
+ (q00) edge [loop above] node [below] {\str{0}} (q00)
+      edge node [right] {\str{1}} (r001)
+ (q001) edge [loop above] node [below] {\str{0}} (q001)
+     edge [bend left=20] node [left] {\str{1}} (r001)
+ (r) edge [bend left=20] node [below] {\str{0}} (q0)
+     edge [loop below] node [above] {\str{1}} (r)
+ (r0) edge node [left] {\str{0}} (q00)
+      edge node [above] {\str{1}} (r)
+ (r00) edge node [right] {\str{0}} (q00)
+      edge node [above] {\str{1}} (r001)
+ (r001) edge [bend left=20] node [right] {\str{0}} (q001)
+     edge [loop below] node [above] {\str{1}} (r001);
+\end{tikzpicture}
+\end{center}
+ทั้งนี้ start state ของ $M$ เป็น $(q_0,r_0)$ เนื่องจาก start state ของ $M_1$ คือ $q_0$ และ start state ของ $M_2$ คือ $r_0$ \enskip $M$ มี transition จาก $(q_0,r_0)$ ไปยัง $(q_0,r_1)$ หาก input symbol เป็น \str{1} เนื่องจาก $M_1$ มี transition จาก $q_0$ ไปยัง $q_0$ หาก input symbol เป็น \str{1} (กล่าวคือ $\delta_1(q_0,\str{1})=q_0$) และ $M_2$ มี transition จาก $r_0$ ไปยัง $r_1$ หาก input symbol เป็น \str{1} (กล่าวคือ $\delta_2(r_0,\str{1})=r_1$) \enskip สำหรับ transitions อื่นๆ ก็ใช้เหตุผลในลักษณะเดียวกัน \enskip จะเห็นได้ว่า $M$ จำลองการทำงานของ $M_1$ และ $M_2$ ไปพร้อมๆ กัน \enskip นอกจากนี้ accept states ของ $M$ คือ states ใดๆ ที่มี $q_3$ หรือ $r_0$ อยู่ในคู่อันดับ ซึ่งแปลว่า $M$ มีทั้งหมด 5 accept states \enskip หาก $M$ จบการทำงาน ณ accept state จะได้ว่า ไม่ $M_1$ ก็ $M_2$ (หรือทั้งคู่) จบการทำงานใน accept state ด้วย
+
+หากพิจารณา DFA ที่สร้างขึ้นมาตามวิธีการข้างต้น จะเห็นว่ามี states ที่ไปถึงจาก start state ไม่ได้ กล่าวคือ $(q_1,r_1)$ และ $(q_2,r_1)$ ที่เราสามารถลบออกได้โดยไม่กระทบการทำงานของ DFA
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state,accepting] (q) at (0,0) {$(q_0,r_0)$};
+\node[state,accepting] (q0) [right=of q] {$(q_1,r_0)$};
+\node[state,accepting] (q00) [right=of q0] {$(q_2,r_0)$};
+\node[state,accepting] (q001) [right=of q00] {$(q_3,r_0)$};
+\node[state] (r) [below=of q] {$(q_0,r_1)$};
+\node[state,accepting] (r001) [right=of r00] {$(q_3,r_1)$};
+
+\path[arrow]
+ (q) edge node [above] {\str{0}} (q0)
+     edge node [left] {\str{1}} (r)
+ (q0) edge node [above] {\str{0}} (q00)
+      edge [bend left=20] node [above] {\str{1}} (r)
+ (q00) edge [loop above] node [below] {\str{0}} (q00)
+      edge node [right] {\str{1}} (r001)
+ (q001) edge [loop above] node [below] {\str{0}} (q001)
+     edge [bend left=20] node [left] {\str{1}} (r001)
+ (r) edge [bend left=20] node [below] {\str{0}} (q0)
+     edge [loop below] node [above] {\str{1}} (r)
+ (r001) edge [bend left=20] node [right] {\str{0}} (q001)
+     edge [loop below] node [above] {\str{1}} (r001);
+\end{tikzpicture}
+\end{center}
+นอกจากนี้ หาก $M$ ไปถึง state $(q_2,r_0)$ แล้ว จะได้ว่า ไม่ว่า input ที่เหลือจะเป็นอะไรก็ตาม states ที่ $M$ จะไปต่อได้ก็มีเพียง accept states เท่านั้น ดังนั้น states $(q_2,r_0)$, $(q_3,r_0)$ และ $(q_3,r_1)$ สามารถยุบรวมเป็น accept state เพียง state เดียวได้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state,accepting] (q) at (0,0) {$(q_0,r_0)$};
+\node[state,accepting] (q0) [right=of q] {$(q_1,r_0)$};
+\node[state,accepting] (q00) [right=of q0] {$(q_2,r_0)$};
+\node[state] (r) [below=of q] {$(q_0,r_1)$};
+
+\path[arrow]
+ (q) edge node [above] {\str{0}} (q0)
+     edge node [left] {\str{1}} (r)
+ (q0) edge node [above] {\str{0}} (q00)
+      edge [bend left=20] node [above] {\str{1}} (r)
+ (q00) edge [loop below] node [below] {\str{0},\str{1}} (q00)
+ (r) edge [bend left=20] node [below] {\str{0}} (q0)
+     edge [loop below] node [above] {\str{1}} (r);
+\end{tikzpicture}
+\end{center}
+\end{example}

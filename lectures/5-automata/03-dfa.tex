@@ -1,0 +1,99 @@
+\section{Deterministic finite automata}
+
+Automaton คือ state machine ที่มีเซตของ accept states นิยามแน่ชัด \enskip (หากเป็นเอกพจน์ จะใช้คำว่า automaton \enskip หากเป็นพหูพจน์ จะใช้คำว่า automata)
+
+Deterministic finite automaton (DFA) คือเครื่องสถานะจำกัดเชิงกำหนด (deterministic finite state machine) ที่มีเซตของ accept states นิยามแน่ชัด
+
+\begin{definition}
+DFA ประกอบด้วยส่วนต่างๆ ต่อไปนี้
+\begin{itemize}
+\item $Q$ เป็นเซตของ states
+\item $q_0\in Q$ เป็น start state
+\item $\Sigma$ เป็น alphabet
+\item $\delta$ เป็น transition function จาก $Q\times\Sigma\to Q$ (ทั้งนี้ $\delta$ ต้องเป็น total function ด้วย กล่าวคือ ในทุกๆ state $q$ และทุกๆ input symbol $a$ จะต้องบอกได้ว่า state ต่อไป ซึ่งก็คือ $\delta(q,a)$ นั้นคืออะไร)
+\item $F\subseteq Q$ เป็นเซตของ accept states
+\end{itemize}
+\end{definition}
+%
+\begin{example}\label{ex:end1}
+พิจารณา DFA $M_1$ ต่อไปนี้ โดยที่ $\Sigma=\set{\str{0},\str{1}}$
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (q1) {$q_1$};
+\node[state,accepting] (q2) [right=of q1] {$q_2$};
+
+\path[arrow]
+ (q1) edge [loop above] node [above] {\str{0}} (q1)
+      edge [bend left] node [above] {\str{1}} (q2)
+ (q2) edge [bend left] node [above] {\str{0}} (q1)
+      edge [loop above] node [above] {\str{1}} (q2);
+\end{tikzpicture}
+\end{center}
+หากป้อน input strings ต่างๆ ให้ $M_1$ ข้างต้น $M_1$ จะจบการทำงานที่ states ต่างๆ ดังนี้
+\begin{multicols}{2}
+\begin{itemize}
+\item \str{0}: $q_1$ \nay
+\item \str{01}: $q_2$ \yea
+\item \str{000}: $q_1$ \nay
+\item \str{01100}: $q_1$ \nay
+\item \str{111}: $q_2$ \yea
+\item \str{11110}: $q_1$ \nay
+\item \str{001101}: $q_2$ \yea
+\item \str{1001010111}: $q_2$ \yea
+\end{itemize}
+\end{multicols}
+\end{example}
+
+\begin{definition}
+ให้ $M$ เป็น DFA \enskip $M$ \emph{ตอบรับ} (accept)s สายอักขระ $w$ หาก $w$ ทำให้ $M$ จบการทำงานที่ accept state \enskip $M$ \emph{ปฏิเสธ} (reject)s สายอักขระ $w$ หาก $w$ ทำให้ $M$ จบการทำงานนอกเหนือจาก accept state
+\end{definition}
+%
+\begin{example}
+$M_1$ accepts \str{01}, \str{111}, และ \str{001101} \enskip $M_1$ rejects \str{0}, \str{000}, และ \str{11110}
+\end{example}
+
+เมื่อมี DFA $M$ เราสามารถพิจารณาเซตของสายอักขระทั้งหมดที่ $M$ ตอบรับได้
+\begin{definition}
+ให้ $A$ เป็นเซต \enskip เรียก $A$ ว่า\emph{ภาษา} (language) หาก $A$ เป็นเซตของสายอักขระ (strings)
+\end{definition}
+%
+\begin{definition}
+ให้ $M$ เป็น automaton \enskip \emph{ภาษาของ $M$} (language of $M$) (denoted $L(M)$) คือเซตของสายอักขระทั้งหมดที่ $M$ ตอบรับ กล่าวคือ \[L(M)\triangleq\set{w\mid\textup{$M$ ตอบรับ $w$}}\]
+\end{definition}
+\begin{definition}
+ให้ $M$ เป็น automaton และ $A$ เป็นเซต \enskip $M$ \emph{รับรู้} (recognize)s $A$ หาก $A=L(M)$
+\end{definition}
+%
+\begin{example}
+หากพิจารณา $M_1$ จาก Example~\ref{ex:end1} จะได้ว่า $L(M_1)=\set{w\mid\textup{$w$ ลงท้ายด้วย \str{1}}}$ กล่าวคือ $M_1$ รับรู้ $\set{w\mid\textup{$w$ ลงท้ายด้วย \str{1}}}$ นั่นเอง
+\end{example}
+
+\begin{example}\label{ex:dfa-nil-or-0end}
+พิจารณา DFA $M_2$ ต่อไปนี้ โดยที่ $\Sigma=\set{\str{0},\str{1}}$
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state,accepting] (q1) {$q_1$};
+\node[state] (q2) [right=of q1] {$q_2$};
+
+\path[arrow]
+ (q1) edge [loop above] node [above] {\str{0}} (q1)
+      edge [bend left] node [above] {\str{1}} (q2)
+ (q2) edge [bend left] node [above] {\str{0}} (q1)
+      edge [loop above] node [above] {\str{1}} (q2);
+\end{tikzpicture}
+\end{center}
+โปรดสังเกตว่า โครงสร้างของ $M_2$ นั้นเหมือนกับ $M_1$ ทุกประการ ยกเว้น accept state ที่ย้ายจาก $q_2$ มาที่ $q_1$ \enskip หากป้อน input strings ต่างๆ ให้ $M_2$ ดังเช่นก่อนหน้านี้ $M_2$ จะจบการทำงานที่ states ต่างๆ ดังนี้
+\begin{itemize}
+\item \str{0}: $q_1$ \yea
+\item \str{01}: $q_2$ \nay
+\item \str{111}: $q_2$ \nay
+\item \str{11110}: $q_1$ \yea
+\item \str{001101}: $q_2$ \nay
+\end{itemize}
+นั่นคือ หาก $M_1$ เคย accept string ตัวใด $M_2$ ก็จะ reject string ตัวนั้น และหาก $M_1$ เคย reject string ตัวใด $M_2$ ก็จะ accept string ตัวนั้น กล่าวคือ $M_2$ accepts $w$ ก็ต่อเมื่อ $M_1$ rejects $w$ \enskip ดังนั้น ดูเหมือนว่า $M_2$ จะตอบรับ strings ที่ลงท้ายด้วย \str{0} \enskip อย่างไรก็ดี ยังมี\emph{สายอักขระว่าง} (empty string) (denoted $\varepsilon$) ที่เราต้องพิจารณาด้วย \enskip เนื่องจากไม่มีอักษรให้เราพิจารณาใน empty string จะได้ว่า $M_2$ จะจบการทำงานที่ state $q_1$ ทันที ซึ่งแปลว่า $M_2$ นี้ accepts $\varepsilon$ ด้วย \enskip ดังนั้น
+\begin{align*}
+L(M_2)
+&=\set{w\mid\textup{$M_1$ rejects $w$}} \\
+&=\set{w\mid\textup{$w=\varepsilon$ หรือ $w$ ลงท้ายด้วย \str{0}}}
+\end{align*}
+\end{example}

@@ -1,0 +1,443 @@
+\section{Regular expressions}
+
+ในวิชาเลขคณิตที่เราคุ้นเคยนั้น มี\emph{นิพจน์เลขคณิต} (arithmetic expressions) อาทิ $(4+7)\cdot 2$ ที่สร้างขึ้นมาจาก arithmetic expressions ย่อยๆ โดยใช้\emph{ตัวดำเนินการทางเลขคณิต} (arithmetic operators) เป็นตัวเชื่อม \enskip จากตัวอย่างข้างต้น $4$, $7$, และ $2$ เป็น arithmetic expressions ที่เล็กที่สุดเท่าที่จะเป็นไปได้ กล่าวคือ ไม่มี arithmetic expressions ที่แยกย่อยกว่านี้ได้อีก \enskip จากนั้น เราใช้ตัวดำเนินการ $+$ ในการเชื่อม $4$ และ $7$ ให้เป็น arithmetic expression $4+7$ ที่ใหญ่ขึ้น \enskip ในท้ายที่สุด เราใช้ตัวดำเนินการ $\cdot$ ในการเชื่อม $4+7$ และ $2$ ให้เป็น arithmetic expression $(4+7)\cdot 2$ ที่ใหญ่ขึ้นกว่าเดิม \enskip นอกจากนี้ หากมี arithmetic expression ใดๆ เราสามารถตีความหรือคำนวณค่าออกมาได้เป็นตัวเลข \enskip จากตัวอย่างข้างต้น เราสามารถตีความ $(4+7)\cdot 2$ ได้เป็น $22$
+
+หากจะเปรียบเทียบวิชาเลขคณิตกับวิชา automata theory ที่เรากำลังศึกษาอยู่นั้น arithmetic expressions ก็เปรียบได้กับ\emph{นิพจน์ปรกติ} (regular expressions) ซึ่งสามารถสร้างขึ้นได้จาก regular expressions ย่อยๆ โดยใช้ regular operators เป็นตัวเชื่อมในลักษณะเดียวกัน อาทิ $(\str{0}\cup\str{1})\circ\str{0}^*$ \enskip ในตัวอย่างนี้ $\str{0}$ และ $\str{1}$ เป็น regular expressions ที่แยกย่อยไม่ได้อีก \enskip จากนั้น เราใช้ตัวดำเนินการ $\cup$ ในการเชื่อม $\str{0}$ และ $\str{1}$ ให้เป็น regular expression $\str{0}\cup\str{1}$ ที่ใหญ่ขึ้น \enskip ส่วนอีกข้างหนึ่ง เราใช้ตัวดำเนินการ $^*$ ในการสร้าง regular expression $\str{0}^*$ ที่ใหญ่ขึ้นมาจาก $\str{0}$ \enskip ในท้ายที่สุด เราใช้ตัวดำเนินการ $\circ$ ในการเชื่อม $\str{0}\cup\str{1}$ และ $\str{0}^*$ ให้เป็น regular expression $(\str{0}\cup\str{1})\circ\str{0}^*$ ที่ใหญ่ขึ้นกว่าเดิม \enskip นอกจากนี้ เราสามารถตีความ regular expression ใดๆ ได้เป็นเซตของสายอักขระที่เข้ากันได้ (match) กับ regular expression นั้นๆ \enskip จากตัวอย่างข้างต้น เราสามารถตีความ $(\str{0}\cup\str{1})\circ\str{0}^*$ ได้เป็นเซตของ strings ที่เริ่มด้วย \str{0} หรือ \str{1} แล้วตามด้วย \str{0} กี่ตัวก็ได้
+
+ณ จุดนี้ อาจจะเกิดข้อสงสัยได้ว่า ทำไม union จึงสามารถใช้ดำเนินการกับ \str{0} และ \str{1} ซึ่งไม่ใช่เซตได้ \enskip ในกรณีนี้ ให้ตีความ regular expression \str{0} เป็นเซต $\set{\str{0}}$ ที่มีสมาชิกหนึ่งตัว เช่นเดียวกับ \str{1} ที่ตีความได้เป็น $\set{\str{1}}$ \enskip ดังนั้น $\str{0}\cup\str{1}$ จึงตีความได้เป็น $\set{\str{0}}\cup\set{\str{1}}$ และ $\str{0}^*$ สามารถตีความได้เป็น $\set{\str{0}}^*$
+
+\begin{example}
+$(\str{0}\cup\str{1})^*$ เป็น regular expression ที่ตีความได้เป็น set of binary strings \enskip หากให้ $\Sigma=\set{\str{0},\str{1}}$ จะเขียน regular expression ข้างต้นได้เป็น $\Sigma^*$ ด้วย ซึ่งสามารถตีความได้อย่างเดียวกัน
+\end{example}
+
+ข้อสงสัยอีกข้อหนึ่งที่อาจจะเกิดขึ้น ณ จุดนี้คือ เมื่อใดควรจะใส่วงเล็บใน regular expressions \enskip หากย้อนกลับไปพิจารณา arithmetic expressions จะเห็นว่าหากเขียน $4+7\cdot 2^{18}$ ซึ่งไม่ใช้วงเล็บ เราต้องคำนวณหรือตีความการยกกำลังก่อน ตามด้วยการคูณและการบวกให้เป็นลำดับ \enskip สำหรับ regular expressions ก็มีลำดับ\emph{การทำก่อน} (precedence) เช่นเดียวกัน กล่าวคือ หากเขียน $\str{0}\cup\str{1}\circ\str{0}^*$ ซึ่งไม่ใช้วงเล็บ จะต้องตีความการใช้ Kleene star ก่อน ตามด้วย concatenation และสุดท้ายเป็น union \enskip นั่นคือ หากใส่วงเล็บให้ถูกต้อง จะได้ $\str{0}\cup(\str{1}\circ(\str{0}^*))$ \enskip ทั้งนี้ หากต้องการเปลี่ยนแปลงลำดับการตีความ ก็สามารถใช้วงเล็บกำหนดในลักษณะเดียวกับ arithmetic expressions ได้
+
+\begin{definition}
+\emph{นิพจน์ปรกติ} (regular expression) [ย่อว่า regex] สามารถนิยามแบบอุปนัยได้ดังนี้
+\begin{itemize}
+\item $a$ โดยที่ $a\in\Sigma$ เป็น regex
+\item $\varepsilon$ เป็น regex
+\item $\emptyset$ เป็น regex
+\item[+] ถ้า $R_1$ และ $R_2$ เป็น regex แล้ว $R_1\cup R_2$ ก็เป็น regex ด้วย
+\item[+] ถ้า $R_1$ และ $R_2$ เป็น regex แล้ว $R_1\circ R_2$ ก็เป็น regex ด้วย
+\item[+] ถ้า $R_1$ เป็น regex แล้ว $R_1^*$ ก็เป็น regex ด้วย
+\end{itemize}
+{\bf หมายเหตุ}:
+\begin{itemize}
+\item เนื่องจากเราสามารถตีความ regular expressions $R$ ใดๆ เป็นเซตของสายอักขระ (denoted $L(R)$) ได้ จึงตีความ $a$ เป็น $L(a)=\set{a}$ และ $\varepsilon$ เป็น $L(\varepsilon)=\set{\varepsilon}$ \enskip ส่วนในกรณีอื่นๆ สามารถตีความเป็นเซตได้อยู่แล้ว
+\item บทนิยามข้างต้นดูเหมือนว่าจะนิยาม regular expressions ในรูปของตัวเอง ซึ่งอาจจะทำให้เกิดปัญหา\emph{การนิยามจากตัวเอง} (circular definition) ได้ \enskip อย่างไรก็ดี หากพิจารณาให้ถี่ถ้วน จะเห็นว่า regular expression ใดๆ นั้นต้องสร้างจาก regular expression(s) ที่เล็กกว่า หรือ regular expression นั้นเล็กที่สุดเท่าที่จะเป็นไปได้แล้ว \enskip ดังนั้น หากแยก regular expression ให้เป็นชิ้นย่อยๆ เท่าที่จะทำได้ แต่ละชิ้นที่แยกย่อยไม่ได้อีกจะต้องมีรูปร่างเป็น $a$, $\varepsilon$, หรือ $\emptyset$ จึงไม่เกิดปัญหาการนิยามจากตัวเองขึ้น \enskip นิยามในลักษณะนี้เรียกว่า\emph{บทนิยามแบบอุปนัย} (inductive definition) ซึ่งสามารถสร้างสิ่งที่ใหญ่กว่าจากสิ่งที่เล็กกว่า \enskip สำหรับ regular expressions นั้น สามกรณีแรกไม่ได้ใช้ regular expressions ย่อยๆ ในการสร้าง regular expressions ขึ้นมา จึงเรียกว่าเป็น\emph{กรณีฐาน} (base case)s ส่วนสามกรณีหลังนั้นใช้ regular expressions ที่มีอยู่แล้วสร้าง regular expression ใหม่ที่ใหญ่ขึ้น จึงเรียกว่าเป็น\emph{กรณีอุปนัย} (inductive case)s
+\item การใช้สัญลักษณ์ $\cup$ ใน $R_1\cup R_2$ บางครั้งอาจจะใช้ $|$ แทน เช่น $R_1|R_2$
+\item การใช้สัญลักษณ์ $\circ$ ใน $R_1\circ R_2$ บางครั้งอาจละสัญลักษณ์ไปได้เลย เช่น $R_1R_2$
+\item ในหลายๆ โอกาส เราต้องการใช้ strings ใน $R$ ที่ต่อกันอย่างน้อย 1 ครั้ง แต่ต่อกัน 0 ครั้งไม่ได้ จึงใช้\emph{สัญกรณ์} (notation) $R^+\triangleq RR^*$ กล่าวคือ $w\in R^+$ หาก $w$ ได้มาจากการนำสมาชิกใน $R$ ต่อกันอย่างน้อยหนึ่งครั้ง
+\end{itemize}
+\end{definition}
+%
+\begin{example}
+ให้ $\Sigma=\set{\str{0},\str{1}}$
+\begin{itemize}
+\item $\str{0}^*\str{1}\str{0}^*=\set{w\mid\textup{$w$ มี \str{1} ตัวเดียว}}$
+\item $\Sigma^*\str{1}\Sigma^*=\set{w\mid\textup{$w$ มี \str{1} อย่างน้อยหนึ่งตัว}}$
+\item $\Sigma^*\str{011}\Sigma^*=\set{w\mid\textup{$w$ มี \str{011} เป็น substring}}$
+\item $\str{1}^*(\str{0}\str{1}^+)^*=\set{w\mid\textup{\str{0} ทุกตัวใน $w$ ตามด้วย \str{1} อย่างน้อยหนึ่งตัว}}$
+\item $(\Sigma\Sigma)^*=\set{w\mid\textup{ความยาวของ $w$ เป็นเลขคู่}}$
+\item $\str{01}\cup\str{10}=\set{\str{01},\str{10}}$
+\item $\str{0}\Sigma^*\str{0}\cup\str{1}\Sigma^*\str{1}\cup\str{0}\cup\str{1}=\set{w\mid\textup{$w$ ขึ้นต้นและลงท้ายด้วยตัวอักษรเดียวกัน}}$
+\item $(\str{0}\cup\varepsilon)(1\cup\varepsilon)=\set{\varepsilon,\str{0},\str{1},\str{01}}$
+\item $\str{1}^*\emptyset=\emptyset$ \\
+หากนำ strings ใน $\emptyset$ (ซึ่งไม่มี) มาต่อท้าย string ใดๆ ก็ตาม จะไม่มีผลลัพธ์ที่เป็นไปได้ กล่าวคือ ผลลัพธ์เป็น $\emptyset$
+\item $\emptyset^*=\set{\varepsilon}$ \\
+Kleene star นำ strings ในเซตตั้งต้นมาต่อกันกี่ครั้งก็ได้ (นั่นคือ อย่างน้อย 0 ครั้ง) \enskip ถ้าเซตตั้งต้นนั้นเป็น $\emptyset$ เราสามารถนำ strings ใน $\emptyset$ (ซึ่งไม่มี) มาต่อกันได้ 0 ครั้ง กล่าวคือ ไม่ต้องต่อ ทำให้ได้ผลลัพธ์เป็น empty string
+\end{itemize}
+\end{example}
+
+\subsection{Equivalence between DFAs and regular expressions}
+
+Regular expressions นั้นมีความสัมพันธ์อย่างใกล้ชิดกับ regular languages
+
+\begin{lemma}\label{lemma:regexp-dfa}
+ถ้า language $L$ เขียนเป็น regular expression ได้ แล้ว $L$ ก็เป็น regular language ด้วย
+
+\noindent{\bf Proof idea}: ให้ $R$ เป็น regular expression ที่ตีความได้เป็น language $L$ \enskip เราจะแปลง $R$ ให้เป็น NFA ที่รับรู้ $L$ \enskip จาก Corollary~\ref{col:reg-nfa} จะได้ว่า $L$ เป็น regular language
+\begin{pf}
+แปลง $R$ ให้เป็น NFA $N$ โดยแยกพิจารณากรณีต่างๆ ตามรูปร่างของ $R$ ในนิยามของ regular expression
+\begin{enumerate}
+\item $R=a$ โดยที่ $a\in\Sigma$: จะได้ว่า $L(R)=\set{a}$ \enskip NFA ต่อไปนี้รับรู้ $L(R)$
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (s) {};
+\node[state,accepting] (a) [right=of s] {};
+\path[arrow] (s) edge node[above] {$a$} (a);
+\end{tikzpicture}
+\end{center}
+โปรดสังเกตว่า automaton ข้างต้นนี้ไม่ใช่ DFA เนื่องจากมี state ที่ไม่มี transition สำหรับ input symbol บางตัว \enskip ใน NFA นี้ ไม่มี transition ออกจาก accept state เลย แต่ถ้าเป็น DFA ต้องมี transition ให้ input symbol ทุกตัวที่เป็นไปได้
+
+หากเขียนอธิบาย NFA นี้เป็นรูปนัย จะได้ว่า $Q=\set{q_1,q_2}$, $F=\set{q_2}$, $q_1$ เป็น start state, $\delta(q_1,a)=\set{q_2}$, และ $\delta(r,b)=\emptyset$ เมื่อ $r\neq q_1$ หรือ $b\neq a$
+
+\item $R=\varepsilon$: จะได้ว่า $L(R)=\set{\varepsilon}$ \enskip NFA ต่อไปนี้รับรู้ $L(R)$
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state,accepting] (s) {};
+\end{tikzpicture}
+\end{center}
+หากเขียนเป็นรูปนัย จะได้ว่า $Q=\set{q_1}$, $F=\set{q_1}$, $q_1$ เป็น start state, และ $\delta(r,b)=\emptyset$ สำหรับ $r$ และ $b$ ใดๆ
+
+\item $R=\emptyset$: จะได้ว่า $L(R)=\emptyset$ \enskip NFA ต่อไปนี้รับรู้ $L(R)$
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (s) {};
+\end{tikzpicture}
+\end{center}
+หากเขียนเป็นรูปนัย จะได้ว่า $Q=\set{q_1}$, $F=\emptyset$, $q_1$ เป็น start state, และ $\delta(r,b)=\emptyset$ สำหรับ $r$ และ $b$ ใดๆ
+
+\item $R=R_1\cup R_2$: เนื่องจาก $R_1$ เป็น regular expression ย่อยของ $R$ จะได้ว่ามี NFA $N_1$ ที่รับรู้ $L(R_1)$ เช่นเดียวกับที่มี NFA $N_2$ ที่รับรู้ $L(R_2)$ \enskip จาก Theorem~\ref{thm:dfa-union-closed-nfa} จะได้ว่าเราสามารถสร้าง NFA ที่รับรู้ $L(R_1\cup R_2)=L(R_1)\cup L(R_2)$ ได้
+
+\item $R=R_1\circ R_2$: เช่นเดียวกับในกรณีที่แล้ว จาก Theorem~\ref{thm:dfa-concat-closed} เราสามารถสร้าง NFA ที่รับรู้ $L(R_1\circ R_2)=L(R_1)\circ L(R_2)$ ได้
+
+\item $R=R_1^*$: เนื่องจาก $R_1$ เป็น regular expression ย่อยของ $R$ จะได้ว่ามี NFA $N_1$ ที่รับรู้ $L(R_1)$ \enskip จาก Theorem~\ref{thm:dfa-star-closed} จะได้ว่าเราสามารถสร้าง NFA ที่รับรู้ $L(R_1^*)=L(R_1)^*$ ได้
+\end{enumerate}
+\end{pf}
+\noindent{\bf หมายเหตุ}: บทพิสูจน์โดยแยกกรณีตาม inductive definition ในลักษณะนี้ใช้\emph{การพิสูจน์โดยอุปนัยเชิงโครงสร้าง} (structural induction) โดย base cases คือกรณีฐานของ inductive definition และ inductive step คือกรณีอุปนัยของ inductive definition \enskip ใน inductive step เรามี induction hypothesis คือ $P(s)$ โดยที่ $s$ เป็นส่วนประกอบย่อยๆ ของกรณีที่เรากำลังพิสูจน์ ตัวอย่างเช่น ถ้าต้องการพิสูจน์ว่า $P(R_1\cup R_2)$ เราสามารถใช้ $P(R_1)$ และ $P(R_2)$ เป็นสมมุติฐานได้ ดังที่ได้แสดงในบทพิสูจน์ข้างต้น \enskip ในที่นี้ $P(R)$ คือ ถ้า $R$ เป็น regular expression แล้วจะมี NFA ที่รับรู้ $L(R)$
+\end{lemma}
+%
+\begin{example}
+Regular expression $(\str{a}\cup\str{b})^*\str{a}$ สามารถแปลงเป็น NFA ตามขั้นตอนวิธีข้างต้นได้ดังนี้
+\begin{center}
+\tikzset{initial text={},every state/.style={circle,draw,minimum size=5mm}}
+\begin{longtable}{rm{3.5in}}
+$\str{a}$
+&
+\begin{tikzpicture}
+\node[initial,state] (s) {};
+\node[state,accepting] (a) [right=of s] {};
+\path[arrow] (s) edge node[above] {\str{a}} (a);
+\end{tikzpicture}
+\\
+$\str{b}$
+&
+\begin{tikzpicture}
+\node[initial,state] (s) {};
+\node[state,accepting] (a) [right=of s] {};
+\path[arrow] (s) edge node[above] {\str{b}} (a);
+\end{tikzpicture}
+\\
+$\str{a}\cup\str{b}$
+&
+\begin{tikzpicture}
+\node[initial,state] (s) {};
+\node[state] (sa) [above right=5mm of s] {};
+\node[state,accepting] (aa) [right=of sa] {};
+\node[state] (sb) [below right=5mm of s] {};
+\node[state,accepting] (ab) [right=of sb] {};
+
+\path[arrow]
+  (s) edge node[left] {$\varepsilon$} (sa)
+      edge node[left] {$\varepsilon$} (sb)
+  (sa) edge node[above] {\str{a}} (aa)
+  (sb) edge node[above] {\str{b}} (ab);
+\end{tikzpicture}
+\\
+$(\str{a}\cup\str{b})^*$
+&
+\begin{tikzpicture}
+\node[initial,state,accepting] (ss) {};
+\node[state] (s) [right=of ss] {};
+\node[state] (sa) [above right=5mm of s] {};
+\node[state,accepting] (aa) [right=of sa] {};
+\node[state] (sb) [below right=5mm of s] {};
+\node[state,accepting] (ab) [right=of sb] {};
+
+\path[arrow]
+  (ss) edge node[above] {$\varepsilon$} (s)
+  (s) edge node[left] {$\varepsilon$} (sa)
+      edge node[left] {$\varepsilon$} (sb)
+  (sa) edge node[above] {\str{a}} (aa)
+  (sb) edge node[above] {\str{b}} (ab)
+  (aa) edge[bend right=45] node[above] {$\varepsilon$} (ss)
+  (ab) edge[bend left=45] node[below] {$\varepsilon$} (ss);
+\end{tikzpicture}
+\\
+$(\str{a}\cup\str{b})^*\str{a}$
+&
+\begin{tikzpicture}
+\node[initial,state] (ss) {};
+\node[state] (s) [right=of ss] {};
+\node[state] (sa) [above right=5mm of s] {};
+\node[state] (aa) [right=of sa] {};
+\node[state] (sb) [below right=5mm of s] {};
+\node[state] (ab) [right=of sb] {};
+\node[state] (sa2) [below right=of ab] {};
+\node[state,accepting] (aa2) [right=of sa2] {};
+
+\path[arrow]
+  (ss) edge node[above] {$\varepsilon$} (s)
+  (s) edge node[left] {$\varepsilon$} (sa)
+      edge node[left] {$\varepsilon$} (sb)
+  (sa) edge node[above] {\str{a}} (aa)
+  (sb) edge node[above] {\str{b}} (ab)
+  (aa) edge[bend right=45] node[above] {$\varepsilon$} (ss)
+  (ab) edge[bend left=45] node[below] {$\varepsilon$} (ss)
+  (sa2) edge node[above] {\str{a}} (aa2)
+  (aa) edge[bend left] node[right] {$\varepsilon$} (sa2)
+  (ab) edge node[above] {$\varepsilon$} (sa2)
+  (ss) edge[bend right=45] node[below] {$\varepsilon$} (sa2);
+\end{tikzpicture}
+\end{longtable}
+\end{center}
+อย่างไรก็ดี หากเราเข้าใจความหมายของ regular expression ตั้งต้นแล้วพยายามเขียน NFA เอง อาจจะได้ผลลัพธ์ที่เรียบง่ายกว่า ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (s) {};
+\node[state,accepting] (a) [right=of s] {};
+\path[arrow]
+  (s) edge[loop above] node[above] {\str{a},\str{b}} (s)
+      edge node[above] {\str{a}} (a);
+\end{tikzpicture}
+\end{center}
+NFA ทั้งสองตัวนี้รับรู้ภาษาเดียวกัน กล่าวคือ หาก $\Sigma=\set{\str{a},\str{b}}$ จะได้ว่า $(\str{a}\cup\str{b})^*\str{a}$ คือ strings ที่ลงท้ายด้วย \str{a}
+\end{example}
+
+\begin{lemma}\label{lemma:dfa-regexp}
+ถ้า $L$ เป็น regular language แล้ว $L$ สามารถเขียนเป็น regular expression ได้
+
+\noindent{\bf Proof idea}: ให้ $L$ เป็น regular language \enskip จะได้ว่า มี DFA $M$ ที่รับรู้ $L$ \enskip เราจะแปลง DFA ตัวนี้ให้เป็น regular expression
+
+การแปลงดังกล่าว จะใช้อุปกรณ์อีกอย่างหนึ่งที่เรียกว่า GNFA (generalized NFA) ซึ่งมี transitions แตกต่างไปจาก NFA ปกติ \enskip ใน NFA นั้น แต่ละ transition จะเป็นตัวอักษรเดี่ยวๆ โดยที่การเปลี่ยน state จะเกิดขึ้นได้ถ้า input symbol ตัวต่อไปตรงกับตัวอักษรที่กำกับลูกศร หรือลูกศรที่กำลังพิจารณาอยู่นั้นเป็น $\varepsilon$-transition ดังในแผนภาพต่อไปนี้ ที่อนุญาตให้เปลี่ยน state หาก input symbol ตัวต่อไปเป็น \str{a} หรือ \str{b}
+\begin{center}
+\begin{tikzpicture}
+\node[state] (s) {};
+\node[state] (a) [right=of s] {};
+\path[arrow]
+  (s) edge node[above] {\str{a},\str{b}} (a);
+\end{tikzpicture}
+\end{center}
+ส่วนใน GNFA นั้น แต่ละ transitions จะเป็น regular expression โดยที่การเปลี่ยน state จะเกิดขึ้นได้ถ้า input string ที่ยังไม่อ่านเข้ามาขึ้นต้นด้วย regular expression ที่กำกับลูกศร ดังในแผนภาพต่อไปนี้ ที่อนุญาตให้เปลี่ยน state หาก input string ที่เหลือนั้นขึ้นต้นด้วย \str{a} หรือ \str{b}
+\begin{center}
+\begin{tikzpicture}
+\node[state] (s) {};
+\node[state] (a) [right=of s] {};
+\path[arrow]
+  (s) edge node[above] {$\str{a}\cup\str{b}$} (a);
+\end{tikzpicture}
+\end{center}
+\end{lemma}
+
+ก่อนจะบรรยายขั้นตอนวิธีการแปลง DFA ให้เป็น regular expression โดยใช้ GNFA จะยกตัวอย่างการแปลง DFA ที่ง่ายๆ ก่อน
+\begin{example}
+ให้ DFA ตั้งต้นเป็นดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (1) {1};
+\node[state,accepting] (2) [below=of 1] {2};
+
+\path[arrow]
+  (1) edge[loop right] node[right] {\str{a}} (1)
+      edge node[right] {\str{b}} (2)
+  (2) edge[loop right] node[right] {\str{a},\str{b}} (2);
+\end{tikzpicture}
+\end{center}
+สามารถแปลงเป็น GNFA ตั้งต้นโดยเพิ่ม start และ accept states ใหม่เข้าไป จากนั้นโยง $\varepsilon$-transitions ไปหา start state เดิม และโยงจาก accept state(s) เดิม ได้ผลลัพธ์ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (s) {$s$};
+\node[state] (1) [right=of s] {1};
+\node[state] (2) [below=of 1] {2};
+\node[state,accepting] (a) [below=of s] {$a$};
+
+\path[arrow]
+  (s) edge node[above] {$\varepsilon$} (1)
+  (1) edge[loop right] node[right] {\str{a}} (1)
+      edge node[right] {\str{b}} (2)
+  (2) edge[loop right] node[right] {$\str{a}\cup\str{b}$} (2)
+      edge node[below] {$\varepsilon$} (a);
+\end{tikzpicture}
+\end{center}
+ลำดับถัดไป จะทำการลบ state $1$ ออก โดยปรับเปลี่ยน transitions ของ GNFA ให้ยังคงรับรู้ภาษาเดิม \enskip ทั้งนี้ หากจะลบ state ออก เส้นทางที่ GNFA เดิมเคยใช้อ่าน regular expressions โดยผ่าน state นี้ก็จะต้องทำได้เช่นเดิมใน GNFA ที่ลบ state ออกแล้ว \enskip จากแผนภาพข้างต้น จะเห็นว่า เส้นทางที่ผ่าน state $1$ นั้นมาจาก $s$ แล้วไป $2$ โดยที่อาจจะวนซ้ำที่ $1$ กี่ครั้งก็ได้ กล่าวคือ หากจะไป $2$ จาก $s$ จะต้องอ่าน input string ที่ขึ้นต้นด้วย regular expression $\varepsilon\str{a}^*\str{b}$ \enskip ดังนั้น หากจะลบ state $1$ ออก ต้องสร้าง transition โดยตรงจาก $s$ ไป $2$ ที่อ่าน $\varepsilon\str{a}^*\str{b}=\str{a}^*\str{b}$ ทำให้ได้ผลลัพธ์ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (s) {$s$};
+\node[state,accepting] (a) [below=of s] {$a$};
+\node[state] (2) [right=of a] {2};
+
+\path[arrow]
+  (s) edge node[right] {$\str{a}^*\str{b}$} (2)
+  (2) edge[loop right] node[right] {$\str{a}\cup\str{b}$} (2)
+      edge node[below] {$\varepsilon$} (a);
+\end{tikzpicture}
+\end{center}
+ต่อไป จะทำการลบ state $2$ ออก โดยใช้หลักการเดียวกันกับการลบ state $1$ ออก \enskip จะได้ว่า เส้นทางที่ผ่าน state $2$ นั้นมาจาก $s$ แล้วไป $a$ \enskip ดังนั้น หากจะลบ state $2$ ออก ต้องสร้าง transition โดยตรงจาก $s$ ไป $a$ ที่อ่าน $\str{a}^*\str{b}(\str{a}\cup\str{b})^*$ ทำให้ได้ผลลัพธ์ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (s) {$s$};
+\node[state,accepting] (a) [below=of s] {$a$};
+
+\path[arrow]
+  (s) edge node[right] {$\str{a}^*\str{b}(\str{a}\cup\str{b})^*$} (a);
+\end{tikzpicture}
+\end{center}
+ณ ขณะนี้ GNFA ที่เรามีอยู่นั้นเหลือแค่ 2 states แล้ว จึงมีแค่ transition เดียวจาก start state ไป accept state \enskip Regular expression ที่กำกับ transition นี้คือผลลัพธ์ที่เราต้องการ
+
+หากพิจารณาให้ถี่ถ้วน DFA ตั้งต้นนั้นตอบรับ strings ที่มี $b$ อย่างน้อยหนึ่งตัว และ regular expression ที่ได้จากการแปลงข้างต้นก็สามารถตีความได้อย่างเดียวกัน
+\end{example}
+
+ขั้นตอนการแปลง DFA ใดๆ ให้เป็น regular expression มีดังนี้
+\begin{itemize}
+\item จาก DFA ตั้งต้น แปลงเป็น GNFA ก่อน โดยการเพิ่ม start state ตัวใหม่ที่มี $\varepsilon$-transition ไปยัง start state เดิม และกำหนด accept state ใหม่เพียง state เดียว ที่มี $\varepsilon$-transitions มาจาก accept states เดิม \enskip ผลลัพธ์ที่ได้จะเป็น GNFA ตั้งต้น ให้ชื่อว่า $G$
+\item เรียก $\textsc{convert}(G)$ ซึ่งเป็น recursive function ดังที่จะนิยามต่อไปนี้
+\end{itemize}
+$\textsc{convert}(G)$:
+\begin{itemize}
+\item ถ้า $G$ มี 2 states ให้จบการทำงาน โดยที่ 2 states นี้คือ start และ accept states \enskip Regular expression ผลลัพธ์ที่ได้ คือ regular expression ที่กำกับ transition ระหว่าง 2 states นี้
+
+\item มิฉะนั้น เลือก state มาหนึ่ง state ที่ไม่ใช่ start และ accept states ให้ชื่อว่า $q_\mathup{rip}$ ซึ่งจะเป็น state ที่เราจะลบออกจาก GNFA \enskip จากนั้น พิจารณาคู่อันดับ $(q_i,q_j)$ ทั้งหมดที่มี transitions ผ่าน $q_\mathup{rip}$ ดังรูป
+\begin{center}
+\begin{tikzpicture}
+\node[state] (qi) {$q_i$};
+\node[state] (rip) [right=of s] {$q_\mathup{rip}$};
+\node[state] (qj) [right=of rip] {$q_j$};
+
+\path[arrow]
+  (qi) edge node[above] {$R_1$} (rip)
+       edge[bend right=75,distance=2.5cm] node[below] {$R_4$} (qj)
+  (rip) edge[loop below] node[below] {$R_2$} (rip)
+  (rip) edge node[above] {$R_3$} (qj);
+\end{tikzpicture}
+\end{center}
+ทั้งนี้ $q_i$ และ $q_j$ ทั้งคู่ต้องไม่ใช่ $q_\mathup{rip}$ แต่ $q_i$ อาจจะเป็น state เดียวกันกับ $q_j$ ได้
+
+หากเราจะลบ $q_\mathup{rip}$ ออกจาก GNFA เราต้องปรับเปลี่ยน transitions ของ $G$ ที่เรากำลังพิจารณาอยู่นี้ให้ยังคงรับรู้ภาษาเดิม ดังนั้น เราต้องพิจารณา states ต้นทางและปลายทางที่สามารถเดินทางผ่าน $q_\mathup{rip}$ ได้ ซึ่งก็คือคู่อันดับ $(q_i,q_j)$ ที่เป็นไปได้ทั้งหมดตามเงื่อนไขข้างต้น
+
+\item สร้าง GNFA ใหม่ที่ชื่อว่า $G'$ โดยลบ $q_\mathup{rip}$ ออก และเปลี่ยน transition จาก $q_i$ ไป $q_j$ ในแต่ละชุดข้างต้นให้เป็นดังรูป
+\begin{center}
+\begin{tikzpicture}
+\node[state] (qi) {$q_i$};
+\node[state] (qj) [right=3cm of qi] {$q_j$};
+
+\path[arrow]
+  (qi) edge node[above] {$R_1R_2^*R_3\cup R_4$} (qj);
+\end{tikzpicture}
+\end{center}
+นั่นคือ เมื่อลบ $q_\mathup{rip}$ ออกแล้ว เราต้องชดเชยเส้นทางที่สูญเสียไป ซึ่งก็คือจาก $q_i$ ไป $q_\mathup{rip}$ ก่อน ($R_1$) จากนั้นจะวนที่ $q_\mathup{rip}$ กี่รอบก็ได้ ($R_2^*$) และสุดท้ายออกจาก $q_\mathup{rip}$ ไปยัง $q_j$ ($R_3$) รวมทั้งหมดเป็น $R_1R_2^*R_3$ \enskip อย่างไรก็ดี อาจจะมีเส้นทางจาก $q_i$ ไป $q_j$ ที่สามารถไปได้โดยตรงโดยไม่ผ่าน $q_\mathup{rip}$ อยู่แล้ว ซึ่งเราก็ยังต้องสงวนไว้ \enskip ดังนั้น เส้นทางทั้งหมดจาก $q_i$ ไป $q_j$ ที่เป็นไปได้ ไม่ว่าจะผ่าน $q_\mathup{rip}$ หรือไม่ก็ตาม คือ $R_1R_2^*R_3\cup R_4$
+
+\item เรียก $\textsc{convert}(G')$
+\end{itemize}
+
+\begin{example}
+ในตัวอย่างนี้ จะทำการแปลง DFA ต่อไปนี้ให้เป็น regular expression
+\begin{center}
+\begin{tikzpicture}
+\node (o) {};
+\node[initial,state] (1) at ($(o)+(-2,1.5)$) {$1$};
+\node[state,accepting] (2) at ($(o)+(2,1.5)$) {$2$};
+\node[state,accepting] (3) at ($(o)+(0,-1.5)$) {$3$};
+
+\path[arrow]
+ (1) edge[bend left=20] node[above] {\str{a}} (2)
+     edge[bend left=20] node[left] {\str{b}} (3)
+ (2) edge[bend left=20] node[above] {\str{a}} (1)
+     edge[loop above] node[above] {\str{b}} (2)
+ (3) edge node[right] {\str{a}} (2)
+     edge[bend left=20] node[left] {\str{b}} (1);
+\end{tikzpicture}
+\end{center}
+ก่อนอื่น แปลง DFA ดังกล่าวให้เป็น GNFA ซึ่งได้ผลลัพธ์ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node (o) {};
+\node[initial,state] (s) at ($(o)+(-4,1.5)$) {$s$};
+\node[state] (1) at ($(o)+(-2,1.5)$) {$1$};
+\node[state] (2) at ($(o)+(2,1.5)$) {$2$};
+\node[state] (3) at ($(o)+(0,-1.5)$) {$3$};
+\node[state,accepting] (a) at ($(o)+(4,-1.5)$) {$a$};
+
+\path[arrow]
+ (s) edge node[above] {$\varepsilon$} (1)
+ (1) edge[bend left=20] node[above] {\str{a}} (2)
+     edge[bend left=20] node[left] {\str{b}} (3)
+ (2) edge[bend left=20] node[above] {\str{a}} (1)
+     edge[loop above] node[above] {\str{b}} (2)
+     edge node[right] {$\varepsilon$} (a)
+ (3) edge node[right] {\str{a}} (2)
+     edge[bend left=20] node[left] {\str{b}} (1)
+     edge node[above] {$\varepsilon$} (a);
+\end{tikzpicture}
+\end{center}
+จากนั้น ทำการลบ state $1$ ออก \enskip เราต้องพิจารณาว่ามีเส้นทางใดที่ผ่าน $1$ บ้าง และหากจะลบ $1$ จะต้องชดเชยด้วย regular expression อะไร \enskip สามารถสรุปได้ดังตารางนี้
+\[
+\begin{array}{c|c||l}
+q_i & q_j & \textup{ชดเชยด้วย} \\ \hline
+s & 2 & \varepsilon\str{a} = \str{a} \\
+s & 3 & \varepsilon\str{b} = \str{b} \\
+2 & 2 & \str{aa}\cup\str{b} \\
+2 & 3 & \str{ab} \\
+3 & 2 & \str{ba}\cup\str{a} \\
+3 & 3 & \str{bb}
+\end{array}
+\]
+โปรดสังเกตว่า ในกรณี $(q_i,q_j)=(2,2)$ นั้นมี transition จาก $2$ ไป $2$ โดยตรงอยู่ก่อนแล้ว ดังนั้น ต้องไม่ลืมเส้นทางนี้ตอนเขียน regular expression ที่จะใช้ชดเชยด้วย \enskip ในกรณี $(q_i,q_j)=(3,2)$ ก็เช่นเดียวกัน
+
+เมื่อลบ state $1$ ออก และเปลี่ยน transitions ตามตารางข้างต้นแล้ว จะได้ GNFA ใหม่ที่มีจำนวน states ลดลงไป ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node (o) {};
+\node[initial,state] (s) at ($(o)+(-4,1.5)$) {$s$};
+\node[state] (2) at ($(o)+(2,1.5)$) {$2$};
+\node[state] (3) at ($(o)+(0,-1.5)$) {$3$};
+\node[state,accepting] (a) at ($(o)+(4,-1.5)$) {$a$};
+
+\path[arrow]
+ (s) edge node[above] {$\str{a}$} (2)
+     edge node[above] {$\str{b}$} (3)
+ (2) edge[loop above] node[above] {$\str{aa}\cup\str{b}$} (2)
+     edge[bend right=20] node[left] {$\str{ab}$} (3)
+     edge node[right] {$\varepsilon$} (a)
+ (3) edge[bend right=20] node[right] {$\str{ba}\cup\str{a}$} (2)
+     edge[loop below] node[below] {$\str{bb}$} (3)
+     edge node[above] {$\varepsilon$} (a);
+\end{tikzpicture}
+\end{center}
+ลำดับต่อไป จะทำการลบ state $2$ ออก \enskip เส้นทางที่ผ่าน $2$ ที่เราต้องชดเชย เป็นดังตารางนี้
+\[
+\begin{array}{c|c||l} % (\str{aa}\cup\str{b})^*
+q_i & q_j & \textup{ชดเชยด้วย} \\ \hline
+s & 3 & \str{a}(\str{aa}\cup\str{b})^*\str{ab} \cup \str{b} \\
+s & a & \str{a}(\str{aa}\cup\str{b})^*\varepsilon = \str{a}(\str{aa}\cup\str{b})^* \\
+3 & 3 & (\str{ba}\cup\str{a})(\str{aa}\cup\str{b})^*\str{ab} \cup \str{bb} \\
+3 & a & (\str{ba}\cup\str{a})(\str{aa}\cup\str{b})^*\varepsilon \cup \varepsilon = (\str{ba}\cup\str{a})(\str{aa}\cup\str{b})^* \cup \varepsilon
+\end{array}
+\]
+ทั้งนี้ อย่าลืม transitions โดยตรงจาก $s$ ไป $3$, จาก $3$ ไป $3$ และจาก $3$ ไป $a$ ที่มีอยู่เดิม \enskip นอกจากนี้ โปรดสังเกตด้วยว่า เราละ $\varepsilon$ ที่นำไป union ในกรณี $3$--$a$ ไม่ได้ เนื่องจาก GNFA อาจจะเปลี่ยน state จาก $3$ ไป $a$ ได้ทันทีโดยไม่ต้องอ่าน input เพิ่มเติม
+
+GNFA ตัวถัดไปที่ยังทำงานเหมือนเดิม เป็นดังรูป
+\begin{center}
+\begin{tikzpicture}
+\node (o) {};
+\node[initial,state] (s) at ($(o)+(-4,1.5)$) {$s$};
+\node[state] (3) at ($(o)+(0,-1.5)$) {$3$};
+\node[state,accepting] (a) at ($(o)+(6,-1.5)$) {$a$};
+
+\path[arrow]
+ (s) edge[bend left=5] node[above right] {$\str{a}(\str{aa}\cup\str{b})^*$} (a)
+     edge node[left] {$\str{a}(\str{aa}\cup\str{b})^*\str{ab}\cup\str{b}$} (3)
+ (3) edge[loop below] node[below] {$(\str{ba}\cup\str{a})(\str{aa}\cup\str{b})^*\str{ab}\cup\str{bb}$} (3)
+     edge node[above] {$(\str{ba}\cup\str{a})(\str{aa}\cup\str{b})^*\cup\varepsilon$} (a);
+\end{tikzpicture}
+\end{center}
+สุดท้ายนี้ จะทำการลบ state $3$ ออก \enskip เส้นทางที่ผ่าน $3$ ที่ต้องชดเชยมีเพียงเส้นทางเดียว คือ $s$--$a$ ทำให้ได้ GNFA สุดท้ายดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (s) {$s$};
+\node[state,accepting] (a) [right=12cm of s] {$a$};
+
+\path[arrow]
+ (s) edge node[above] {\footnotesize $(\str{a}(\str{aa}\cup\str{b})^*\str{ab}\cup\str{b})((\str{ba}\cup\str{a})(\str{aa}\cup\str{b})^*\str{ab}\cup\str{bb})^*((\str{ba}\cup\str{a})(\str{aa}\cup\str{b})^*\cup\varepsilon)\cup\str{a}(\str{aa}\cup\str{b})^*$} (a);
+\end{tikzpicture}
+\end{center}
+Regular expression ที่กำกับบน transition นี้เป็นผลลัพธ์จากการแปลงที่เราต้องการ
+\end{example}
+
+\begin{theorem}
+$L$ is a regular language iff $L$ can be written as a regular expression.
+\begin{pf}
+จาก Lemmas~\ref{lemma:regexp-dfa} และ~\ref{lemma:dfa-regexp}
+\end{pf}
+\end{theorem}

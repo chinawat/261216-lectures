@@ -1,0 +1,553 @@
+\section{Nondeterministic finite automata}
+
+ลำดับต่อไป จะพยายามพิสูจน์สมบัติปิดของ concatenation
+%
+\begin{theorem}
+Regular languages มีสมบัติปิดภายใต้ concatenation
+
+\noindent{\bf Proof idea}: ให้ $A_1,A_2$ เป็น regular languages \enskip เนื่องจาก $A_1,A_2$ นั้น regular จะได้ว่า มี DFA ที่รับรู้แต่ละภาษา \enskip ให้ $M_1$ รับรู้ $A_1$ และ $M_2$ รับรู้ $A_2$ \enskip ถ้าต้องการแสดงว่า $A_1\circ A_2$ นั้น regular ต้องหา DFA $M$ ที่รับรู้ $A_1\circ A_2$ ให้ได้ \enskip ดังนั้น ต้องพิจารณาว่า $M$ ที่เราจะสร้างขึ้นมานั้นควรจะทำงานอย่างไร
+
+วิธีหนึ่งที่อาจจะทำได้คือ เมื่อ $M$ รับ input string $w$ ใดๆ เข้ามา $M$ ต้องพยายามแบ่ง $w$ เป็นสองส่วน โดยแต่ละส่วนนั้น DFA ตั้งต้นแต่ละตัวนั้นตอบรับ กล่าวคือ แบ่ง $w=xy$ โดยที่ $M_1$ accepts $x$ และ $M_2$ accepts $y$ \enskip หากมีวิธีแบ่งดังกล่าว จะได้ว่า หากนำ $x$ และ $y$ มาต่อกันได้เป็น $xy=w$ แล้ว $w$ ก็ย่อมอยู่ใน $A_1\circ A_2$ ด้วย
+
+ดังนั้น เมื่อแบ่ง $w=xy$ แล้ว $M$ สามารถจำลองการทำงานของ $M_1$ ว่า accept $x$ หรือไม่ หาก accept ก็จำลองการทำงานของ $M_2$ ต่อว่า accept $y$ หรือไม่ หาก accept ทั้งคู่แสดงว่า $w$ นั้นอยู่ใน $A_1\circ A_2$ (สังเกตว่าในการจำลองการทำงานนั้น $M$ อ่านตัวอักษรแต่ละตัวใน $w$ อย่างมากเพียงครั้งเดียว จึงไม่ผิดเงื่อนไขการทำงานของ DFA) \enskip แต่หากตัวใดตัวหนึ่ง reject แสดงว่าการแบ่ง $x,y$ ดังกล่าวอาจจะไม่ถูกต้อง หรืออาจจะแปลว่าไม่มีวิธีการใดๆ เลยที่จะแบ่ง $w$ ให้ได้ผลสำเร็จก็เป็นได้
+
+อย่างไรก็ดี เราไม่มีทางทราบแน่ชัดว่าจะต้องแบ่ง $w$ อย่างไรจึงจะได้ผลสำเร็จ กล่าวคือ หากตัดสินใจอย่างแน่ชัด กำหนดแน่นอนว่าจะต้องแบ่ง $w$ ณ จุดใดจุดหนึ่ง แต่การแบ่งดังกล่าวไม่ทำให้ $M_1$ และ $M_2$ accept แต่ละส่วนได้ ความพยายามของเราก็จะไม่เป็นผล \enskip ดังนั้น การกำหนดจุดแบ่งตั้งแต่แรกอาจจะก่อให้เกิดปัญหาขึ้นได้ \enskip แต่ถ้าเราจะสร้าง DFA ขึ้นมาให้รับรู้ concatenation ก็ย่อมต้องกำหนดจุดแบ่งให้แน่ชัด \enskip ดูเหมือนว่า DFA จะไม่ช่วยให้เราแก้ปัญหานี้ให้ลุล่วงไปได้
+
+ดังนั้น เราต้องสร้างเครื่องมือใหม่มาช่วยในการแก้ปัญหา \enskip เครื่องมือใหม่นี้เป็น finite automata ที่เราสามารถเลือกทำมากกว่าหนึ่งอย่างได้เมื่ออยู่ ณ state ใดๆ \enskip หากทางเลือกใดทางเลือกหนึ่งทำให้เราประสบผลสำเร็จ ก็จะถือว่าการแก้ปัญหานั้นสำเร็จลุล่วงไปได้ด้วย
+\end{theorem}
+
+Nondeterministic finite automaton (NFA) คือเครื่องสถานะจำกัดเชิงไม่กำหนด (nondeterministic finite state machine) ที่มีเซตของ accept states นิยามแน่ชัด
+%
+\begin{example}
+$N_1$ ดังแผนภาพด้านล่างเป็น NFA
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (q1) at (0,0) {$q_1$};
+\node[state] (q2) [right=of q1] {$q_2$};
+\node[state] (q3) [right=of q2] {$q_3$};
+\node[state,accepting] (q4) [right=of q3] {$q_4$};
+
+\path[arrow]
+ (q1) edge[loop above] node[above] {\texttt{0},\texttt{1}} (q1)
+      edge node[above] {\texttt{1}} (q2)
+ (q2) edge node[above] {\texttt{0},$\varepsilon$} (q3)
+ (q3) edge node[above] {\texttt{1}} (q4)
+ (q4) edge[loop above] node[above] {\texttt{0},\texttt{1}} (q4);
+\end{tikzpicture}
+\end{center}
+หากพิจารณาให้ละเอียดถี่ถ้วน จะพบว่า NFA ข้างต้นมีคุณสมบัติคล้ายกับ DFA หลายประการ แต่มีจุดที่แตกต่าง ดังนี้
+\begin{itemize}
+\item แต่ละ input symbol อาจจะมีมากกว่า 1 transition ออกจาก state (ต่างกับ DFA ที่ต้องมี 1 transition พอดีไม่ขาดไม่เกิน) \enskip ใน $N_1$ จะเห็นว่าที่ state $q_1$ หาก next input symbol เป็น \texttt{1} จะได้ว่า state ต่อไปที่เป็นไปได้คือ $q_1$ และ $q_2$ กล่าวคือ $N_1$ สามารถเลือกที่จะย้ายไปยัง state ใดก็ได้เท่าที่เป็นไปได้ ไม่กำหนดตายตัวแน่ชัด
+\item แต่ละ input symbol อาจจะไม่มี transition ออกจาก state เลย \enskip ใน $N_1$ จะเห็นว่าที่ state $q_2$ หาก next input symbol เป็น \texttt{1} จะได้ว่า ไม่มี state ต่อไปที่ $N_1$ สามารถไปต่อได้ \enskip ในสถานการณ์นี้ การทำงานของ NFA ถือว่าสิ้นสุดลงโดยไม่ประสบความสำเร็จ กล่าวคือ ไม่สามารถหาวิธีการที่จะไปถึง accept state ได้
+\item อาจจะมี $\varepsilon$-transition ที่ทำให้ NFA ย้าย state ได้โดยไม่ต้องอ่าน input symbol (ต่างกับ DFA ที่ต้องอ่าน input symbol หนึ่งตัวทุกครั้งหากจะย้าย state) \enskip ใน $N_1$ จะเห็นว่าที่ state $q_2$ มี $\varepsilon$-transition ไปยัง $q_3$ กล่าวคือ หาก $N_1$ อยู่ที่ $q_2$ ก็สามารถกระโดดไปที่ $q_3$ ได้ทันทีโดยไม่ต้องอ่าน input symbol เพิ่มเติม
+\end{itemize}
+
+หากเราป้อน \texttt{11} ให้กับ $N_1$ ลำดับของ states ที่ $N_1$ อาจจะเลือกไปได้ มีดังนี้ \[q_1\xrightarrow{\texttt{1}} q_2\xrightarrow{\varepsilon} q_3\xrightarrow{\texttt{1}} q_4\quad\textup{\yea}\] นั่นคือ $N_1$ accepts \texttt{11} เพราะ $N_1$ สามารถจบการทำงานที่ $q_4$ ซึ่งเป็น accept state ได้
+
+ในกรณีทั่วไป หากจะพิจารณาว่า NFA ตอบรับ input string ที่กำหนดมาให้หรือไม่ ต้องพิจารณาลำดับของ states ที่เป็นไปได้ทั้งหมดที่ NFA อาจจะเลือกไป แล้วดูว่ามีลำดับใดลำดับหนึ่งที่พา NFA ไปถึง accept state หรือไม่ \enskip หากมี ถือว่า NFA accepts the input string มิฉะนั้น ถือว่า NFA rejects the input string
+
+หากเราป้อน \texttt{0110} ให้กับ $N_1$ แล้วต้องการพิจารณาว่า $N_1$ accepts \texttt{0110} หรือไม่ ต้องพิจารณาเส้นทางทั้งหมดที่เป็นไปได้ แล้วดูว่ามีเส้นทางที่พาไปถึง accept state หรือไม่ ดังนี้
+\begin{center}
+\begin{tikzpicture}[edge from parent/.style={draw,arrow}]
+\node (i) {$q_1$}
+  child { node {$q_1$}
+    child { node {$q_1$}
+      child { node {$q_1$}
+        child { node {$q_1$}
+        }
+      }
+      child { node {$q_2$}
+        child { node {$q_3$}
+        }
+      }
+      child { node {\underline{$q_3$}}
+      }
+    }
+    child { node {\underline{$q_2$}}
+    }
+    child { node {$q_3$}
+      child { node {$q_4$}
+        child { node[state,accepting,inner sep=1pt,minimum size=0pt] {$q_4$}
+        }
+      }
+    }
+  };
+  \begin{scope}
+    \path (i -| i-1-1-1-1) -- node[left=7.5mm] {\texttt{0}} (i-1 -| i-1-1-1-1);
+    \path (i-1 -| i-1-1-1-1) -- node[left=7.5mm] {\texttt{1}} (i-1-1 -| i-1-1-1-1);
+    \path (i-1-1 -| i-1-1-1-1) -- node[left=7.5mm] {\texttt{1}} (i-1-1-1 -| i-1-1-1-1);
+    \path (i-1-1-1 -| i-1-1-1-1) -- node[left=7.5mm] {\texttt{0}} (i-1-1-1-1 -| i-1-1-1-1);
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item เริ่มแรก ที่ $q_1$ และตัวอักษรถัดไปเป็น \texttt{0} จะได้ว่า states ที่ $N_1$ ไปต่อได้มีเพียง state เดียวคือ $q_1$
+\item จากนั้น ที่ $q_1$ และตัวอักษรถัดไปเป็น \texttt{1} จะได้ว่า states ที่ $N_1$ ไปได้มี $q_1$ และ $q_2$ ตาม transitions ที่ออกจาก $q_1$ \enskip นอกจากนี้ $N_1$ ยังไปที่ $q_3$ ได้ด้วย เนื่องจากมี $\varepsilon$-transition จาก $q_2$ ไปยัง $q_3$ กล่าวคือ หาก $N_1$ เลือกที่จะย้ายจาก $q_1$ ไป $q_2$ แล้ว $N_1$ ยังเลือกที่จะกระโดดต่อจาก $q_2$ ไปยัง $q_3$ ได้ด้วยโดยไม่ต้องอ่านตัวอักษรเพิ่มเติม
+\item หากอยู่ที่ $q_2$ และตัวอักษรถัดไปเป็น \texttt{1} จะได้ว่า ไม่มี states ที่ $N_1$ ไปต่อได้ \enskip ในกรณีนี้ หนทางที่ $N_1$ เลือกเดินมาแล้วนั้นไม่สามารถพา $N_1$ ไปถึง accept state ได้ จึงเลิกพิจารณาเส้นทางนี้กับ input ที่เหลือ
+\item หากอยู่ที่ $q_3$ และตัวอักษรถัดไปเป็น \texttt{0} จะได้ว่า ไม่มี states ที่ $N_1$ ไปต่อได้เช่นกัน จึงเลิกพิจารณาเส้นทางนี้
+\item ท้ายที่สุดแล้ว มีสามเส้นทางที่ $N_1$ เลือกเดินจนจบการทำงานได้ (กล่าวคือ อ่าน input string ได้ครบทุกตัวไม่ติดขัด) ดังนี้
+\begin{itemize}
+\item $q_1\xrightarrow{\texttt{0}} q_1\xrightarrow{\texttt{1}} q_1\xrightarrow{\texttt{1}} q_1\xrightarrow{\texttt{0}} q_1$ \nay
+\item $q_1\xrightarrow{\texttt{0}} q_1\xrightarrow{\texttt{1}} q_1\xrightarrow{\texttt{1}} q_2\xrightarrow{\texttt{0}} q_3$ \nay
+\item $q_1\xrightarrow{\texttt{0}} q_1\xrightarrow{\texttt{1}} q_2\xrightarrow{\varepsilon} q_3\xrightarrow{\texttt{1}} q_4\xrightarrow{\texttt{0}} q_4$ \yea
+\end{itemize}
+ในที่นี้ มีหนึ่งเส้นทางที่พา $N_1$ ไปยัง accept state ดังนั้น $N_1$ accepts \texttt{0110}
+\end{itemize}
+
+หากเราป้อน \texttt{010} ให้กับ $N_1$ แล้วต้องการพิจารณาว่า $N_1$ accepts \texttt{010} หรือไม่ ต้องพิจารณาเส้นทางทั้งหมดที่เป็นไปได้ แล้วดูว่ามีเส้นทางที่พาไปถึง accept state หรือไม่ ดังนี้
+\begin{center}
+\begin{tikzpicture}[edge from parent/.style={draw,arrow}]
+\node (i) {$q_1$}
+  child { node {$q_1$}
+    child { node {$q_1$}
+      child { node {$q_1$}
+      }
+    }
+    child { node {$q_2$}
+      child { node {$q_3$}
+      }
+    }
+    child { node {\underline{$q_3$}}
+    }
+  };
+  \begin{scope}
+    \path (i -| i-1-1-1) -- node[left=7.5mm] {\texttt{0}} (i-1 -| i-1-1-1);
+    \path (i-1 -| i-1-1-1) -- node[left=7.5mm] {\texttt{1}} (i-1-1 -| i-1-1-1);
+    \path (i-1-1 -| i-1-1-1) -- node[left=7.5mm] {\texttt{0}} (i-1-1-1 -| i-1-1-1);
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+เนื่องจากทุกเส้นทางที่ $N_1$ สามารถใช้ได้นั้นจบการทำงานนอก accept state จะได้ว่า $N_1$ rejects \texttt{010}
+
+เมื่อเราพิจารณาอย่างถี่ถ้วนแล้ว จะได้ว่า $N_1$ ตอบรับ strings ที่มี \texttt{11} หรือ \texttt{101} เป็นส่วนหนึ่ง นั่นคือ \[L(N_1)=\set{w\mid\textup{$w$ มี \texttt{101} หรือ \texttt{11} เป็น substring}}\]
+\end{example}
+
+\begin{definition}
+NFA ประกอบด้วยส่วนต่างๆ ต่อไปนี้
+\begin{itemize}
+\item $Q$ เป็นเซตของ states
+\item $q_0\in Q$ เป็น start state
+\item $\Sigma$ เป็น alphabet
+\item $\delta$ เป็น transition function จาก $Q\times\Sigma_\varepsilon\to\pow(Q)$ โดยที่ $\Sigma_\varepsilon\triangleq\Sigma\cup\set{\varepsilon}$ (ทั้งนี้ $\delta$ ต้องเป็น total function ด้วย) \enskip หาก state ปัจจุบันคือ $q$ และ input symbol ที่เรากำลังพิจารณาคือ $a$ (ซึ่งอาจจะเป็น $\varepsilon$) แล้ว $\delta(q,a)$ บ่งบอก states ต่อไปที่เป็นไปได้ ซึ่งอาจจะมีมากกว่า 1 state หรือไม่มีเลยก็ได้ ดังนั้น ผลลัพธ์ของ $\delta(q,a)$ จึงเป็นเซตของ states
+\item $F\subseteq Q$ เป็นเซตของ accept states
+\end{itemize}
+จะเห็นว่า มีเพียง $\delta$ เท่านั้นที่แตกต่างไปจาก DFA
+\end{definition}
+%
+\begin{example}
+ให้ $\Sigma=\set{\texttt{0}}$ (เรียก $\Sigma$ ในลักษณะนี้ว่า\emph{ชุดตัวอักษรเอกภาค} (unary alphabet) เนื่องจากมีตัวอักษรที่เป็นไปได้เพียงตัวเดียว) \enskip พิจารณา $L=\set{\texttt{0}^n:2\mid n\vee 3\mid n}$ กล่าวคือ $L$ ประกอบไปด้วย strings ที่ความยาวหารด้วย 2 หรือ 3 ลงตัว และตัวอักษรแต่ละตัวนั้นเป็น \texttt{0} อาทิ $\varepsilon,\texttt{00},\texttt{000},\texttt{0000},\texttt{000000}$ \enskip สามารถเขียน NFA $N_2$ ที่รับรู้ $L$ ได้ดังนี้
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state] (i) at (0,0) {};
+\node[state,accepting] (q20) [above right=1cm of i] {};
+\node[state] (q21) [right=of q20] {};
+\node[state,accepting] (q30) [below right=1cm of i] {};
+\node[state] (q31) [right=of q30] {};
+\path (q30) -- node[state] (q32) [below=1cm] {} (q31);
+
+\path[arrow]
+ (i) edge[bend left] node[left] {$\varepsilon$} (q20)
+      edge[bend right] node[left] {$\varepsilon$} (q30)
+ (q20) edge[bend left] node[above] {\texttt{0}} (q21)
+ (q21) edge[bend left] node[above] {\texttt{0}} (q20)
+ (q30) edge node[above] {\texttt{0}} (q31)
+ (q31) edge node[right] {\texttt{0}} (q32)
+ (q32) edge node[left] {\texttt{0}} (q30);
+\end{tikzpicture}
+\end{center}
+เริ่มแรก $N_2$ สามารถเลือกได้ว่า string ที่กำลังจะพิจารณานั้นมีความยาวหารด้วย 2 หรือหารด้วย 3 ลงตัว \enskip ในกรณีแรก $N_2$ จะเลือกใช้ $\varepsilon$-transition ไปยังส่วนบนเพื่อตรวจสอบว่าความยาวเป็นเลขคู่ \enskip ในกรณีหลัง $N_2$ จะเลือกใช้ $\varepsilon$-transition ไปยังส่วนล่าง \enskip หากส่วนใดส่วนหนึ่งของ $N_2$ ตอบรับ ก็แสดงว่า string ที่พิจารณานั้นมีคุณสมบัติตามเงื่อนไข
+\end{example}
+
+ตัวอย่างข้างต้นนั้นสร้าง NFA ที่รับรู้ union ของภาษาสองภาษา \enskip ในกรณีทั่วไป สามารถเขียนเป็นบทตั้งได้ดังนี้
+\begin{lemma}\label{lemma:nfa-union-nfa}
+ถ้า $N_1$ เป็น NFA ที่รับรู้ภาษา $A_1$ และ $N_2$ เป็น NFA ที่รับรู้ภาษา $A_2$ แล้วจะมี NFA ที่รับรู้ $A_1\cup A_2$
+
+\noindent{\bf Proof idea}: ให้ $N_1$ และ $N_2$ มีโครงสร้างโดยรวมดังแผนภาพต่อไปนี้ กล่าวคือ มี start state, accept states, และ states อื่นๆ ที่เหลือ
+% union start
+\begin{center}
+\begin{tikzpicture}[initial text={},every state/.style={circle,draw,minimum size=5mm}]
+\node (o1) at (0,0) {};
+\node[initial,state] (i1) [left=of o1] {};
+\node[minimum width=5mm] (a12) [right=of o1] {};
+\node[state,accepting] (a11) [above=1mm of a12] {};
+\node[state,accepting] (a13) [below=1mm of a12] {};
+\node[circle,draw] at ($(o1)+(0.5,0.2)$) (m11) {};
+\node[circle,draw] at ($(o1)+(-0.1,0.75)$) (m12) {};
+\node[circle,draw] at ($(o1)+(-0.5,-0.75)$) (m13) {};
+
+\node[draw,rounded corners,fit=(i1) (m11) (m12) (m13) (a11) (a13)] (N1) {};
+\node [below right=0pt of N1.north west] {$N_1$};
+
+\node (o2) [right=1in of N1.east] {};
+\node[initial,state] (i2) [left=of o2] {};
+\node[state,accepting] (a22) [right=of o2] {};
+\node[state,accepting] (a21) [above=1mm of a22] {};
+\node[state,accepting] (a23) [below=1mm of a22] {};
+\node[circle,draw] at ($(o2)+(0.1,0.75)$) (m21) {};
+\node[circle,draw] at ($(o2)+(-0.1,-0.75)$) (m22) {};
+
+\node[draw,rounded corners,fit=(i2) (m21) (m22) (a21) (a23)] (N2) {};
+\node[below right=0pt of N2.north west] {$N_2$};
+\end{tikzpicture}
+\end{center}
+เราจะใช้ $N_1$ และ $N_2$ เป็นฐานในการสร้าง $N$ ดังแผนภาพต่อไปนี้
+% union
+\begin{center}
+\begin{tikzpicture}[initial text={},every state/.style={circle,draw,minimum size=5mm}]
+\node (o) at (0,0) {};
+
+\node (o1) [above=of o] {};
+\node[state] (i1) [left=of o1] {};
+\node[minimum width=5mm] (a12) [right=of o1] {};
+\node[state,accepting] (a11) [above=1mm of a12] {};
+\node[state,accepting] (a13) [below=1mm of a12] {};
+\node[circle,draw] at ($(o1)+(0.5,0.2)$) (m11) {};
+\node[circle,draw] at ($(o1)+(-0.1,0.75)$) (m12) {};
+\node[circle,draw] at ($(o1)+(-0.5,-0.75)$) (m13) {};
+
+\node[draw,rounded corners,fit=(i1) (m11) (m12) (m13) (a11) (a13)] (N1) {};
+
+\node (o2) [below=of o] {};
+\node[state] (i2) [left=of o2] {};
+\node[state,accepting] (a22) [right=of o2] {};
+\node[state,accepting] (a21) [above=1mm of a22] {};
+\node[state,accepting] (a23) [below=1mm of a22] {};
+\node[circle,draw] at ($(o2)+(0.1,0.75)$) (m21) {};
+\node[circle,draw] at ($(o2)+(-0.1,-0.75)$) (m22) {};
+
+\node[draw,rounded corners,fit=(i2) (m21) (m22) (a21) (a23)] (N2) {};
+
+\node[initial,state] (i) [left=1in of o] {};
+\path[arrow]
+ (i) edge[bend left] node[left] {$\varepsilon$} (i1)
+     edge[bend right] node[left] {$\varepsilon$} (i2);
+
+\node[draw,rounded corners,fit=(i) (N1) (N2)] (N) {};
+\node[below right=0pt of N.north west] {$N$};
+\end{tikzpicture}
+\end{center}
+นั่นคือ $N$ จะเลือกจำลองการทำงานของ $N_1$ และ $N_2$ \enskip ถ้า NFA ตั้งต้นตัวใดตัวหนึ่งตอบรับ input string แล้ว $N$ ก็จะตอบรับด้วย \enskip สร้าง $N$ โดยเพิ่ม state ตัวใหม่ให้เป็น start state ใหม่ และจาก state นี้ มี $\varepsilon$-transition ไปยัง start state เดิมแต่ละตัว \enskip ถ้ามี NFA ตั้งต้นที่ตอบรับ input string ใดๆ จะมีลำดับของ states จาก start state ของ NFA นั้นๆ ไปยัง accept state \enskip จะได้ว่า ใน $N$ ก็จะมีลำดับของ states จาก start state ใหม่ไปยัง accept state เดิมด้วยเช่นกัน (โดยเพิ่ม $\varepsilon$-transition เข้าไปด้านหน้าสุดของลำดับ states ที่มีแต่แรก)
+\begin{pf}
+ก่อนอื่น เขียนแจกแจงส่วนประกอบของ NFA ตั้งต้นแต่ละตัว \enskip ให้ $N_1: (Q_1,q_1,\Sigma,\delta_1,F_1)$ รับรู้ $A_1$ (พึงระลึกว่า $\delta_1:Q_1\times\Sigma_\varepsilon\to \pow(Q_1)$) และ $N_2: (Q_2,q_2,\Sigma,\delta_2,F_2)$ รับรู้ $A_2$ (พึงระลึกว่า $\delta_2:Q_2\times\Sigma_\varepsilon\to\pow(Q_2)$) \enskip สร้าง $N$ ที่รับรู้ $A_1\cup A_2$ ดังนี้
+\begin{itemize}
+\item $Q=Q_1\cup Q_2\cup\set{q_0}$ โดยที่ $q_0$ เป็น state ใหม่ที่ยังไม่เคยใช้มาก่อน
+\item $q_0$ เป็น start state
+\item $\Sigma$ คงเดิม
+\item $F=F_1\cup F_2$
+\item $\delta:Q\times\Sigma_\varepsilon\to\pow(Q)$ โดยที่
+\[\delta(q,a)\triangleq\left\{
+\begin{array}{ll}
+\delta_1(q,a) & \textup{หาก $q\in Q_1$} \\
+\delta_2(q,a) & \textup{หาก $q\in Q_2$} \\
+\set{q_1,q_2} & \textup{หาก $q=q_0$ และ $a=\varepsilon$} \\
+\emptyset & \textup{หาก $q=q_0$ และ $a\neq\varepsilon$}
+\end{array}
+\right.\]
+นั่นคือ หากขณะนี้ $N$ อยู่ที่ state เดิมของ $N_1$ ให้ปฎิบัติตาม transition ของ $N_1$ ที่เคยทำมา เช่นเดียวกับเมื่อ $N$ อยู่ที่ state เดิมของ $N_2$ \enskip แต่ถ้าขณะนี้ $N$ อยู่ที่ $q_0$ ที่เพิ่งสร้างขึ้นมาใหม่ และ transition ที่เรากำลังพิจารณาเป็น $\varepsilon$-transition ให้ไปที่ start states เดิมคือ $q_1$ หรือ $q_2$ ได้ \enskip ในกรณีสุดท้าย หาก $N$ อยู่ที่ $q_0$ แต่ transition ที่เรากำลังพิจารณาไม่ใช่ $\varepsilon$-transition กล่าวคือ $N$ ต้องอ่าน input symbol ตัวต่อไป จะได้ว่าไม่มี state ที่ $N$ สามารถไปต่อได้
+\end{itemize}
+\end{pf}
+\end{lemma}
+
+\subsection{Equivalence of DFAs and NFAs}
+
+ใน Lemma~\ref{lemma:nfa-union-nfa} เราได้พิสูจน์ว่า ภาษาที่รับรู้ได้ด้วย NFA มีสมบัติปิดภายใต้ union \enskip แต่ใน Theorem~\ref{thm:dfa-union-closed} เราได้พิสูจน์มาแล้วว่า regular languages ซึ่งก็คือภาษาที่รับรู้ได้ด้วย DFA นั้น มีสมบัติปิดภายใต้ union \enskip หากเราสามารถสร้างความสัมพันธ์ระหว่าง DFAs กับ NFAs ได้ เราก็จะมีเครื่องมือที่ใช้แก้ปัญหาที่เกี่ยวกับ regular languages เพิ่มเติม และยังสามารถเขียนบทพิสูจน์ของสมบัติปิดของ union ได้ง่ายขึ้นดั่งข้างต้นด้วย \enskip ทฤษฎีบทต่อไปจะกล่าวถึงความเกี่ยวเนื่องระหว่าง NFAs กับ DFAs
+
+\begin{theorem}\label{thm:equiv-dfa-nfa}
+NFA ทุกตัวมี DFA ที่เทียบเท่า กล่าวคือ ถ้า $N$ เป็น NFA แล้ว จะมี DFA $M$ ที่ $L(N)=L(M)$
+
+\noindent{\bf Proof idea}: เนื่องจาก NFA สามารถเลือกที่จะไปได้หลาย states ในเวลาเดียวกัน DFA ที่เราจะสร้างขึ้นมาต้องติดตามว่า หลังจากอ่าน input symbol แต่ละตัวแล้ว states ที่เป็นไปได้ทั้งหมดมีอะไรบ้าง \enskip เมื่ออ่าน input string ครบทั้งหมดแล้ว NFA จบการทำงานที่ accept state ใดๆ DFA ที่จะสร้างขึ้นมาก็จะต้อง accept input string นั้นด้วย \enskip ทั้งนี้ ต้องใช้ความระมัดระวังกับ $\varepsilon$-transitions ที่อาจจะทำให้ NFA ย้าย states ได้โดยไม่ต้องอ่าน input symbol ตัวต่อไป
+\begin{pf}
+ให้ $N: (Q,q_0,\Sigma,\delta,F)$ เป็น NFA ที่รับรู้ภาษา $A$ (พึงระลึกว่า $\delta:Q\times\Sigma_\varepsilon\to \pow(Q)$) \enskip สร้าง DFA $M: (Q',q_0',\Sigma,\delta',F')$ ที่รับรู้ $A$ เช่นเดียวกันดังต่อไปนี้ \enskip เริ่มแรก เราจะพิจารณากรณีที่ $N$ ยังไม่มี $\varepsilon$-transitions ก่อน (กล่าวคือ $\forall q\in Q:\delta(q,\varepsilon)=\emptyset$) จากนั้นจึงจะพิจารณาว่าจะทำอย่างไรกับ $\varepsilon$-transitions ต่อไป
+
+Formal description ของ $M$ (โดยที่ยังไม่พิจารณา $\varepsilon$-transitions) มีดังนี้
+\begin{itemize}
+\item $Q'=\pow(Q)$\\
+State แต่ละตัวของ $M$ เป็นเซตของ states ของ $N$ ที่ $N$ สามารถไปถึงได้ ณ เวลาใดเวลาหนึ่ง
+\item $q_0'=\set{q_0}$\\
+$M$ เริ่มที่ state ที่ $N$ สามารถเริ่มได้ ซึ่งมีเพียง $q_0$ เท่านั้น (อย่าลืมว่า states ใน $M$ เป็นเซต)
+\item $\Sigma$ เหมือนเดิม
+\item $F'=\set{R\in Q'\mid R\cap F\neq\emptyset}$\\
+$M$ ควรจะตอบรับ input string หากเส้นทางใดเส้นทางหนึ่งที่ $N$ เลือกเดินจบการทำงานที่ accept state กล่าวคือ state ที่เป็นไปได้หลังจากอ่าน input string ครบแล้วมี accept state ของ $N$ อยู่ด้วย (ตรวจสอบประเภทตัวแปรให้มั่นใจ---$R\in Q'$ แต่ $Q'=\pow(Q)$ ดังนั้น $R\subseteq Q$ \enskip นอกจากนี้ $F\subseteq Q$ จากนิยามของ $N$ \enskip ดังนั้น ทั้ง $R$ และ $F$ จึงนำมา intersect กันได้ เพราะเป็นเซตทั้งคู่)
+\item หาก $R\in Q'$ และ $a\in\Sigma$ ให้ $\delta'(R,a)\triangleq\set{q\in Q\mid\exists r\in R: q\in\delta(r,a)}$\\
+นั่นคือ states ที่เป็นไปได้หลังจากที่ $N$ อ่าน $a$ เข้ามา ก็ย่อมต้องมีลูกศรชี้มาจาก state ใด state หนึ่งที่เป็นไปได้ก่อนที่ $N$ จะอ่าน $a$ \enskip ในที่นี้ $R$ คือ state ที่เป็นไปได้ก่อนอ่าน $a$ (อย่าลืมว่า $R$ เป็น state ใน $M$ ซึ่งเป็นเซตของ states จาก $N$ เพราะ $Q'=\pow(Q)$) \enskip ดังนั้น ถ้าขณะนี้ $N$ อยู่ที่ state $r\in R$ ได้ และ $N$ อ่าน $a$ เข้ามา แล้วเราต้องพิจารณาว่า $N$ ไปยัง states ใดได้บ้าง ซึ่งก็คือ $\delta(r,a)$ นั่นเอง \enskip แต่ใน $R$ อาจจะมีหลาย states ที่เป็นไปได้ก่อนอ่าน $a$ ก็ต้องพิจารณาทีละ state จนครบ \enskip ในที่สุดแล้ว states ที่เป็นไปได้ทั้งหมดหลังจากอ่าน input symbol ก็คือ union ของ $\delta(r,a)$ โดยที่ $r$ เป็นสมาชิกของ $R$ \enskip กล่าวคือ เราสามารถเขียน $\delta'(R,a)$ อีกรูปหนึ่งได้ดังนี้ \[\delta'(R,a)\triangleq\bigcup_{r\in R}{\delta(r,a)}\]
+
+หากตรวจสอบชนิดข้อมูลของตัวแปรต่างๆ ให้มั่นใจ จะได้ว่า $R\in\pow(Q)$, $a\in\Sigma$, และ $\delta'(R,a)\in\pow(Q)$ ดังนั้น $\delta':\pow(Q)\times\Sigma\rightarrow\pow(Q)$ ซึ่งแปลว่า $\delta':Q'\times\Sigma\rightarrow Q'$ ตรงตามชนิดของ transition function ใน DFA ที่เราต้องการ
+\end{itemize}
+
+ณ จุดนี้ เราสร้าง DFA จาก $N$ ได้แล้วถ้า $N$ ไม่มี $\varepsilon$-transitions \enskip ต่อไป จะพิจารณา $\varepsilon$-transitions \enskip ก่อนอื่น หาก $R$ เป็น state ใน $M$ (กล่าวคือ สมาชิกแต่ละตัวของ $R$ เป็น state ที่ $N$ ไปถึงได้ ณ ขณะใดขณะหนึ่ง) นิยาม $E(R)$ เป็นเซตของ states ที่ $N$ สามารถไปถึงได้จาก states ใน $R$ โดยใช้ $\varepsilon$-transition ได้เท่านั้น (หรือไม่ใช้เลยก็ได้ ซึ่งแปลว่า $R\subseteq E(R)$ ด้วย) \enskip หากเขียนเชิงรูปนัย จะได้ว่า \[E(R)\triangleq\set{q\in Q\mid\textup{$q$ ไปถึงได้จาก state ใน $R$ โดยใช้ $\varepsilon$-transitions อย่างน้อย 0 ครั้ง}}%
+\footnote{
+หากมอง $\varepsilon$-transitions เป็นความสัมพันธ์ $T$ กล่าวคือ $q_1$ สัมพันธ์กับ $q_2$ ใน $T$ หากมี $\varepsilon$-transition จาก $q_1$ ไปยัง $q_2$ จะได้ว่า $E$ คือความสัมพันธ์ที่ได้จากการนำ $T$ ประกอบกับตัวเองอย่างน้อย 0 ครั้ง กล่าวคือ $E=I\cup T\cup T\circ T\cup T\circ T\circ T\cup\cdots$ โดยที่ $I\triangleq\set{(q,q)}$ \enskip ความสัมพันธ์ในลักษณะนี้เรียกว่า\emph{การปิดโดยสะท้อนและถ่ายทอด} (reflexive transitive closure) ของ $T$ \enskip ดังนั้น $E(r)$ คือ image ของ $r$ ภายใต้ $E$ ซึ่งก็คือเซตของ states ที่ไปถึงจาก $r$ ได้โดยใช้ $\varepsilon$-transitions เท่านั้น หรือไม่ใช้เลย \enskip ส่วน $E(R)$ นั้นคือ image ของเซต $R$ ภายใต้ $E$ ซึ่งก็คือ $E(R)=\bigcup_{r\in R}{E(r)}$
+}
+\]
+เราจะใช้นิยามของ $E(R)$ ปรับเปลี่ยน DFA ที่เราสร้างขึ้นมาก่อนหน้านี้ให้จำลองการทำงานของ $\varepsilon$-transitions ได้ถูกต้อง
+\begin{itemize}
+\item แต่เดิม start state เป็น $q_0'=\set{q_0}$ \enskip แต่จาก $q_0$ เราอาจจะใช้ $\varepsilon$-transition(s) ก้าวกระโดดไป state(s) อื่นได้ด้วย ดังนั้น ต้องเปลี่ยน start state ให้เป็น $q_0'=E(\set{q_0})$
+\item แต่เดิม $\delta'(R,a)$ เป็น $\bigcup_{r\in R}{\delta(r,a)}$ แต่เมื่อไปถึง state ต่อไปแล้ว เราอาจจะยังก้าวกระโดดไป state(s) อื่นๆ โดยใช้ $\varepsilon$-transition(s) ได้อีก จะได้ว่า หากเริ่มจาก $r$ แล้ว states ทั้งหมดที่ไปถึงได้คือ $E(\delta(r,a))$ \enskip ดังนั้น ต้องเปลี่ยน transition function ให้เป็น \[\delta'(R,a)\triangleq\bigcup_{r\in R}{E(\delta(r,a))}=\set{q\in Q\mid\exists r\in R: q\in E(\delta(r,a))}\]
+\end{itemize}
+ณ จุดนี้ DFA ที่เราสร้างขึ้นมานั้นสามารถจำลองการทำงานของ $N$ ได้ครบถ้วนแล้ว เป็นการจบบทพิสูจน์
+\end{pf}
+\end{theorem}
+ในบทพิสูจน์ข้างต้น นิยามของ transition function นั้นเลือกที่จะใช้ $\varepsilon$-transition(s) หลังจากที่อ่าน input symbol แล้วเท่านั้น อย่างไรก็ดี หากปรับเปลี่ยน transition function ให้ใช้ $\varepsilon$-transition(s) ก่อนที่จะอ่าน input symbol ได้เท่านั้น ก็จะได้ DFA ที่แตกต่างออกไป แต่ยังทำงานแล้วให้ผลลัพธ์เหมือนเดิม
+
+เนื่องจากเราสามารถแปลง NFA ใดๆ ให้เป็น DFA ที่รับรู้ภาษาเดียวกันได้ จะได้ว่า NFA นั้นไม่ได้มีกำลังความสามารถมากกว่า DFA แต่อย่างใด เป็นแค่เพียงเครื่องมืออำนวยความสะดวกให้เราแก้ปัญหาต่างๆ ได้สะดวกรวดเร็วยิ่งขึ้นเท่านั้น
+%
+\begin{example}
+พิจารณา NFA $N_3$ ต่อไปนี้
+% NFA-DFA start
+\begin{center}
+\begin{tikzpicture}
+\node[initial,state,accepting] (q1) {1};
+\node[state] (q2) [below left=2cm of q1] {2};
+\node[state] (q3) [below right=2cm of q1] {3};
+
+\path[arrow]
+ (q1) edge node[left] {\texttt{b}} (q2)
+      edge[bend right] node[left] {$\varepsilon$} (q3)
+ (q2) edge[loop left] node[left] {\texttt{a}} (q22)
+      edge node[below] {\texttt{a},\texttt{b}} (q3)
+ (q3) edge[bend right] node[right] {\texttt{a}} (q1);
+\end{tikzpicture}
+\end{center}
+หากเขียน $N_3$ เป็น formal description จะได้ว่า
+\begin{itemize}
+\item $Q=\set{1,2,3}$
+\item $1$ เป็น start state
+\item $\Sigma=\set{\texttt{a},\texttt{b}}$
+\item $F=\set{1}$
+\item
+$
+\begin{array}[t]{@{}c|ccc}
+\delta & \texttt{a} & \texttt{b} & \varepsilon \\ \hline
+1      & \emptyset  & \set{2}    & \set{3} \\
+2      & \set{2,3}  & \set{3}    & \emptyset \\
+3      & \set{1}    & \emptyset  & \emptyset
+\end{array}
+$
+\end{itemize}
+
+หากต้องการแปลง $N_3$ ให้เป็น DFA $M_3$ ตามวิธีการใน Theorem~\ref{thm:equiv-dfa-nfa} จะได้ผลลัพธ์ดังนี้
+%
+% NFA-DFA
+\begin{center}
+\begin{tikzpicture}[every state/.style={ellipse,draw,minimum width=22mm},node distance=15mm]
+\node[state] (q) at (0,0) {$\emptyset$};
+\node[state,accepting] (q1) [right=of q] {$\set{1}$};
+\node[state] (q2) [right=of q1] {$\set{2}$};
+\node[state,accepting] (q12) [right=of q2] {$\set{1,2}$};
+\node[state] (q3) [below=of q] {$\set{3}$};
+\node[state,accepting] (q13) [right=of q3] {$\set{1,3}$};
+\node[state] (q23) [right=of q13] {$\set{2,3}$};
+\node[state,accepting] (q123) [right=of q23] {$\set{1,2,3}$};
+
+% start arrow
+\draw[arrow] (q13) ++ (-5ex,-5ex) -- node[left] {start} (q13);
+
+\path[arrow]
+ (q) edge[loop above,looseness=5] node [above] {\texttt{a},\texttt{b}} (q)
+ (q1) edge node [above] {\texttt{a}} (q)
+      edge node [above] {\texttt{b}} (q2)
+ (q2) edge node [right] {\texttt{a}} (q23)
+      edge[bend right=5] node [above] {\texttt{b}} (q3)
+ (q12) edge[bend right=5] node [left] {\texttt{a},\texttt{b}} (q23)
+ (q3) edge node [above] {\texttt{a}} (q13)
+      edge node [left] {\texttt{b}} (q)
+ (q13) edge[loop above] node [below] {\texttt{a}} (q13)
+      edge[bend right=5] node [left] {\texttt{b}} (q2)
+ (q23) edge[bend left=20] node [above] {\texttt{a}} (q123)
+      edge[bend left=45] node [above] {\texttt{b}} (q3)
+ (q123) edge[loop above] node [below] {\texttt{a}} (q123)
+     edge[bend left=20] node [above] {\texttt{b}} (q23);
+\end{tikzpicture}
+\end{center}
+ในการแปลง NFA ข้างต้น มีจุดสำคัญที่ควรสังเกต ดังนี้
+\begin{itemize}
+\item เนื่องจาก $N_3$ มี 3 states คือ $\set{1,2,3}$ จะได้ว่า $M_3$ จะต้องมี 8 states โดยที่แต่ละ state เป็น subset ของ $Q$
+\item เนื่องจาก state $1$ เป็น accept state ใน $N_3$ จะได้ว่า หาก $N_3$ จบการทำงานที่ state $1$ ได้ ก็จะ accept input string \enskip ดังนั้น หาก $M$ จบการทำงานใน state ที่มี $1$ เป็นสมาชิก ก็ควรจะต้อง accept input string เช่นกัน
+\item เนื่องจาก start state ของ $N_3$ คือ state $1$ แต่มี $\varepsilon$-transition จาก state $1$ ไป state $3$ จะได้ว่า ก่อนอ่าน input symbol ใดๆ $N_3$ สามารถไปที่ $\set{1,3}$ ได้ \enskip ดังนั้น start state ของ $M_3$ คือ $\set{1,3}$
+\item มี transition จาก $\set{2}$ ไป $\set{2,3}$ เมื่อ input เป็น \texttt{a} ซึ่งแปลว่า หาก ณ ขณะนี้ $N_3$ อยู่ที่ state $2$ ได้เท่านั้น และ input เป็น \texttt{a} จะได้ว่า states ที่ $N_3$ ไปถึงได้มีเพียง $\set{2,3}$ เนื่องจากไม่มี $\varepsilon$-transition ให้กระโดดเพิ่มเติมได้
+\item มี transition จาก $\set{1}$ ไป $\emptyset$ เมื่อ input เป็น \texttt{a} ซึ่งแปลว่า หาก ณ ขณะนี้ $N_3$ อยู่ที่ state $1$ ได้เท่านั้น และ input เป็น \texttt{a} จะได้ว่า $N_3$ ทำงานต่อไม่ได้ เพราะไม่มี transition ให้ก้าวไป กล่าวคือ ไม่มี state ต่อไปที่เป็นไปได้เลย
+\item มี transition จาก $\set{3}$ ไป $\set{1,3}$ เมื่อ input เป็น \texttt{a} ซึ่งแปลว่า หาก ณ ขณะนี้ $N_3$ อยู่ที่ state $3$ ได้เท่านั้น และ input เป็น \texttt{a} จะได้ว่า states ที่ $N_3$ ไปถึงได้คือ state $1$ \enskip นอกจากนี้ เมื่อ $N_3$ ไปที่ state $1$ แล้วยังใช้ $\varepsilon$-transition กระโดดไปที่ state $3$ ได้เพิ่มเติม \enskip ดังนั้น states ต่อไปที่เป็นไปได้ทั้งหมดคือ $\set{1,3}$
+\item มี transition จาก $\set{1,2}$ ไป $\set{2,3}$ เมื่อ input เป็น \texttt{a} ซึ่งแปลว่า หาก ณ ขณะนี้ $N_3$ อยู่ที่ states $1$ หรือ $2$ ได้ และ input เป็น \texttt{a} แล้วจะไป $\set{2,3}$ ได้ \enskip จากการให้เหตุผลก่อนหน้านี้ ถ้า $N_3$ อยู่ที่ state $1$ จะไปไหนต่อไม่ได้เลย ($\emptyset$) แต่ถ้า $N_3$ อยู่ที่ state $2$ จะไปที่ $\set{2,3}$ ได้ ดังนั้น states ทั้งหมดที่สามารถไปได้หลังจากอ่าน \texttt{a} ก็คือ $\emptyset\cup\set{2,3}=\set{2,3}$
+\item มี transition จาก $\set{2,3}$ ไป $\set{1,2,3}$ เมื่อ input เป็น \texttt{a} \enskip จากการให้เหตุผลก่อนหน้านี้ ถ้า $N_3$ อยู่ที่ state $2$ จะไปที่ $\set{2,3}$ ได้ ส่วนถ้า $N_3$ อยู่ที่ state $3$ จะไปที่ $\set{1,3}$ ได้ ดังนั้น states ทั้งหมดที่สามารถไปได้หลังจากอ่าน \texttt{a} ก็คือ $\set{2,3}\cup\set{1,3}=\set{1,2,3}$
+\item มี transition จาก $\emptyset$ ไป $\emptyset$ เมื่อ input เป็นตัวใดๆ ซึ่งแปลว่า หาก ณ ขณะนี้ $N_3$ อยู่ที่ state ใดไม่ได้เลย ไม่ว่า input จะเป็นอะไรก็ตาม จะได้ว่า $N_3$ ก็ไม่มี state ต่อไปที่เป็นไปได้เลยอยู่ดี \enskip กล่าวอีกนัยหนึ่ง หาก $N_3$ เกิดการติดขัดอยู่แล้ว ณ ตอนนี้ ไม่ว่า input จะเป็นอะไรก็ตาม $N_3$ ก็ยังติดขัดเหมือนเดิมอยู่ดี
+\end{itemize}
+สังเกตว่า ใน DFA ข้างต้น มี states ที่ไปถึงจาก start state ไม่ได้ ได้แก่ $\set{1}$ และ $\set{1,2}$ ซึ่งเราสามารถลบออกได้โดยไม่กระทบการทำงานของ DFA
+\end{example}
+
+\begin{corollary}\label{col:reg-nfa}
+A language is regular iff some NFA recognizes it.
+\begin{pf}
+($\Rightarrow$) Suppose a language $L$ is regular.  By definition of regular, there is a DFA that recognizes it.  Since every DFA is also an NFA, this DFA is the NFA that recognizes $L$.
+
+($\Leftarrow$) Suppose there is an NFA $N$ that recognizes a language $L$.  By Theorem~\ref{thm:equiv-dfa-nfa}, we can convert $N$ into a DFA $M$ that also recognizes $L$.  By definition of regular, $L$ is a regular language because $M$ recognizes it.
+\end{pf}
+\end{corollary}
+ดังนั้น หากเราจะพิสูจน์ว่าภาษาใดภาษาหนึ่งเป็น regular language เราสามารถใช้ NFA แทน DFA ได้ ทำให้เราสามารถพิสูจน์สมบัติต่างๆ เกี่ยวกับ regular operators ได้ง่ายขึ้น
+
+\begin{theorem}\label{thm:dfa-union-closed-nfa}
+Regular languages มีสมบัติปิดภายใต้ union กล่าวคือ ถ้า $A_1,A_2$ เป็น regular languages แล้ว $A_1\cup A_2$ ก็เป็นด้วย
+\begin{pf}
+ให้ $A_1,A_2$ เป็น regular languages \enskip จาก Corollary~\ref{col:reg-nfa} จะได้ว่ามี NFAs $N_1,N_2$ ที่รับรู้ $A_1,A_2$ ตามลำดับ \enskip จาก Lemma~\ref{lemma:nfa-union-nfa} เราสามารถสร้าง NFA $N$ จาก $N_1,N_2$ ที่รับรู้ $A_1\cup A_2$ ได้ \enskip ดังนั้น $A_1\cup A_2$ เป็น regular language โดยใช้ Corollary~\ref{col:reg-nfa} อีกครั้งหนึ่งกับ $N$
+\end{pf}
+\end{theorem}
+
+\begin{theorem}\label{thm:dfa-concat-closed}
+Regular languages มีสมบัติปิดภายใต้ concatenation
+
+\noindent{\bf Proof idea}: ให้ $N_1$ ที่รับรู้ $A_1$ และ $N_2$ ที่รับรู้ $A_2$ มีโครงสร้างโดยรวมดังแผนภาพต่อไปนี้
+% concat start
+\begin{center}
+\begin{tikzpicture}[initial text={},every state/.style={circle,draw,minimum size=5mm}]
+\node (o1) at (0,0) {};
+\node[initial,state] (i1) [left=of o1] {};
+\node[state,accepting] (a12) [right=of o1] {};
+\node[state,accepting] (a11) [above=1mm of a12] {};
+\node[state,accepting] (a13) [below=1mm of a12] {};
+\node[circle,draw] at ($(o1)+(0.5,0.2)$) (m11) {};
+\node[circle,draw] at ($(o1)+(-0.1,0.75)$) (m12) {};
+\node[circle,draw] at ($(o1)+(-0.5,-0.75)$) (m13) {};
+
+\node[draw,rounded corners,fit=(i1) (m11) (m12) (m13) (a11) (a13)] (N1) {};
+\node [below right=0pt of N1.north west] {$N_1$};
+
+\node (o2) [right=1in of N1.east] {};
+\node[initial,state] (i2) [left=of o2] {};
+\node[minimum width=5mm] (a22) [right=of o2] {};
+\node[state,accepting] (a21) [above=1mm of a22] {};
+\node[state,accepting] (a23) [below=1mm of a22] {};
+\node[circle,draw] at ($(o2)+(0.5,0.2)$) (m21) {};
+\node[circle,draw] at ($(o2)+(-0.1,0.75)$) (m22) {};
+\node[circle,draw] at ($(o2)+(-0.5,-0.2)$) (m23) {};
+\node[circle,draw] at ($(o2)+(0.1,-0.75)$) (m24) {};
+
+\node[draw,rounded corners,fit=(i2) (m21) (m22) (m23) (m24) (a21) (a23)] (N2) {};
+\node[below right=0pt of N2.north west] {$N_2$};
+\end{tikzpicture}
+\end{center}
+เราจะใช้ $N_1$ และ $N_2$ เป็นฐานในการสร้าง $N$ ที่รับรู้ $A_1\circ A_2$ ดังแผนภาพต่อไปนี้
+% concat
+\begin{center}
+\begin{tikzpicture}[initial text={},every state/.style={circle,draw,minimum size=5mm}]
+\node (o1) at (0,0) {};
+\node[initial,state] (i1) [left=of o1] {};
+\node[state] (a12) [right=of o1] {};
+\node[state] (a11) [above=1mm of a12] {};
+\node[state] (a13) [below=1mm of a12] {};
+\node[circle,draw] at ($(o1)+(0.5,0.2)$) (m11) {};
+\node[circle,draw] at ($(o1)+(-0.1,0.75)$) (m12) {};
+\node[circle,draw] at ($(o1)+(-0.5,-0.75)$) (m13) {};
+
+\node[draw,rounded corners,fit=(i1) (m11) (m12) (m13) (a11) (a13)] (N1) {};
+\node [below right=0pt of N1.north west] {};
+
+\node (o2) [right=1in of N1.east] {};
+\node[state] (i2) [left=of o2] {};
+\node[minimum width=5mm] (a22) [right=of o2] {};
+\node[state,accepting] (a21) [above=1mm of a22] {};
+\node[state,accepting] (a23) [below=1mm of a22] {};
+\node[circle,draw] at ($(o2)+(0.5,0.2)$) (m21) {};
+\node[circle,draw] at ($(o2)+(-0.1,0.75)$) (m22) {};
+\node[circle,draw] at ($(o2)+(-0.5,-0.2)$) (m23) {};
+\node[circle,draw] at ($(o2)+(0.1,-0.75)$) (m24) {};
+
+\node[draw,rounded corners,fit=(i2) (m21) (m22) (m23) (m24) (a21) (a23)] (N2) {};
+\node[below right=0pt of N2.north west] {};
+
+\path[arrow]
+ (a11) edge node[near start,above] {$\varepsilon$} (i2)
+ (a12) edge node[near start,above] {$\varepsilon$} (i2)
+ (a13) edge node[near start,above] {$\varepsilon$} (i2);
+
+\node[draw,rounded corners,fit=(N1) (N2),inner ysep=5mm] (N) {};
+\node[below right=0pt of N.north west] {$N$};
+\end{tikzpicture}
+\end{center}
+นั่นคือ $N$ จะจำลองการทำงานของ $N_1$ ก่อน หาก $N_1$ สามารถไปถึง accept state ของ $N_1$ ได้ $N$ ก็จะเริ่มจำลองการทำงานของ $N_2$ \enskip หาก $N_2$ สามารถจบการทำงานใน accept state ของ $N_2$ ได้ด้วย แสดงว่าเราสามารถแบ่ง input string เป็นสองส่วนได้ โดยที่ส่วนแรกมี $N_1$ ตอบรับ และส่วนที่สองมี $N_2$ ตอบรับ ซึ่งแปลว่า $N$ ควรตอบรับ input string นี้ด้วย \enskip สร้าง $N$ โดยเพิ่ม $\varepsilon$-transition จาก accept state แต่ละตัวใน $N_1$ ไปยัง start state ของ $N_2$ และกำหนดให้ accept states ของ $N_2$ เท่านั้นเป็น accept states ของ $N$
+\begin{pf}
+ให้ $N_1: (Q_1,q_1,\Sigma,\delta_1,F_1)$ รับรู้ $A_1$ (พึงระลึกว่า $\delta_1:Q_1\times\Sigma_\varepsilon\to \pow(Q_1)$) และ $N_2: (Q_2,q_2,\Sigma,\delta_2,F_2)$ รับรู้ $A_2$ (พึงระลึกว่า $\delta_2:Q_2\times\Sigma_\varepsilon\to\pow(Q_2)$) \enskip สร้าง $N$ ที่รับรู้ $A_1\circ A_2$ ดังนี้
+\begin{itemize}
+\item $Q=Q_1\cup Q_2$
+\item $q_1$ เป็น start state
+\item $\Sigma$ คงเดิม
+\item $F=F_2$
+\item $\delta:Q\times\Sigma_\varepsilon\to\pow(Q)$ โดยที่
+\[\delta(q,a)\triangleq\left\{
+\begin{array}{ll}
+\delta_1(q,a) & \textup{หาก $q\in Q_1$ และ $q\notin F_1$} \\
+\delta_1(q,a) & \textup{หาก $q\in F_1$ และ $a\neq\varepsilon$} \\
+\delta_1(q,a)\cup\set{q_2} & \textup{หาก $q\in F_1$ และ $a=\varepsilon$} \\
+\delta_2(q,a) & \textup{หาก $q\in Q_2$} \\
+\end{array}
+\right.\]
+นั่นคือ หากขณะนี้ $N$ อยู่ที่ state เดิมของ $N_1$ ที่ไม่ใช่ accept state ให้ปฎิบัติตาม transition ของ $N_1$ ที่เคยทำมา เช่นเดียวกับเมื่อ $N$ อยู่ที่ accept state เดิมของ $N_1$ แต่ transition ที่เรากำลังพิจารณาไม่ใช่ $\varepsilon$-transition \enskip แต่ถ้าขณะนี้ $N$ อยู่ที่ accept state เดิมของ $N_1$ และ transition ที่เรากำลังพิจารณาเป็น $\varepsilon$-transition หากมี transitions เดิมอยู่แล้วก็สามารถปฏิบัติตามได้เช่นเดิม แต่ยังสามารถก้าวกระโดดไปยัง start state ของ $N_2$ ได้ด้วย \enskip ในกรณีสุดท้าย หากขณะนี้ $N$ อยู่ที่ state เดิมของ $N_2$ ให้ปฏิบัติตาม transition ของ $N_2$ ที่เคยทำมา
+\end{itemize}
+\end{pf}
+\end{theorem}
+
+\begin{theorem}\label{thm:dfa-star-closed}
+Regular languages มีสมบัติปิดภายใต้ Kleene star
+
+\noindent{\bf Proof idea}: ให้ $N_1$ ที่รับรู้ $A_1$ มีโครงสร้างโดยรวมดังแผนภาพต่อไปนี้
+% star start
+\begin{center}
+\begin{tikzpicture}[initial text={},every state/.style={circle,draw,minimum size=5mm}]
+\node (o1) at (0,0) {};
+\node[initial,state] (i1) [left=of o1] {};
+\node[minimum width=5mm] (a12) [right=of o1] {};
+\node[state,accepting] (a11) [above=1mm of a12] {};
+\node[state,accepting] (a13) [below=1mm of a12] {};
+\node[circle,draw] at ($(o1)+(0.5,0.2)$) (m11) {};
+\node[circle,draw] at ($(o1)+(-0.1,0.75)$) (m12) {};
+\node[circle,draw] at ($(o1)+(-0.5,-0.75)$) (m13) {};
+
+\node[draw,rounded corners,fit=(i1) (m11) (m12) (m13) (a11) (a13)] (N1) {};
+\node [below right=0pt of N1.north west] {$N_1$};
+\end{tikzpicture}
+\end{center}
+เราจะใช้ $N_1$ เป็นฐานในการสร้าง $N$ ที่รับรู้ $A_1^*$ ดังแผนภาพต่อไปนี้
+% star
+\begin{center}
+\begin{tikzpicture}[initial text={},every state/.style={circle,draw,minimum size=5mm}]
+\node (o1) at (0,0) {};
+\node[state] (i1) [left=of o1] {};
+\node[minimum width=5mm] (a12) [right=of o1] {};
+\node[state,accepting] (a11) [above=1mm of a12] {};
+\node[state,accepting] (a13) [below=1mm of a12] {};
+\node[circle,draw] at ($(o1)+(0.5,0.2)$) (m11) {};
+\node[circle,draw] at ($(o1)+(-0.1,0.75)$) (m12) {};
+\node[circle,draw] at ($(o1)+(-0.5,-0.75)$) (m13) {};
+
+\node[draw,rounded corners,fit=(i1) (m11) (m12) (m13) (a11) (a13)] (N1) {};
+
+\node[initial,state,accepting] (i) [left=of i1] {};
+\path[arrow]
+ (i) edge node[above] {$\varepsilon$} (i1)
+ (a11) edge[bend right=60] node[near start,above] (e1) {$\varepsilon$} (i)
+ (a13) edge[bend left=60] node[near start,below] (e2) {$\varepsilon$} (i);
+
+\node[draw,rounded corners,fit=(i) (N1) (e1) (e2)] (N) {};
+\node[below right=0pt of N.north west] {$N$};
+\end{tikzpicture}
+\end{center}
+นั่นคือ $N$ สามารถตอบรับ $\varepsilon$ ด้วย start state ที่เพิ่มเข้าไปใหม่ได้ทันที \enskip นอกจากนี้ หาก input string เป็นการนำ strings ใน $A_1$ มาต่อกันหลายๆ ครั้ง ในแต่ละครั้ง $N_1$ จะต้องไปถึง accept state ได้ \enskip ดังนั้น $N$ จะจำลองการทำงานของ $N_1$ แต่ละครั้ง หากไปถึง accept state ของ $N_1$ ได้ $N$ ก็สามารถย้อนกลับมาเริ่มจำลองการทำงานของ $N_1$ ในครั้งต่อไปได้ใหม่เรื่อยๆ \enskip จะได้ว่า $N$ จะตอบรับ input string ที่เป็นผลลัพธ์จากการนำ strings ใน $A_1$ มาต่อกันกี่ครั้งก็ได้
+\begin{pf}
+ให้ $N_1: (Q_1,q_1,\Sigma,\delta_1,F_1)$ รับรู้ $A_1$ \enskip สร้าง $N$ ที่รับรู้ $A_1^*$ ดังนี้
+\begin{itemize}
+\item $Q=Q_1\cup\set{q_0}$ โดยที่ $q_0$ เป็น state ใหม่ที่ยังไม่เคยใช้มาก่อน
+\item $q_0$ เป็น start state
+\item $\Sigma$ คงเดิม
+\item $F=F_1\cup\set{q_0}$
+\item $\delta:Q\times\Sigma_\varepsilon\to\pow(Q)$ โดยที่
+\[\delta(q,a)\triangleq\left\{
+\begin{array}{ll}
+\delta_1(q,a) & \textup{หาก $q\in Q_1$ และ $q\notin F_1$} \\
+\delta_1(q,a) & \textup{หาก $q\in F_1$ และ $a\neq\varepsilon$} \\
+\delta_1(q,a)\cup\set{q_0} & \textup{หาก $q\in F_1$ และ $a=\varepsilon$} \\
+\set{q_1} & \textup{หาก $q=q_0$ และ $a=\varepsilon$} \\
+\emptyset & \textup{หาก $q=q_0$ และ $a\neq\varepsilon$} \\
+\end{array}
+\right.\]
+นั่นคือ หากขณะนี้ $N$ อยู่ที่ state เดิมของ $N_1$ ที่ไม่ใช่ accept state ให้ปฎิบัติตาม transition ของ $N_1$ ที่เคยทำมา เช่นเดียวกับเมื่อ $N$ อยู่ที่ accept state เดิมของ $N_1$ แต่ transition ที่เรากำลังพิจารณาไม่ใช่ $\varepsilon$-transition \enskip แต่ถ้าขณะนี้ $N$ อยู่ที่ accept state เดิมของ $N_1$ และ transition ที่เรากำลังพิจารณาเป็น $\varepsilon$-transition หากมี transitions เดิมอยู่แล้วก็สามารถปฏิบัติตามได้เช่นเดิม แต่ยังสามารถก้าวกระโดดไปยัง $q_0$ ได้ด้วย \enskip แต่ถ้าขณะนี้ $N$ อยู่ที่ $q_0$ ที่เพิ่งสร้างขึ้นมาใหม่ และ transition ที่เรากำลังพิจารณาเป็น $\varepsilon$-transition ให้ไปที่ start states เดิมคือ $q_1$ \enskip ในกรณีสุดท้าย หาก $N$ อยู่ที่ $q_0$ แต่ transition ที่เรากำลังพิจารณาไม่ใช่ $\varepsilon$-transition กล่าวคือ $N$ ต้องอ่าน input symbol ตัวต่อไป จะได้ว่าไม่มี state ที่ $N$ สามารถไปต่อได้
+\end{itemize}
+\end{pf}
+\end{theorem}

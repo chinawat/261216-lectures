@@ -1,0 +1,28 @@
+\section{Products}
+
+ที่ผ่านมานั้น เราได้ศึกษาเกี่ยวกับผลบวกมาพอสมควร \enskip อย่างไรก็ดี เราสามารถหา closed form และประมาณค่าของผลคูณ (products) ได้ไม่ยากนัก โดยการแปลงปัญหาให้เป็นรูปของผลบวก ดังตัวอย่างต่อไปนี้
+%
+\begin{example}
+สมมุติว่าเราต้องการประมาณค่าของ $n!=\prod_{i=1}^n{i}$ \enskip หากเขียนกระจายพจน์ออกมา จะได้ว่า \[\prod_{i=1}^n{i}=1\cdot 2\cdot 3\cdot \cdots \cdot n\] เมื่อใส่ $\ln$ ทั้งสองข้าง จะได้
+\begin{align*}
+\ln\prod_{i=1}^n{i}
+ &= \ln(1\cdot 2\cdot 3\cdot \cdots \cdot n) \\
+ &= \ln 1 + \ln 2 + \ln 3 + \cdots + \ln n \\
+ &= \sum_{i=1}^n{\ln i}
+\end{align*}
+ซึ่งเราสามารถประมาณค่าได้ \enskip ทั้งนี้ \[\int_1^n \ln x dx=\left.(x\ln x-x)\right|_1^n=n\ln n-n+1\] เนื่องจาก $f(i)=i$ เป็นฟังก์ชันเพิ่ม จะได้ว่า \[
+\begin{array}{r@{\ \leq\ }c@{\ \leq\ }l}
+\ln 1 + n\ln n-n+1 & \sum_{i=1}^n{\ln i} & \ln n + n\ln n-n+1 \\
+n\ln n-n+1 & \ln n! & (n+1)\ln n-n+1
+\end{array}
+\]
+เมื่อใส่ exponential ทั้งอสมการ จะได้ \[
+\begin{array}{r@{\ \leq\ }c@{\ \leq\ }l}
+e^{n\ln n-n+1} & e^{\ln n!} & e^{(n+1)\ln n-n+1} \\
+e^{\ln n^n-n+1} & n! & e^{\ln n^{n+1}-n+1} \\
+n^ne^{-n+1} & n! & n^{n+1}e^{-n+1} \\
+\frac{n^n}{e^{n-1}} & n! & \frac{n^{n+1}}{e^{n-1}}
+\end{array}
+\]
+นั่นคือ เราสามารถหาค่าประมาณของ $n!$ ได้
+\end{example}
