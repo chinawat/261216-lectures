@@ -44,10 +44,10 @@ By structural induction โดยที่ \[P(\ell)\triangleq \ell\lconcat[]=\e
 \item{\bf Inductive step}: ($\ell_1=a:\ell_1'$) \quad สมมุติว่า $\forall\ell_2,\ell_3:(\ell_1'\lconcat\ell_2)\lconcat\ell_3=\ell_1'\lconcat(\ell_2\lconcat\ell_3)$ \enskip \enskip ต้องพิสูจน์ว่า $\forall\ell_2,\ell_3:((a:\ell_1')\lconcat\ell_2)\lconcat\ell_3=(a:\ell_1')\lconcat(\ell_2\lconcat\ell_3)$ โดยจะทำการแปลง (rewrite) ด้านซ้ายของสมการให้เป็นด้านขวา \enskip ให้ $\ell_2,\ell_3$ เป็น integer lists ใดๆ จะได้ว่า
 \begin{align*}
 ((a:\ell_1')\lconcat\ell_2)\lconcat\ell_3
- &= (a:(\ell_1'\lconcat\ell_2))\lconcat\ell_3 \qquad\textup{(จากนิยามของ \lconcat ขาไป)} \\
- &= a:((\ell_1'\lconcat\ell_2)\lconcat\ell_3) \qquad\textup{(จากนิยามของ \lconcat ขาไป)} \\
+ &= (a:(\ell_1'\lconcat\ell_2))\lconcat\ell_3 \qquad\textup{(จากนิยามของ \lconcat{} ขาไป)} \\
+ &= a:((\ell_1'\lconcat\ell_2)\lconcat\ell_3) \qquad\textup{(จากนิยามของ \lconcat{} ขาไป)} \\
  &= a:(\ell_1'\lconcat(\ell_2\lconcat\ell_3)) \qquad\textup{(by I.H.)} \\
- &= (a:\ell_1')\lconcat(\ell_2\lconcat\ell_3) \qquad\textup{(จากนิยามของ \lconcat ขากลับ)\qquad\yea}
+ &= (a:\ell_1')\lconcat(\ell_2\lconcat\ell_3) \qquad\textup{(จากนิยามของ \lconcat{} ขากลับ)\qquad\yea}
 \end{align*}
 \end{itemize}
 เนื่องจากเราได้พิจารณาทุกรูปร่างของ $\ell_1$ ที่เป็นไปได้แล้ว จึงสรุปได้ว่า $\lconcat$ มีสมบัติการเปลี่ยนหมู่

@@ -60,11 +60,11 @@ $a$ กับ $b$ สัมพันธ์กันถ้า $a$ ชอบ $b$
 \end{example}
 
 \begin{example}
-ให้ $A$ เป็นเซตของนักศึกษา และ $B$ เป็นเซตของวิชา \enskip $R=\set{(a,b)\mid\textrm{$a$ ลงทะเบียนวิชา $b$}}$
+ให้ $A$ เป็นเซตของนักศึกษา และ $B$ เป็นเซตของวิชา \enskip $R=\set{(a,b)\mid\text{$a$ ลงทะเบียนวิชา $b$}}$
 \end{example}
 
 \begin{example}
-ให้ $A$ เป็นเซตผู้ชาย และ $B$ เป็นเซตของผู้หญิง \enskip $R=\set{(a,b)\mid\textrm{$a$ ชอบ $b$}}$
+ให้ $A$ เป็นเซตผู้ชาย และ $B$ เป็นเซตของผู้หญิง \enskip $R=\set{(a,b)\mid\text{$a$ ชอบ $b$}}$
 \end{example}
 
 \begin{definition}
@@ -86,7 +86,7 @@ $=$, $<$, $>$, $\geq$, $\neq$ are relations on $\mathbb{Z}$, $\mathbb{Q}$, $\mat
 \end{example}
 
 \begin{example}
-ให้ $A$ เป็นเซตของ \textit{homo sapiens sapiens} \enskip $R=\set{(a_1,a_2)\mid\textrm{$a_1$ ชอบ $a_2$}}$ is a relation on $A$
+ให้ $A$ เป็นเซตของ \textit{homo sapiens sapiens} \enskip $R=\set{(a_1,a_2)\mid\text{$a_1$ ชอบ $a_2$}}$ is a relation on $A$
 \end{example}
 
 \begin{definition}
@@ -98,7 +98,7 @@ $=$, $<$, $>$, $\geq$, $\neq$ are relations on $\mathbb{Z}$, $\mathbb{Q}$, $\mat
 \end{example}
 
 \begin{example}
-ให้ $R=\set{(a_1,a_2)\mid\textrm{$a_1$ ชอบ $a_2$}}$ จะได้ว่า $R^{-1}=\set{(a_1,a_2)\mid\textrm{$a_2$ ชอบ $a_1$}}$
+ให้ $R=\set{(a_1,a_2)\mid\text{$a_1$ ชอบ $a_2$}}$ จะได้ว่า $R^{-1}=\set{(a_1,a_2)\mid\text{$a_2$ ชอบ $a_1$}}$
 \end{example}
 
 \begin{definition}
@@ -265,7 +265,7 @@ $A$ & $B$ & relation & \rotatedhdr{function} & \rotatedhdr{total} & \rotatedhdr{
 ให้ $A$ เป็นเซตของนักศึกษามหาวิทยาลัยเชียงใหม่, $B$ เป็นเซตของกระบวนวิชาในมหาวิทยาลัยเชียงใหม่, และ $C$ เป็นเซตของอาจารย์มหาวิทยาลัยเชียงใหม่ \enskip ให้ $R\subseteq A\times B$ เป็นความสัมพันธ์ระหว่างนักศึกษา $a$ กับกระบวนวิชา $b$ โดยที่ $\R{a}{b}$ หาก $a$ ลงทะเบียนเรียนวิชา $b$ ในภาคเรียนนี้, และ $S\subseteq B\times C$ เป็นความสัมพันธ์ระหว่างกระบวนวิชา $b$ กับอาจารย์ $c$ โดยที่ $\R[S]{b}{c}$ หาก $c$ สอนวิชา $b$ ในภาคเรียนนี้ \enskip จะได้ว่า
 \begin{itemize}[]
 \item $R(A)$ (image of $A$ under $R$) เป็นเซตของวิชาที่มีนักศึกษาลงทะเบียนในภาคเรียนนี้ (นั่นคือ วิชาใดมีลูกศรชี้มาจากนักศึกษาบ้างในความสัมพันธ์ $R$)
-\item $S^{-1}(\textrm{ชิน})$ (image of ชิน under $S^{-1}$) เป็นเซตของวิชาที่ อ.ชินสอนในภาคเรียนนี้ (นั่นคือ วิชาใดมีลูกศรชี้ไปหา อ.ชินบ้างในความสัมพันธ์ $S$)
+\item $S^{-1}(\text{ชิน})$ (image of ชิน under $S^{-1}$) เป็นเซตของวิชาที่ อ.ชินสอนในภาคเรียนนี้ (นั่นคือ วิชาใดมีลูกศรชี้ไปหา อ.ชินบ้างในความสัมพันธ์ $S$)
 \item $S\circ R\subseteq A\times C$ เป็นความสัมพันธ์ที่เชื่อมโยงนักศึกษากับอาจารย์ โดยที่ $\R[S\circ R]{a}{c}$ หากนักศึกษา $a$ เรียนกับอาจารย์ $c$
 \item $R\circ R^{-1}\subseteq B\times B$ เป็นความสัมพันธ์ที่เชื่อมโยงสองวิชาเข้าด้วยกัน โดยที่ $\R[R\circ R^{-1}]{b_1}{b_2}$ หากวิชา $b_1$ และ $b_2$ ไม่สามารถจัดสอบปลายภาคพร้อมกันได้ เนื่องจากมีนักศึกษาที่ลงทะเบียนวิชา $b_1$ และ $b_2$ ทั้งคู่ (หรือ $b_1$ และ $b_2$ นี้เป็นวิชาเดียวกัน)
 \item $R^{-1}\circ R\subseteq A\times A$ เป็นความสัมพันธ์ที่เชื่อมโยงนักศึกษาสองค้นเข้าด้วยกัน โดยที่ $\R[R^{-1}\circ R]{a_1}{a_2}$ หากนักศึกษา $a_1$ และ $a_2$ ลงทะเบียนเรียนวิชาเดียวกัน (หรือ $a_1$ และ $a_2$ เป็นนักศึกษาคนเดียวกัน)
