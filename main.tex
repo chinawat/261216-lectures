@@ -17,7 +17,10 @@
 \usepackage{rotating}
 \newcommand\rotatedhdr[1]{\multicolumn{1}{c}{\begin{rotate}{45}{#1}\end{rotate}}}
 
-\usepackage{longtable}
+\usepackage{ltablex}
+\keepXColumns
+\setlength\LTpre{0pt}
+\setlength\LTpost{0pt}
 \usepackage{bigdelim}
 \usepackage{multicol}
 \usepackage{array}
@@ -41,7 +44,11 @@
 \tikzset{graphpt/.style={circle,fill,inner sep=2pt}}
 \tikzset{block/.style={minimum width=1.5cm,minimum height=0.5cm,draw}}
 
-% \includeonly{lectures/7-combinatorics}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{intersections,pgfplots.fillbetween}
+
+% \includeonly{lectures/8-graphs}
 
 \begin{document}
 \pagenumbering{roman}
@@ -63,7 +70,5 @@
 \include{lectures/5-automata}
 \include{lectures/6-sums}
 \include{lectures/7-combinatorics}
-
-\chapter{Graph theory}
-
+\include{lectures/8-graphs}
 \end{document}
